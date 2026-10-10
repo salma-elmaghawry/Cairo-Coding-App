@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "666221533893",
+    "project_id": "cairo-coding-app",
+    "storage_bucket": "cairo-coding-app.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:666221533893:android:a688c210a0deca72e3eeac",
+        "android_client_info": {
+          "package_name": "com.cairocodingschool.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA8a1dxRdp3fEACsEx2y6AXw7s6c9K1STE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

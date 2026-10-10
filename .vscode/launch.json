@@ -1,0 +1,18 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Student (Android)",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main_student.dart"
+    },
+    {
+      "name": "Admin (Web)",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main_admin.dart",
+      "deviceId": "chrome"
+    }
+  ]
+}

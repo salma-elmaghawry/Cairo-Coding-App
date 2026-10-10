@@ -1,0 +1,252 @@
+{
+  "app_name": "Cairo Coding",
+  "app_name_admin": "Cairo Coding Admin",
+  "common": {
+    "ok": "OK",
+    "cancel": "Cancel",
+    "retry": "Retry",
+    "save": "Save",
+    "add": "Add",
+    "delete": "Delete"
+  },
+  "validation": {
+    "required": "This field is required"
+  },
+  "errors": {
+    "network_error": "No internet connection. Check your network and try again",
+    "server_error": "Server error. Please try again later",
+    "unexpected_error": "Something went wrong. Please try again",
+    "open_link_failed": "Couldn't open the link"
+  },
+  "not_found": {
+    "title": "Page not found",
+    "message": "We couldn't find the page you're looking for.",
+    "go_home": "Go home"
+  },
+  "preferences": {
+    "language": "Language",
+    "language_en": "English",
+    "language_ar": "العربية",
+    "theme": "Theme",
+    "theme_light": "Light",
+    "theme_dark": "Dark",
+    "theme_system": "System"
+  },
+  "auth": {
+    "logout": "Log out",
+    "errors": {
+      "invalid_credentials": "Wrong email or password",
+      "not_authorized": "This account isn't allowed here",
+      "not_signed_in": "Please sign in again",
+      "too_many_requests": "Too many attempts. Please wait a few minutes and try again"
+    },
+    "login": {
+      "eyebrow": "sign in",
+      "title": "Welcome back",
+      "admin_title": "Admin dashboard",
+      "subtitle": "Use the email your academy registered you with.",
+      "admin_subtitle": "Sign in with your admin account.",
+      "email_label": "Email",
+      "email_hint": "you@example.com",
+      "email_required": "Email is required",
+      "email_invalid": "Enter a valid email",
+      "password_label": "Password",
+      "password_hint": "Your password",
+      "password_required": "Password is required",
+      "password_length": "Password must be at least 6 characters",
+      "show_password": "Show password",
+      "hide_password": "Hide password",
+      "forgot_password": "Forgot password?",
+      "submit": "Sign in",
+      "no_account": "No account yet? Your academy creates it for you. Check your inbox for the set-password email."
+    },
+    "signup": {
+      "name_required": "Name is required",
+      "password_mismatch": "Passwords do not match"
+    },
+    "forgot": {
+      "title": "Reset your password",
+      "message": "We'll email you a link to set a new password.",
+      "submit": "Send link",
+      "sent": "Check your inbox for the reset link"
+    },
+    "blocked": {
+      "title": "Your account is inactive",
+      "message": "Please contact the academy to reactivate your account.",
+      "admin_title": "Not authorized",
+      "admin_message": "This account doesn't have admin access to the dashboard."
+    }
+  },
+  "session": {
+    "title": "Session {}",
+    "extra_title": "Extra session",
+    "hours": "{}h",
+    "minutes": "{} min",
+    "duration": "{}h {}m",
+    "status": {
+      "scheduled": "Scheduled",
+      "moved": "Moved",
+      "extra": "Extra",
+      "cancelled": "Cancelled",
+      "done": "Done"
+    }
+  },
+  "student": {
+    "nav": {
+      "home": "Home",
+      "schedule": "Schedule",
+      "recordings": "Recordings",
+      "settings": "Settings"
+    }
+  },
+  "home": {
+    "greeting_morning": "good morning",
+    "greeting_afternoon": "good afternoon",
+    "greeting_evening": "good evening",
+    "hi": "Hi, {}",
+    "next_session": "next session",
+    "starts_in": "Starts in",
+    "countdown_days": "{}d {}h {}m",
+    "countdown_hours": "{}h {}m",
+    "live_now": "Live now",
+    "reminders": "Reminders 24h and 1h before",
+    "join": "Join meeting",
+    "no_upcoming": "No upcoming sessions right now",
+    "this_week": "This week",
+    "full_schedule": "Full schedule",
+    "week_empty": "Nothing else this week",
+    "latest_recording": "Latest recording",
+    "all_recordings": "All recordings"
+  },
+  "schedule": {
+    "eyebrow": "your sessions",
+    "title": "Schedule",
+    "upcoming": "Upcoming",
+    "past": "Past",
+    "next": "Next",
+    "empty_upcoming": "No upcoming sessions",
+    "empty_past": "No past sessions yet"
+  },
+  "recordings": {
+    "eyebrow": "watch again",
+    "title": "Recordings",
+    "all": "All",
+    "empty": "No recordings yet",
+    "hint": "Recordings open in YouTube or Google Drive."
+  },
+  "settings": {
+    "eyebrow": "preferences",
+    "title": "Settings",
+    "reminders_title": "Session reminders",
+    "reminders_message": "You get a notification 24 hours and 1 hour before every session.",
+    "logout_title": "Log out?",
+    "logout_message": "You'll need your email and password to sign in again."
+  },
+  "admin": {
+    "role": "Admin",
+    "nav": {
+      "groups": "Groups",
+      "settings": "Settings"
+    },
+    "groups": {
+      "eyebrow": "dashboard",
+      "title": "Groups",
+      "search": "Search groups",
+      "new": "New group",
+      "active": "Active · {}",
+      "archived": "Archived · {}",
+      "empty": "No groups here yet",
+      "actions": "Group actions",
+      "edit": "Edit group",
+      "archive": "Archive",
+      "unarchive": "Unarchive",
+      "students": "Students",
+      "weekly": "Weekly",
+      "runs": "Runs",
+      "next_session": "Next session",
+      "open": "Open group"
+    },
+    "group_form": {
+      "new_title": "New group",
+      "edit_title": "Edit group",
+      "name": "Name",
+      "track": "Track",
+      "meeting_link": "Meeting link",
+      "location": "Location",
+      "start": "Start",
+      "end": "End",
+      "dates_invalid": "End date must be after the start date",
+      "saved": "Group saved"
+    },
+    "group": {
+      "tab_students": "Students",
+      "tab_schedule": "Schedule",
+      "tab_recordings": "Recordings"
+    },
+    "students": {
+      "name": "Full name",
+      "email": "Email",
+      "phone": "Phone",
+      "status": "Status",
+      "actions": "Actions",
+      "active": "Active",
+      "inactive": "Inactive",
+      "empty": "No students in this group yet",
+      "remove": "Remove from group",
+      "remove_title": "Remove student?",
+      "remove_message": "Remove {} from {}? Their account stays active for other groups.",
+      "deactivate": "Deactivate account",
+      "activate": "Activate account",
+      "deactivate_title": "Deactivate account?",
+      "deactivate_message": "{} won't be able to sign in until you activate the account again.",
+      "mode_one": "One student",
+      "mode_bulk": "Bulk paste",
+      "add_title": "Add to {}",
+      "bulk_label": "Emails, one per line",
+      "bulk_empty": "Paste at least one email",
+      "bulk_invalid": "Invalid emails: {}",
+      "add_hint": "New emails get an account and a set-password email. Emails that already have an account are just added to this group.",
+      "add_one": "Add student",
+      "add_all": "Add all",
+      "added": "{} new accounts created, {} existing students added",
+      "skipped": "Couldn't add (account exists without a profile, contact support): {}"
+    },
+    "schedule": {
+      "slots_title": "Weekly slots",
+      "slots_hint": "Times are Cairo local time",
+      "add_slot": "Add slot",
+      "remove_slot": "Remove slot",
+      "day": "Day",
+      "time": "Time",
+      "duration": "Duration",
+      "generate": "Generate sessions",
+      "generate_title": "Generate sessions?",
+      "generate_message": "Future sessions you haven't changed will be replaced using these slots.",
+      "generate_note": "Editing slots regenerates future sessions you haven't touched. Cancelled or moved sessions stay as they are.",
+      "generated": "{} sessions generated",
+      "sessions_title": "Sessions",
+      "extra": "Extra session",
+      "empty": "No sessions yet. Add weekly slots and generate them.",
+      "date": "Date",
+      "reschedule": "Reschedule",
+      "cancel": "Cancel",
+      "restore": "Restore"
+    },
+    "recordings": {
+      "title": "Title",
+      "number": "Session no",
+      "date": "Recorded on",
+      "link": "Link",
+      "url": "Link (YouTube unlisted or Drive)",
+      "add": "Add recording",
+      "edit": "Edit recording",
+      "save": "Save recording",
+      "saved": "Recording saved",
+      "empty": "No recordings yet",
+      "number_invalid": "Enter a session number",
+      "url_invalid": "Enter a valid link",
+      "delete_title": "Delete recording?",
+      "delete_message": "Delete \"{}\"? Students won't see it anymore."
+    }
+  }
+}

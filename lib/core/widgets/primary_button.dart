@@ -30,6 +30,7 @@ class PrimaryButton extends StatelessWidget {
       button: true,
       enabled: enabled && !isLoading,
       label: label,
+      onTap: enabled && !isLoading ? onPressed : null,
       excludeSemantics: true,
       child: AnimatedButton(
         onPressed: onPressed,

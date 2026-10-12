@@ -5,9 +5,11 @@ import 'package:cairo_coding_app/core/error_handling/app_exceptions.dart';
 import 'package:cairo_coding_app/core/error_handling/failures.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/foundation.dart';
 
 class ErrorMapper {
   static Failure map(Object error) {
+    if (kDebugMode && error is! Failure) debugPrint('ErrorMapper ← ${error.runtimeType}: $error');
     if (error is FirebaseAuthException) return _mapAuth(error.code);
     if (error is FirebaseException) return _mapFirestore(error.code);
 

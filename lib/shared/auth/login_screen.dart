@@ -5,7 +5,7 @@ import 'package:cairo_coding_app/core/providers/core_providers.dart';
 import 'package:cairo_coding_app/core/utils/app_text_styles.dart';
 import 'package:cairo_coding_app/core/widgets/eyebrow_text.dart';
 import 'package:cairo_coding_app/core/widgets/wordmark.dart';
-import 'package:cairo_coding_app/shared/auth/login_controller.dart';
+import 'package:cairo_coding_app/data/data_providers.dart';
 import 'package:cairo_coding_app/shared/auth/widgets/login_form.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -18,7 +18,7 @@ class LoginScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final isAdmin = ref.watch(appFlavorProvider).isAdmin;
 
-    ref.listen(loginControllerProvider, (_, next) {
+    ref.listen(authStateProvider, (_, next) {
       if (next case AsyncError(:final error)) {
         showAppSnackBar(context, error.toString(), isError: true);
       }

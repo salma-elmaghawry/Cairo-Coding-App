@@ -5,6 +5,7 @@ import 'package:cairo_coding_app/core/widgets/app_text_field.dart';
 import 'package:cairo_coding_app/core/widgets/primary_button.dart';
 import 'package:cairo_coding_app/shared/auth/login_controller.dart';
 import 'package:cairo_coding_app/shared/auth/widgets/forgot_password_sheet.dart';
+import 'package:cairo_coding_app/shared/auth/widgets/login_error_banner.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -42,6 +43,7 @@ class _LoginFormState extends ConsumerState<LoginForm> {
   @override
   Widget build(BuildContext context) {
     final isLoading = ref.watch(loginControllerProvider.select((state) => state.isLoading));
+    final errorMessage = ref.watch(loginControllerProvider.select((state) => state.hasError ? '${state.error}' : null));
     ref.listen(loginControllerProvider.select((state) => state.hasError), (_, hasError) {
       if (hasError) setState(() => _shakeCount++);
     });
@@ -97,6 +99,7 @@ class _LoginFormState extends ConsumerState<LoginForm> {
           ),
           verticalSpace(8),
           PrimaryButton(label: 'auth.login.submit'.tr(), isLoading: isLoading, onPressed: _submit),
+          if (errorMessage != null && !isLoading) ...[verticalSpace(14), LoginErrorBanner(message: errorMessage)],
         ],
       ),
     );

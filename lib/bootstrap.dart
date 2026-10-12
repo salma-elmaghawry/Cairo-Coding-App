@@ -9,11 +9,16 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/misc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-Future<void> bootstrap({required AppFlavor flavor, required Provider<GoRouter> routerProvider}) async {
+Future<void> bootstrap({
+  required AppFlavor flavor,
+  required Provider<GoRouter> routerProvider,
+  List<Override> overrides = const [],
+}) async {
   WidgetsFlutterBinding.ensureInitialized();
   await EasyLocalization.ensureInitialized();
   await initializeDateFormatting();
@@ -27,6 +32,7 @@ Future<void> bootstrap({required AppFlavor flavor, required Provider<GoRouter> r
       overrides: [
         sharedPreferencesProvider.overrideWithValue(sharedPreferences),
         appFlavorProvider.overrideWithValue(flavor),
+        ...overrides,
       ],
       child: EasyLocalization(
         fallbackLocale: const Locale('en'),

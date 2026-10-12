@@ -140,7 +140,9 @@
     "reminders_title": "Session reminders",
     "reminders_message": "You get a notification 24 hours and 1 hour before every session.",
     "logout_title": "Log out?",
-    "logout_message": "You'll need your email and password to sign in again."
+    "logout_message": "You'll need your email and password to sign in again.",
+    "privacy_policy": "Privacy policy",
+    "delete_account": "Delete my account"
   },
   "admin": {
     "role": "Admin",

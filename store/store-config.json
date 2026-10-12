@@ -1,0 +1,161 @@
+{
+  "out_dir": "store",
+  "icon": "store/graphics/play-icon-512.png",
+  "colors": {
+    "primary": "#7C3AED",
+    "primary_mid": "#5B21B6",
+    "primary_dark": "#1B0F26",
+    "glow": "#C084FC",
+    "accent": "#FACC15",
+    "light_from": "#FAF7FE",
+    "light_to": "#EFE6FC",
+    "ink": "#1B0F26",
+    "ink_soft": "#5B4A6E"
+  },
+  "hero_tiles": [
+    "📅",
+    "🎥",
+    "⏱️",
+    "💻",
+    "🌙"
+  ],
+  "languages": {
+    "en": {
+      "rtl": false,
+      "font": "Nunito",
+      "brand": "Cairo Coding",
+      "feature_graphic": {
+        "headline": "Never miss<br>a session.",
+        "sub": "Your schedule, meeting link and recordings from Cairo Coding School, in one app.",
+        "panel_label": "Next session starts in",
+        "panel_value": "1d 04h 23m",
+        "rows": [
+          [
+            "Session 07 · Thu",
+            "7:00 PM",
+            "#7C3AED"
+          ],
+          [
+            "Session 08 · Sun",
+            "7:00 PM",
+            "#C084FC"
+          ],
+          [
+            "Session 09 · Thu",
+            "Moved · 8 PM",
+            "#FACC15"
+          ]
+        ],
+        "chip": "🎥 Recordings"
+      },
+      "hero": {
+        "welcome": "Welcome to",
+        "slogan": "Schedule. Join. Rewatch.",
+        "headline": "Never miss<br>a session",
+        "sub": "Your whole course, in one app."
+      },
+      "shots": [
+        {
+          "title": "Your next session.<br>One tap to join.",
+          "sub": "The day, the time and a live countdown. Then tap Join meeting.",
+          "bg": "brand"
+        },
+        {
+          "title": "Moved? Cancelled?<br><em>You'll know.</em>",
+          "sub": "Moved, cancelled and extra sessions are clearly marked.",
+          "bg": "light"
+        },
+        {
+          "title": "Missed it?<br>Watch it again.",
+          "sub": "Every recording with its session number and date.",
+          "bg": "brand"
+        },
+        {
+          "title": "Arabic or English.<br>Light or dark.",
+          "sub": "Full right-to-left support, and a theme that suits you.",
+          "bg": "light"
+        },
+        {
+          "title": "Easy on the eyes<br>at night.",
+          "sub": "Dark mode in Cairo Coding colors.",
+          "bg": "brand"
+        }
+      ]
+    },
+    "ar": {
+      "rtl": true,
+      "font": "Cairo",
+      "brand": "كايرو كودينج",
+      "feature_graphic": {
+        "headline": "متفوّتش<br>ولا سيشن.",
+        "sub": "الجدول ورابط الاجتماع والتسجيلات من مدرسة كايرو كودينج، في تطبيق واحد.",
+        "panel_label": "السيشن القادمة تبدأ بعد",
+        "panel_value": "1d 04h 23m",
+        "rows": [
+          [
+            "السيشن 7 · الخميس",
+            "7:00 م",
+            "#7C3AED"
+          ],
+          [
+            "السيشن 8 · الأحد",
+            "7:00 م",
+            "#C084FC"
+          ],
+          [
+            "السيشن 9 · الخميس",
+            "اتغيرت · 8 م",
+            "#FACC15"
+          ]
+        ],
+        "chip": "🎥 التسجيلات"
+      },
+      "hero": {
+        "welcome": "أهلاً بيك في",
+        "slogan": "جدول. سيشن. تسجيل.",
+        "headline": "متفوّتش<br>ولا سيشن",
+        "sub": "كورسك كله في تطبيق واحد."
+      },
+      "shots": [
+        {
+          "title": "سيشنك الجاية<br>بضغطة واحدة",
+          "sub": "اليوم والساعة وعداد تنازلي، وبعدين انضم للاجتماع.",
+          "bg": "brand"
+        },
+        {
+          "title": "اتغير الميعاد؟<br><em>هتعرف علطول</em>",
+          "sub": "السيشنات المنقولة والملغية والإضافية متعلّمة بوضوح.",
+          "bg": "light"
+        },
+        {
+          "title": "فاتتك سيشن؟<br>شوفها تاني",
+          "sub": "كل التسجيلات برقم السيشن وتاريخها.",
+          "bg": "brand"
+        },
+        {
+          "title": "عربي أو إنجليزي<br>فاتح أو داكن",
+          "sub": "دعم كامل للكتابة من اليمين للشمال.",
+          "bg": "light"
+        },
+        {
+          "title": "مريح لعينك<br>بالليل",
+          "sub": "الوضع الداكن بألوان كايرو كودينج.",
+          "bg": "brand"
+        }
+      ]
+    }
+  },
+  "video": {
+    "lang": "en",
+    "raw": "store/video/demo-raw.mp4",
+    "intro": {
+      "title": "Cairo Coding",
+      "sub": "Never miss <b>a session.</b>"
+    },
+    "outro": {
+      "title": "Get Cairo Coding",
+      "sub": "Schedule. Join. Rewatch. <b>On Google Play.</b>"
+    },
+    "scenes": []
+  }
+}

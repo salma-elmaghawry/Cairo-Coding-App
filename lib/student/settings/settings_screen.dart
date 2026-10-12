@@ -5,6 +5,7 @@ import 'package:cairo_coding_app/core/utils/app_text_styles.dart';
 import 'package:cairo_coding_app/core/widgets/app_card.dart';
 import 'package:cairo_coding_app/data/data_providers.dart';
 import 'package:cairo_coding_app/shared/preferences/preferences_panel.dart';
+import 'package:cairo_coding_app/student/settings/widgets/legal_links_card.dart';
 import 'package:cairo_coding_app/student/settings/widgets/profile_card.dart';
 import 'package:cairo_coding_app/student/widgets/tab_page.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -61,6 +62,8 @@ class SettingsScreen extends ConsumerWidget {
                 ],
               ),
             ),
+            verticalSpace(24),
+            const LegalLinksCard(),
             verticalSpace(24),
             OutlinedButton.icon(
               style: OutlinedButton.styleFrom(

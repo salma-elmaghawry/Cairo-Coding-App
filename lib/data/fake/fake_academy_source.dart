@@ -42,6 +42,14 @@ class FakeAcademySource implements AcademySource {
   }
 
   @override
+  Future<List<ClassSession>> getSessionsBetween(List<String> groupIds, DateTime from, DateTime until) async {
+    await _latency();
+    return _store.sessions.values
+        .where((s) => groupIds.contains(s.groupId) && !s.startsAt.isBefore(from) && s.startsAt.isBefore(until))
+        .toList();
+  }
+
+  @override
   Future<AcademyGroup> saveGroup(AcademyGroup group) => _write(() {
     final saved = group.id.isEmpty ? group.copyWith(id: _store.newId('group')) : group;
     _store.groups[saved.id] = saved;

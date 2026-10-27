@@ -30,6 +30,9 @@ class AcademyRepository {
     _source.watchStudents(groupId).map((list) => [...list]..sort((a, b) => a.name.compareTo(b.name))),
   );
 
+  Future<Result<List<ClassSession>>> sessionsBetween(List<String> groupIds, DateTime from, DateTime until) =>
+      Result.guard(() => _source.getSessionsBetween(groupIds, from, until));
+
   Future<Result<AcademyGroup>> saveGroup(AcademyGroup group) => Result.guard(() => _source.saveGroup(group));
 
   Future<Result<void>> setArchived(AcademyGroup group, bool archived) =>

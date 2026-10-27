@@ -1,14 +1,18 @@
+import 'package:cairo_coding_app/student/reminders/reminder_providers.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-class StudentShell extends StatelessWidget {
+class StudentShell extends ConsumerWidget {
   const StudentShell({super.key, required this.shell});
 
   final StatefulNavigationShell shell;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    ref.listen(reminderSyncProvider(context.locale.languageCode), (_, _) {});
+
     return Scaffold(
       body: shell,
       bottomNavigationBar: DecoratedBox(

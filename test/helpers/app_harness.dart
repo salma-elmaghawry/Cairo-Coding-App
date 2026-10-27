@@ -4,6 +4,10 @@ import 'package:cairo_coding_app/core/const/app_assets.dart';
 import 'package:cairo_coding_app/core/providers/core_providers.dart';
 import 'package:cairo_coding_app/core/utils/cairo_time.dart';
 import 'package:cairo_coding_app/data/data_providers.dart';
+import 'package:cairo_coding_app/data/models/class_session.dart';
+import 'package:cairo_coding_app/student/reminders/reminder_planner.dart';
+import 'package:cairo_coding_app/student/reminders/reminder_providers.dart';
+import 'package:cairo_coding_app/student/reminders/reminder_scheduler.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -20,6 +24,7 @@ Future<void> pumpApp(WidgetTester tester, AppFlavor flavor, Provider<GoRouter> r
       overrides: [
         sharedPreferencesProvider.overrideWithValue(prefs),
         appFlavorProvider.overrideWithValue(flavor),
+        reminderSchedulerProvider.overrideWithValue(SilentReminderScheduler()),
         ...fakeSourceOverrides,
       ],
       child: EasyLocalization(
@@ -35,6 +40,22 @@ Future<void> pumpApp(WidgetTester tester, AppFlavor flavor, Provider<GoRouter> r
   await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 300)));
   await tester.pump(const Duration(seconds: 1));
   await tester.pump(const Duration(seconds: 1));
+}
+
+class SilentReminderScheduler implements ReminderScheduler {
+  @override
+  Future<bool> requestPermission() async => true;
+
+  @override
+  Future<void> sync(
+    List<ClassSession> sessions, {
+    required ReminderPlanner planner,
+    required Map<String, String> groupNames,
+    required DateTime now,
+  }) async {}
+
+  @override
+  Future<void> clear() async {}
 }
 
 Future<void> settle(WidgetTester tester) async {

@@ -71,13 +71,13 @@
           "bg": "brand"
         },
         {
-          "title": "Arabic or English.<br>Light or dark.",
-          "sub": "Full right-to-left support, and a theme that suits you.",
+          "title": "Reminded before<br><em>every session.</em>",
+          "sub": "A notification 24 hours and 1 hour before class. Turn it off anytime.",
           "bg": "light"
         },
         {
-          "title": "Easy on the eyes<br>at night.",
-          "sub": "Dark mode in Cairo Coding colors.",
+          "title": "Arabic or English.<br>Light or dark.",
+          "sub": "Full right-to-left support, and a dark mode in Cairo Coding colors.",
           "bg": "brand"
         }
       ]
@@ -133,13 +133,13 @@
           "bg": "brand"
         },
         {
-          "title": "عربي أو إنجليزي<br>فاتح أو داكن",
-          "sub": "دعم كامل للكتابة من اليمين للشمال.",
+          "title": "تنبيه قبل<br><em>كل سيشن</em>",
+          "sub": "تنبيه قبلها بـ 24 ساعة وقبلها بساعة، وتقدر تقفله في أي وقت.",
           "bg": "light"
         },
         {
-          "title": "مريح لعينك<br>بالليل",
-          "sub": "الوضع الداكن بألوان كايرو كودينج.",
+          "title": "عربي أو إنجليزي<br>فاتح أو داكن",
+          "sub": "دعم كامل للعربي، ووضع داكن بألوان كايرو كودينج.",
           "bg": "brand"
         }
       ]

@@ -18,6 +18,7 @@ A Flutter Web admin dashboard and a mobile student app for **Cairo Coding School
 - Next session with a live countdown and a one-tap "Join meeting".
 - Full schedule with upcoming and past sessions, with moved, cancelled and extra sessions marked.
 - Recordings, filterable by group.
+- Session reminders 24 hours and 1 hour before, kept in step with schedule changes by a background sync every 6 hours.
 - Arabic / English and light / dark / system theme.
 
 ## Technical highlights
@@ -83,4 +84,4 @@ flutter test
 
 ## Status
 
-MVP in progress. A pilot with one real group is planned for late October 2026. Session reminders (24 hours and 1 hour before) are next.
+MVP ready for Google Play. A pilot with one real group is planned for late October 2026. Store assets, listing text and the release checklist are in `store/`.

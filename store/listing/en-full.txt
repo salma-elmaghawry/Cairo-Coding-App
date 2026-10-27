@@ -8,6 +8,9 @@ Open the app and see your next session: the day, the time, and a live countdown.
 📅 THE FULL SCHEDULE
 Every upcoming session for your group, plus the ones you already attended. If a session is moved, cancelled, or an extra one is added, it's clearly marked, so you never show up at the wrong time.
 
+🔔 A REMINDER BEFORE EVERY SESSION
+Get a notification the day before and an hour before each session, with the time and your group. When a session is moved or cancelled, your reminders update too. Prefer no reminders? Turn them off in Settings.
+
 🎥 WATCH IT AGAIN
 Missed a session or want to review pointers one more time? Every recording is listed with its session number and date. In more than one group? Filter by group. Recordings open in YouTube or Google Drive.
 

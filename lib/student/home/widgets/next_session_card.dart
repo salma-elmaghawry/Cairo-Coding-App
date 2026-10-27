@@ -10,10 +10,12 @@ import 'package:cairo_coding_app/data/models/academy_group.dart';
 import 'package:cairo_coding_app/data/models/class_session.dart';
 import 'package:cairo_coding_app/student/home/widgets/countdown_text.dart';
 import 'package:cairo_coding_app/shared/session_labels.dart';
+import 'package:cairo_coding_app/student/reminders/reminder_providers.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class NextSessionCard extends StatelessWidget {
+class NextSessionCard extends ConsumerWidget {
   const NextSessionCard({super.key, required this.session, required this.group});
 
   final ClassSession session;
@@ -28,7 +30,7 @@ class NextSessionCard extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final colorScheme = Theme.of(context).colorScheme;
     final timeRange = '${context.time(session.startsAt)} – ${context.time(session.endsAt)}';
 
@@ -77,8 +79,10 @@ class NextSessionCard extends StatelessWidget {
           ),
           verticalSpace(14),
           _InfoRow(icon: Icons.videocam_outlined, text: group?.location ?? ''),
-          verticalSpace(8),
-          _InfoRow(icon: Icons.notifications_none_rounded, text: 'home.reminders'.tr()),
+          if (ref.watch(remindersEnabledProvider)) ...[
+            verticalSpace(8),
+            _InfoRow(icon: Icons.notifications_none_rounded, text: 'home.reminders'.tr()),
+          ],
           verticalSpace(18),
           PrimaryButton(label: 'home.join'.tr(), icon: Icons.videocam_rounded, onPressed: () => _join(context)),
         ],

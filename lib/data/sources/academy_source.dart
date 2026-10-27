@@ -14,6 +14,8 @@ abstract class AcademySource {
 
   Future<List<ClassSession>> getSessions(String groupId);
 
+  Future<List<ClassSession>> getSessionsBetween(List<String> groupIds, DateTime from, DateTime until);
+
   Future<AcademyGroup> saveGroup(AcademyGroup group);
 
   Future<void> saveSessions(List<ClassSession> sessions);

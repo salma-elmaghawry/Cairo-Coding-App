@@ -60,6 +60,18 @@ class FirestoreAcademySource implements AcademySource {
       _map(await _sessionsOf(groupId).get(), ClassSession.fromMap);
 
   @override
+  Future<List<ClassSession>> getSessionsBetween(List<String> groupIds, DateTime from, DateTime until) async {
+    final snapshots = await Future.wait([
+      for (final groupId in groupIds)
+        _sessionsOf(groupId)
+            .where('startsAt', isGreaterThanOrEqualTo: Timestamp.fromDate(from))
+            .where('startsAt', isLessThan: Timestamp.fromDate(until))
+            .get(),
+    ]);
+    return [for (final snapshot in snapshots) ..._map(snapshot, ClassSession.fromMap)];
+  }
+
+  @override
   Future<AcademyGroup> saveGroup(AcademyGroup group) async {
     final doc = group.id.isEmpty ? _groups.doc() : _groups.doc(group.id);
     await doc.set(toFirestore(group.toMap()));

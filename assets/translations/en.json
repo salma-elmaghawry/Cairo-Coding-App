@@ -134,6 +134,12 @@
     "empty": "No recordings yet",
     "hint": "Recordings open in YouTube or Google Drive."
   },
+  "reminders": {
+    "tomorrow": "{} is tomorrow at {}",
+    "soon": "{} starts at {}",
+    "body": "Open the app to join the meeting.",
+    "body_group": "{} · Open the app to join the meeting."
+  },
   "settings": {
     "eyebrow": "preferences",
     "title": "Settings",
@@ -142,7 +148,8 @@
     "logout_title": "Log out?",
     "logout_message": "You'll need your email and password to sign in again.",
     "privacy_policy": "Privacy policy",
-    "delete_account": "Delete my account"
+    "delete_account": "Delete my account",
+    "reminders_blocked": "Notifications are blocked for Cairo Coding. Allow them in your phone settings."
   },
   "admin": {
     "role": "Admin",

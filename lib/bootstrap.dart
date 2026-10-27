@@ -18,6 +18,7 @@ Future<void> bootstrap({
   required AppFlavor flavor,
   required Provider<GoRouter> routerProvider,
   List<Override> overrides = const [],
+  Future<void> Function()? setup,
 }) async {
   WidgetsFlutterBinding.ensureInitialized();
   await EasyLocalization.ensureInitialized();
@@ -25,6 +26,7 @@ Future<void> bootstrap({
   CairoTime.init();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   FirebaseFirestore.instance.settings = const Settings(persistenceEnabled: true);
+  await setup?.call();
   final sharedPreferences = await SharedPreferences.getInstance();
 
   runApp(

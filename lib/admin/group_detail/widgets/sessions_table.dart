@@ -23,6 +23,8 @@ class SessionsTable extends ConsumerWidget {
 
   final AcademyGroup group;
 
+  static const _compactPadding = EdgeInsets.symmetric(horizontal: 8);
+
   Future<void> _run(BuildContext context, Future<Result<void>> action) async {
     final result = await action;
     if (!context.mounted) return;
@@ -40,6 +42,26 @@ class SessionsTable extends ConsumerWidget {
     if (picked == null || !context.mounted) return;
     final duration = group.weeklySlots.firstOrNull?.durationMin ?? 120;
     await _run(context, ref.read(academyRepositoryProvider).addExtraSession(group, picked, duration));
+  }
+
+  Future<void> _delete(BuildContext context, WidgetRef ref, ClassSession session) async {
+    final confirmed = await showConfirmDialog(
+      context,
+      title: 'admin.schedule.delete_title'.tr(args: [session.title]),
+      message: 'admin.schedule.delete_message'.tr(args: [context.shortDay(session.startsAt)]),
+      confirmLabel: 'common.delete'.tr(),
+      cancelLabel: 'common.cancel'.tr(),
+      destructive: true,
+    );
+    if (!confirmed || !context.mounted) return;
+    final result = await ref.read(academyRepositoryProvider).deleteSession(session);
+    if (!context.mounted) return;
+    switch (result) {
+      case Ok():
+        showAppSnackBar(context, 'admin.schedule.deleted'.tr());
+      case Err(:final failure):
+        showAppSnackBar(context, failure.message, isError: true);
+    }
   }
 
   void _editDetails(BuildContext context, List<ClassSession> sessions, ClassSession session) {
@@ -95,7 +117,7 @@ class SessionsTable extends ConsumerWidget {
               AppTableColumn('admin.schedule.time'.tr(), flex: 2),
               AppTableColumn('admin.schedule.topic'.tr(), flex: 4),
               AppTableColumn('admin.students.status'.tr(), flex: 2),
-              AppTableColumn('admin.students.actions'.tr(), flex: 4, alignEnd: true),
+              AppTableColumn('admin.students.actions'.tr(), flex: 5, alignEnd: true),
             ],
             rows: [
               for (final session in value)
@@ -149,20 +171,21 @@ class SessionsTable extends ConsumerWidget {
                       ],
                     ),
                     StatusChip(label: status.$1, tone: status.$2),
-                    if (past)
-                      const SizedBox.shrink()
-                    else
-                      Wrap(
-                        spacing: 6,
-                        children: [
+                    Wrap(
+                      spacing: 4,
+                      crossAxisAlignment: WrapCrossAlignment.center,
+                      children: [
+                        if (!past) ...[
                           TextButton(
+                            style: TextButton.styleFrom(padding: _compactPadding),
                             onPressed: session.isCancelled ? null : () => _reschedule(context, ref, session),
                             child: Text('admin.schedule.reschedule'.tr()),
                           ),
                           TextButton(
-                            style: session.isCancelled
-                                ? null
-                                : TextButton.styleFrom(foregroundColor: colorScheme.error),
+                            style: TextButton.styleFrom(
+                              padding: _compactPadding,
+                              foregroundColor: session.isCancelled ? null : colorScheme.error,
+                            ),
                             onPressed: () => _run(
                               context,
                               repository.setSessionStatus(
@@ -177,7 +200,14 @@ class SessionsTable extends ConsumerWidget {
                             ),
                           ),
                         ],
-                      ),
+                        IconButton(
+                          style: IconButton.styleFrom(side: BorderSide.none, foregroundColor: colorScheme.error),
+                          tooltip: 'admin.schedule.delete'.tr(),
+                          onPressed: () => _delete(context, ref, session),
+                          icon: const Icon(Icons.delete_outline_rounded, size: 18),
+                        ),
+                      ],
+                    ),
                   ];
                 }(),
             ],

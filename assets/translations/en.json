@@ -250,7 +250,11 @@
       "instructor": "Instructor",
       "no_instructor": "No instructor",
       "no_instructors_hint": "Add instructors from Settings to pick them here.",
-      "details_saved": "Session updated"
+      "details_saved": "Session updated",
+      "delete": "Delete session",
+      "delete_title": "Delete {}?",
+      "delete_message": "The session on {} disappears from the students' schedule and its reminders are removed. This can't be undone.",
+      "deleted": "Session deleted"
     },
     "recordings": {
       "title": "Title",

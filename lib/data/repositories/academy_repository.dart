@@ -61,6 +61,9 @@ class AcademyRepository {
   Future<Result<void>> setSessionStatus(ClassSession session, SessionStatus status) =>
       Result.guard(() => _source.saveSessions([session.copyWith(status: status)]));
 
+  Future<Result<void>> deleteSession(ClassSession session) =>
+      Result.guard(() => _source.deleteSessions(session.groupId, [session.id]));
+
   Future<Result<void>> reschedule(ClassSession session, DateTime startsAt) =>
       Result.guard(() => _source.saveSessions([session.copyWith(startsAt: startsAt, status: SessionStatus.moved)]));
 

@@ -22,7 +22,8 @@ class NextSessionCard extends ConsumerWidget {
   final AcademyGroup? group;
 
   Future<void> _join(BuildContext context) async {
-    final link = session.meetingLinkOverride ?? group?.meetingLink ?? '';
+    final override = session.meetingLinkOverride?.trim() ?? '';
+    final link = override.isNotEmpty ? override : group?.meetingLink ?? '';
     final opened = await openExternalLink(link);
     if (!opened && context.mounted) {
       showAppSnackBar(context, 'errors.open_link_failed'.tr(), isError: true);

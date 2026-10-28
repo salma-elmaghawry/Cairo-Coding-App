@@ -1,7 +1,7 @@
 # Google Play Console checklist: Cairo Coding
 
 Everything to upload is in this folder. The release bundle is
-`build/app/outputs/bundle/release/app-release.aab` (version 1.0.0, build 1).
+`build/app/outputs/bundle/release/app-release.aab` (version 1.0.1, build 2).
 
 ## 1. Create the app
 Create app → App name **Cairo Coding** · Default language **English (United States)** · App · Free.
@@ -14,6 +14,7 @@ The package name `com.cairocodingschool.app` is permanent after the first upload
 | Privacy policy | https://cairo-coding-app.web.app/privacy/ |
 | App access | All or some functionality is restricted → add the test student account (below) |
 | Ads | No, my app does not contain ads |
+| Advertising ID | No (the release manifest has no `AD_ID` permission) |
 | Content rating | Category: Education/Reference. Answer **No** to violence, sexuality, language, drugs, gambling, user-generated content, sharing location, and digital purchases |
 | Target audience | The real ages of your students. Never tick "under 13" (it triggers the Families policy). If some students are under 18, tick 13–15 and/or 16–17 as well |
 | News app | No |
@@ -34,8 +35,9 @@ Keep this account active and enrolled, and don't change its password, while any 
 - Account creation: **My app does not allow users to create an account** (the school creates them).
 - Users can request deletion: **Yes** → https://cairo-coding-app.web.app/delete-account/
 - Data types (all **Collected**, not shared, required, for **App functionality** and **Account management**):
-  - Personal info → **Name**, **Email address**, **Phone number**
+  - Personal info → **Name**, **Email address**, **Phone number**, **User IDs** (the Firebase account ID)
 - Nothing else: no location, no analytics or crash data, no device IDs, no photos, no contacts.
+  The app has no Analytics, Crashlytics or FCM SDKs, so Firebase itself adds nothing to this list.
   Reminders are local notifications, so they aren't data collection.
 
 ### If asked about exact alarms
@@ -72,6 +74,16 @@ First release: your next session with a live countdown, the full schedule, recor
 </ar>
 ```
 
+If version 1.0.0 was already uploaded, use these for 1.0.1 instead:
+```
+<en-US>
+Join now opens your Zoom meeting straight in the Zoom app.
+</en-US>
+<ar>
+زرار الانضمام بقى بيفتح ميتنج Zoom على طول في تطبيق Zoom.
+</ar>
+```
+
 ## Upload key (back this up)
 - Keystore: `~/.android-keystores/cairo_coding/upload-keystore.jks`, alias `cairocoding-upload`
 - Passwords: only in `android/key.properties` (git-ignored)
@@ -79,7 +91,7 @@ First release: your next session with a live countdown, the full schedule, recor
   through Play support.
 
 ## Next upload
-Bump `version:` in `pubspec.yaml` (for example `1.0.1+2`; the build number must go up), then:
+Bump `version:` in `pubspec.yaml` (for example `1.0.2+3`; the build number must go up), then:
 ```bash
 flutter build appbundle --release -t lib/main_student.dart
 ```

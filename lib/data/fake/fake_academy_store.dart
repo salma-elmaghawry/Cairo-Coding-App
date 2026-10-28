@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:cairo_coding_app/data/models/academy_group.dart';
 import 'package:cairo_coding_app/data/models/class_session.dart';
+import 'package:cairo_coding_app/data/models/instructor.dart';
 import 'package:cairo_coding_app/data/models/recording.dart';
 import 'package:cairo_coding_app/data/models/student.dart';
 import 'package:cairo_coding_app/data/models/weekly_slot.dart';
@@ -19,6 +20,7 @@ class FakeAcademyStore {
   final Map<String, ClassSession> sessions = {};
   final Map<String, Recording> recordings = {};
   final Map<String, Student> students = {};
+  final Map<String, Instructor> instructors = {};
   final StreamController<void> _changes = StreamController<void>.broadcast();
   int _nextId = 1;
 
@@ -137,6 +139,32 @@ class FakeAcademyStore {
       ],
       'workshop': ['Setting up VS Code', 'Git basics', 'Debugging'],
     };
+    final topicsByGroup = {
+      'cs140': [
+        ...?titlesByGroup['cs140'],
+        'Operators',
+        'Classes and objects',
+        'Vectors',
+        'Recursion',
+        'File input and output',
+        'Final project',
+      ],
+      'workshop': [...?titlesByGroup['workshop'], 'Clean code'],
+    };
+    const instructorsByGroup = {'cs140': 'Eng. Salma Elmaghawry', 'workshop': 'Eng. Youssef Nabil'};
+    for (final name in instructorsByGroup.values) {
+      final id = newId('instructor');
+      instructors[id] = Instructor(id: id, name: name);
+    }
+    for (final session in sessions.values.toList()) {
+      final topics = topicsByGroup[session.groupId] ?? const <String>[];
+      final number = session.number ?? 0;
+      if (number < 1 || number > topics.length) continue;
+      sessions[session.id] = session.copyWith(
+        topic: topics[number - 1],
+        instructor: instructorsByGroup[session.groupId],
+      );
+    }
     for (final session in sessions.values.where((s) => s.isPast(now)).toList()) {
       final titles = titlesByGroup[session.groupId] ?? const <String>[];
       final number = session.number ?? 0;

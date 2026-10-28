@@ -16,6 +16,7 @@ class SessionTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     final cancelled = session.isCancelled;
     final effectiveBadge = badge ?? session.statusBadge;
     final subtitle = [context.time(session.startsAt), session.durationLabel, ?groupName].join(' · ');
@@ -38,6 +39,10 @@ class SessionTile extends StatelessWidget {
                   session.title,
                   style: AppTextStyles.font16Bold.copyWith(decoration: cancelled ? TextDecoration.lineThrough : null),
                 ),
+                if (session.topicLine.isNotEmpty) ...[
+                  verticalSpace(2),
+                  Text(session.topicLine, style: AppTextStyles.font14SemiBold.copyWith(color: colorScheme.primary)),
+                ],
                 verticalSpace(2),
                 Text(subtitle, style: AppTextStyles.font14Normal.secondary(context)),
               ],

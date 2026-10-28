@@ -89,7 +89,9 @@
       "extra": "Extra",
       "cancelled": "Cancelled",
       "done": "Done"
-    }
+    },
+    "by": "by {}",
+    "with": "With {}"
   },
   "student": {
     "nav": {
@@ -231,7 +233,7 @@
       "generate": "Generate sessions",
       "generate_title": "Generate sessions?",
       "generate_message": "Future sessions you haven't changed will be replaced using these slots.",
-      "generate_note": "Editing slots regenerates future sessions you haven't touched. Cancelled or moved sessions stay as they are.",
+      "generate_note": "Editing slots regenerates future sessions you haven't touched. Cancelled or moved sessions stay as they are, and session names carry over in order.",
       "generated": "{} sessions generated",
       "sessions_title": "Sessions",
       "extra": "Extra session",
@@ -239,7 +241,16 @@
       "date": "Date",
       "reschedule": "Reschedule",
       "cancel": "Cancel",
-      "restore": "Restore"
+      "restore": "Restore",
+      "topic": "Session name",
+      "edit_details": "Edit name and instructor",
+      "details_title": "Session details",
+      "topic_label": "Session name",
+      "topic_hint": "e.g. Operators",
+      "instructor": "Instructor",
+      "no_instructor": "No instructor",
+      "no_instructors_hint": "Add instructors from Settings to pick them here.",
+      "details_saved": "Session updated"
     },
     "recordings": {
       "title": "Title",
@@ -256,6 +267,18 @@
       "url_invalid": "Enter a valid link",
       "delete_title": "Delete recording?",
       "delete_message": "Delete \"{}\"? Students won't see it anymore."
+    },
+    "instructors": {
+      "title": "Instructors",
+      "hint": "These names appear in the instructor list for every session.",
+      "name": "Instructor name",
+      "name_hint": "e.g. Eng. Salma Elmaghawry",
+      "add": "Add instructor",
+      "empty": "No instructors yet",
+      "remove": "Remove instructor",
+      "remove_title": "Remove {}?",
+      "remove_message": "Sessions already assigned to this instructor keep the name.",
+      "exists": "This instructor is already in the list"
     }
   }
 }

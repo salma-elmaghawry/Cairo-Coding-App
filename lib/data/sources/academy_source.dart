@@ -1,5 +1,6 @@
 import 'package:cairo_coding_app/data/models/academy_group.dart';
 import 'package:cairo_coding_app/data/models/class_session.dart';
+import 'package:cairo_coding_app/data/models/instructor.dart';
 import 'package:cairo_coding_app/data/models/recording.dart';
 import 'package:cairo_coding_app/data/models/student.dart';
 
@@ -31,4 +32,10 @@ abstract class AcademySource {
   Future<void> removeStudentFromGroup(String uid, String groupId);
 
   Future<void> setStudentActive(String uid, bool active);
+
+  Stream<List<Instructor>> watchInstructors();
+
+  Future<Instructor> saveInstructor(Instructor instructor);
+
+  Future<void> deleteInstructor(String id);
 }

@@ -50,6 +50,10 @@ class NextSessionCard extends ConsumerWidget {
               ),
             ],
           ),
+          if (session.topicLine.isNotEmpty) ...[
+            verticalSpace(14),
+            Text(session.topicLine, style: AppTextStyles.font16Bold.copyWith(color: colorScheme.primary)),
+          ],
           verticalSpace(14),
           Text(context.fullDay(session.startsAt), style: AppTextStyles.font22ExtraBold),
           verticalSpace(4),

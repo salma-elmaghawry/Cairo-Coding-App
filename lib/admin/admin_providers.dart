@@ -2,6 +2,7 @@ import 'package:cairo_coding_app/core/providers/core_providers.dart';
 import 'package:cairo_coding_app/data/data_providers.dart';
 import 'package:cairo_coding_app/data/models/academy_group.dart';
 import 'package:cairo_coding_app/data/models/class_session.dart';
+import 'package:cairo_coding_app/data/models/instructor.dart';
 import 'package:cairo_coding_app/data/models/recording.dart';
 import 'package:cairo_coding_app/data/models/student.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -68,3 +69,7 @@ final groupNextSessionProvider = Provider.autoDispose.family<ClassSession?, Stri
   final sessions = ref.watch(groupSessionsProvider(groupId)).value ?? const [];
   return sessions.where((s) => !s.isCancelled && !s.isPast(now)).firstOrNull;
 });
+
+final instructorsProvider = StreamProvider<List<Instructor>>(
+  (ref) => ref.watch(academyRepositoryProvider).watchInstructors(),
+);

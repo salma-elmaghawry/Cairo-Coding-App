@@ -1,4 +1,5 @@
 import 'package:cairo_coding_app/admin/admin_providers.dart';
+import 'package:cairo_coding_app/admin/group_detail/widgets/session_details_dialog.dart';
 import 'package:cairo_coding_app/core/error_handling/result.dart';
 import 'package:cairo_coding_app/core/helpers/date_formats.dart';
 import 'package:cairo_coding_app/core/helpers/pickers.dart';
@@ -41,6 +42,12 @@ class SessionsTable extends ConsumerWidget {
     await _run(context, ref.read(academyRepositoryProvider).addExtraSession(group, picked, duration));
   }
 
+  void _editDetails(BuildContext context, List<ClassSession> sessions, ClassSession session) {
+    final before = sessions.takeWhile((s) => s.id != session.id);
+    final suggested = before.lastWhere((s) => s.instructor.isNotEmpty, orElse: () => session).instructor;
+    SessionDetailsDialog.show(context, session, suggestedInstructor: suggested);
+  }
+
   (String, StatusTone) _status(ClassSession session, bool past) => switch (session.status) {
     SessionStatus.cancelled => ('session.status.cancelled'.tr(), StatusTone.danger),
     _ when past => ('session.status.done'.tr(), StatusTone.neutral),
@@ -77,15 +84,16 @@ class SessionsTable extends ConsumerWidget {
             icon: Icons.event_note_outlined,
           ),
           AsyncData(:final value) => AppDataTable(
-            minWidth: 680,
+            minWidth: 720,
             dimmedRows: {
               for (final (index, session) in value.indexed)
                 if (session.isPast(now) || session.isCancelled) index,
             },
             columns: [
               const AppTableColumn('#'),
-              AppTableColumn('admin.schedule.date'.tr(), flex: 3),
-              AppTableColumn('admin.schedule.time'.tr(), flex: 3),
+              AppTableColumn('admin.schedule.date'.tr(), flex: 2),
+              AppTableColumn('admin.schedule.time'.tr(), flex: 2),
+              AppTableColumn('admin.schedule.topic'.tr(), flex: 4),
               AppTableColumn('admin.students.status'.tr(), flex: 2),
               AppTableColumn('admin.students.actions'.tr(), flex: 4, alignEnd: true),
             ],
@@ -108,6 +116,37 @@ class SessionsTable extends ConsumerWidget {
                     Text(
                       '${context.time(session.startsAt)} · ${session.durationLabel}',
                       style: AppTextStyles.font14Normal.secondary(context),
+                    ),
+                    Row(
+                      children: [
+                        Flexible(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                session.topic.isEmpty ? '—' : session.topic,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: AppTextStyles.font14SemiBold,
+                              ),
+                              if (session.instructor.isNotEmpty)
+                                Text(
+                                  'session.by'.tr(args: [session.instructor]),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: AppTextStyles.font12Normal.secondary(context),
+                                ),
+                            ],
+                          ),
+                        ),
+                        IconButton(
+                          style: IconButton.styleFrom(side: BorderSide.none),
+                          tooltip: 'admin.schedule.edit_details'.tr(),
+                          onPressed: () => _editDetails(context, value, session),
+                          icon: const Icon(Icons.edit_outlined, size: 16),
+                        ),
+                      ],
                     ),
                     StatusChip(label: status.$1, tone: status.$2),
                     if (past)

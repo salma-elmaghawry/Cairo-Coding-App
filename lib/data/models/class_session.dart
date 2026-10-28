@@ -11,6 +11,8 @@ class ClassSession extends Equatable {
     this.number,
     this.status = SessionStatus.scheduled,
     this.meetingLinkOverride,
+    this.topic = '',
+    this.instructor = '',
   });
 
   factory ClassSession.fromMap(String id, Map<String, dynamic> map) => ClassSession(
@@ -21,6 +23,8 @@ class ClassSession extends Equatable {
     durationMin: map['durationMin'] as int,
     status: SessionStatus.values.asNameMap()[map['status']] ?? SessionStatus.scheduled,
     meetingLinkOverride: map['meetingLinkOverride'] as String?,
+    topic: map['topic'] as String? ?? '',
+    instructor: map['instructor'] as String? ?? '',
   );
 
   final String id;
@@ -30,6 +34,8 @@ class ClassSession extends Equatable {
   final int durationMin;
   final SessionStatus status;
   final String? meetingLinkOverride;
+  final String topic;
+  final String instructor;
 
   DateTime get endsAt => startsAt.add(Duration(minutes: durationMin));
 
@@ -44,9 +50,11 @@ class ClassSession extends Equatable {
     'durationMin': durationMin,
     'status': status.name,
     'meetingLinkOverride': meetingLinkOverride,
+    'topic': topic,
+    'instructor': instructor,
   };
 
-  ClassSession copyWith({String? id, DateTime? startsAt, SessionStatus? status}) {
+  ClassSession copyWith({String? id, DateTime? startsAt, SessionStatus? status, String? topic, String? instructor}) {
     return ClassSession(
       id: id ?? this.id,
       groupId: groupId,
@@ -55,9 +63,21 @@ class ClassSession extends Equatable {
       durationMin: durationMin,
       status: status ?? this.status,
       meetingLinkOverride: meetingLinkOverride,
+      topic: topic ?? this.topic,
+      instructor: instructor ?? this.instructor,
     );
   }
 
   @override
-  List<Object?> get props => [id, groupId, number, startsAt, durationMin, status, meetingLinkOverride];
+  List<Object?> get props => [
+    id,
+    groupId,
+    number,
+    startsAt,
+    durationMin,
+    status,
+    meetingLinkOverride,
+    topic,
+    instructor,
+  ];
 }

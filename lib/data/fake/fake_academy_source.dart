@@ -1,6 +1,7 @@
 import 'package:cairo_coding_app/data/fake/fake_academy_store.dart';
 import 'package:cairo_coding_app/data/models/academy_group.dart';
 import 'package:cairo_coding_app/data/models/class_session.dart';
+import 'package:cairo_coding_app/data/models/instructor.dart';
 import 'package:cairo_coding_app/data/models/recording.dart';
 import 'package:cairo_coding_app/data/models/student.dart';
 import 'package:cairo_coding_app/data/sources/academy_source.dart';
@@ -119,4 +120,17 @@ class FakeAcademySource implements AcademySource {
     if (student == null) return;
     _store.students[uid] = student.copyWith(active: active);
   });
+
+  @override
+  Stream<List<Instructor>> watchInstructors() => _store.watch(() => _store.instructors.values.toList());
+
+  @override
+  Future<Instructor> saveInstructor(Instructor instructor) => _write(() {
+    final saved = instructor.id.isEmpty ? instructor.copyWith(id: _store.newId('instructor')) : instructor;
+    _store.instructors[saved.id] = saved;
+    return saved;
+  });
+
+  @override
+  Future<void> deleteInstructor(String id) => _write(() => _store.instructors.remove(id));
 }

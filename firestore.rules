@@ -37,6 +37,13 @@ service cloud.firestore {
       allow delete: if false;
     }
 
+    match /instructors/{instructorId} {
+      allow read, delete: if isAdmin();
+      allow create, update: if isAdmin()
+        && request.resource.data.keys().hasOnly(['name'])
+        && request.resource.data.name is string;
+    }
+
     match /groups/{groupId} {
       allow read: if isAdmin() || isActiveMemberOf(groupId);
       allow write: if isAdmin();

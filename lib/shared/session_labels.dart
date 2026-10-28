@@ -5,6 +5,12 @@ import 'package:easy_localization/easy_localization.dart';
 extension SessionLabels on ClassSession {
   String get title => number == null ? 'session.extra_title'.tr() : 'session.title'.tr(args: ['$number']);
 
+  /// "Operators by Eng. Salma", or whichever half is set; empty when neither is.
+  String get topicLine => [
+    if (topic.isNotEmpty) topic,
+    if (instructor.isNotEmpty) (topic.isEmpty ? 'session.with' : 'session.by').tr(args: [instructor]),
+  ].join(' ');
+
   String get durationLabel {
     final hours = durationMin ~/ 60;
     final minutes = durationMin % 60;

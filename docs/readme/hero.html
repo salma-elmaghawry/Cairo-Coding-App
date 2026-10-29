@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Cairo Coding README Hero</title>
+<style>
+  @font-face { font-family: Nunito; font-weight: 400; src: url(../../assets/fonts/Nunito-Regular.ttf); }
+  @font-face { font-family: Nunito; font-weight: 600; src: url(../../assets/fonts/Nunito-SemiBold.ttf); }
+  @font-face { font-family: Nunito; font-weight: 700; src: url(../../assets/fonts/Nunito-Bold.ttf); }
+  @font-face { font-family: Nunito; font-weight: 800; src: url(../../assets/fonts/Nunito-ExtraBold.ttf); }
+  @font-face { font-family: 'JetBrains Mono'; font-weight: 500; src: url(../../assets/fonts/JetBrainsMono-Medium.ttf); }
+  @font-face { font-family: 'JetBrains Mono'; font-weight: 700; src: url(../../assets/fonts/JetBrainsMono-Bold.ttf); }
+
+  :root {
+    --bg: #1b0f26;
+    --surface: #2c1a40;
+    --border: rgba(192,132,252,.22);
+    --text: #F2ECFA;
+    --text-2: #C9BEDD;
+    --muted: rgba(242,236,250,.6);
+    --lilac: #c084fc;
+    --gold: #facc15;
+    --deep: #120a1a;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 1920px; height: 1080px; overflow: hidden; }
+  body {
+    position: relative;
+    background: var(--bg);
+    color: var(--text);
+    font-family: Nunito, sans-serif;
+  }
+
+  /* Background: dot grid + two soft glows behind the devices. */
+  .bg { position: absolute; inset: 0; pointer-events: none; }
+  .bg::before {
+    content: ''; position: absolute; inset: 0;
+    background-image: radial-gradient(rgba(192,132,252,.13) 1.2px, transparent 1.2px);
+    background-size: 28px 28px;
+    mask-image: linear-gradient(180deg, transparent 0%, #000 35%, #000 70%, transparent 100%);
+  }
+  .glow { position: absolute; border-radius: 50%; filter: blur(90px); }
+  .glow.a { width: 900px; height: 560px; left: 160px; top: 380px; background: rgba(124,58,237,.38); }
+  .glow.b { width: 700px; height: 600px; left: 1160px; top: 320px; background: rgba(192,132,252,.26); }
+
+  .mono { font-family: 'JetBrains Mono', monospace; }
+
+  /* Header */
+  .eyebrow { position: absolute; left: 80px; top: 64px; font-size: 22px; font-weight: 500; color: var(--lilac); letter-spacing: .01em; }
+  .headline { position: absolute; left: 80px; top: 100px; font-size: 80px; font-weight: 800; line-height: 1; letter-spacing: -.015em; }
+  .headline span { color: var(--lilac); }
+  .sub { position: absolute; left: 80px; top: 204px; width: 1100px; font-size: 23px; line-height: 1.4; color: var(--text-2); }
+  .sub b { color: var(--text); font-weight: 700; }
+  .live { color: var(--gold); font-weight: 700; white-space: nowrap; }
+  .live::before { content: ''; display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: var(--gold); margin: 0 8px 3px 2px; box-shadow: 0 0 12px rgba(250,204,21,.8); }
+
+  .wordmark { position: absolute; right: 80px; top: 62px; text-align: left; font-weight: 800; text-transform: uppercase; line-height: .98; letter-spacing: -.01em; font-size: 44px; }
+
+  .stack { position: absolute; right: 80px; top: 214px; display: flex; gap: 10px; }
+  .chip { font-family: 'JetBrains Mono', monospace; font-size: 16px; font-weight: 500; color: var(--lilac); background: rgba(44,26,64,.7); border: 1px solid var(--border); border-radius: 999px; padding: 7px 14px; }
+
+  /* Browser window */
+  .browser {
+    position: absolute; left: 80px; top: 312px; width: 980px;
+    border-radius: 16px; overflow: hidden;
+    background: var(--surface); border: 1px solid rgba(192,132,252,.35);
+    box-shadow: 0 40px 90px rgba(0,0,0,.55), 0 0 0 6px rgba(192,132,252,.05);
+  }
+  .bar { height: 44px; display: flex; align-items: center; gap: 8px; padding: 0 18px; border-bottom: 1px solid var(--border); }
+  .dot { width: 12px; height: 12px; border-radius: 50%; background: rgba(242,236,250,.22); }
+  .url { margin-left: 18px; flex: 0 0 auto; width: 560px; height: 26px; border-radius: 8px; background: var(--deep); border: 1px solid var(--border); display: flex; align-items: center; padding: 0 12px; font-size: 13px; color: var(--muted); }
+  .url b { color: var(--text-2); font-weight: 500; }
+  .browser img { display: block; width: 980px; height: 612.5px; }
+
+  /* Phones */
+  .phone {
+    position: absolute; padding: 9px; border-radius: 40px;
+    background: #0d0713; border: 1px solid rgba(192,132,252,.35);
+    box-shadow: 0 34px 70px rgba(0,0,0,.6);
+  }
+  .phone img { display: block; border-radius: 31px; }
+  .p1 { left: 1100px; top: 380px; }
+  .p1 img { width: 226px; height: 503px; }
+  .p2 { left: 1330px; top: 340px; z-index: 2; }
+  .p2 img { width: 262px; height: 583px; }
+  .p3 { left: 1596px; top: 380px; }
+  .p3 img { width: 226px; height: 503px; }
+
+  /* Bottom labels */
+  .label { position: absolute; top: 1000px; }
+  .label .k { font-family: 'JetBrains Mono', monospace; font-size: 17px; font-weight: 700; letter-spacing: .08em; color: var(--lilac); text-transform: uppercase; }
+  .label .k em { font-style: normal; color: var(--muted); font-weight: 500; letter-spacing: .02em; text-transform: none; }
+  .label .v { margin-top: 6px; font-size: 20px; color: var(--text-2); }
+  .label.admin { left: 80px; }
+  .label.student { left: 1100px; }
+</style>
+</head>
+<body>
+  <div class="bg"><div class="glow a"></div><div class="glow b"></div></div>
+
+  <div class="eyebrow mono">// cairo coding · admin dashboard + student app</div>
+  <div class="headline">Two apps. <span>One codebase.</span></div>
+  <div class="sub">
+    A <b>Flutter Web dashboard</b> where the school runs its courses, groups and students, and a <b>mobile app</b>
+    where students follow their course. Changes on the dashboard reach every student's phone in <span class="live">real time</span>
+  </div>
+
+  <div class="wordmark">CAIRO;<br>CODING<br>SCHOOL</div>
+  <div class="stack">
+    <span class="chip">Flutter</span>
+    <span class="chip">Riverpod</span>
+    <span class="chip">go_router</span>
+    <span class="chip">Firebase</span>
+  </div>
+
+  <div class="browser">
+    <div class="bar">
+      <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+      <div class="url mono"><b>cairo-coding-app.web.app</b>/#/groups/cs140/schedule</div>
+    </div>
+    <img src="screens/schedule.png" alt="">
+  </div>
+
+  <div class="phone p1"><img src="../../store/screenshots/raw/en/02.png" alt=""></div>
+  <div class="phone p2"><img src="../../store/screenshots/raw/en/01.png" alt=""></div>
+  <div class="phone p3"><img src="../../store/screenshots/raw/en/05.png" alt=""></div>
+
+  <div class="label admin">
+    <div class="k">Admin dashboard <em>· Flutter Web</em></div>
+    <div class="v">Courses &amp; session plans · Groups &amp; students · Named sessions · Instructors · Recordings</div>
+  </div>
+  <div class="label student">
+    <div class="k">Student app <em>· Android &amp; iOS</em></div>
+    <div class="v">Countdown &amp; one-tap join · Schedule · Recordings · AR/EN · Dark mode</div>
+  </div>
+</body>
+</html>

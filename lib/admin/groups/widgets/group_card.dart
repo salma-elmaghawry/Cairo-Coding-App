@@ -2,10 +2,11 @@ import 'package:cairo_coding_app/admin/admin_providers.dart';
 import 'package:cairo_coding_app/admin/admin_routes.dart';
 import 'package:cairo_coding_app/admin/groups/widgets/group_form_dialog.dart';
 import 'package:cairo_coding_app/admin/widgets/slot_labels.dart';
+import 'package:cairo_coding_app/core/error_handling/result.dart';
+import 'package:cairo_coding_app/core/helpers/bidi.dart';
 import 'package:cairo_coding_app/core/helpers/date_formats.dart';
 import 'package:cairo_coding_app/core/helpers/spacing.dart';
 import 'package:cairo_coding_app/core/helpers/ui_helpers.dart';
-import 'package:cairo_coding_app/core/error_handling/result.dart';
 import 'package:cairo_coding_app/core/utils/app_text_styles.dart';
 import 'package:cairo_coding_app/core/widgets/app_card.dart';
 import 'package:cairo_coding_app/data/data_providers.dart';
@@ -54,7 +55,7 @@ class GroupCard extends ConsumerWidget {
                   children: [
                     Text(group.name, style: AppTextStyles.monoFont20Bold.copyWith(color: colorScheme.primary)),
                     Text(
-                      course?.name ?? 'admin.groups.no_course'.tr(),
+                      course == null ? 'admin.groups.no_course'.tr() : context.bidi(course.name),
                       style: course == null ? AppTextStyles.font16Bold.secondary(context) : AppTextStyles.font16Bold,
                     ),
                   ],

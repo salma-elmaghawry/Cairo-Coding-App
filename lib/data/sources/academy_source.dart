@@ -14,6 +14,8 @@ abstract class AcademySource {
 
   Stream<List<Student>> watchStudents(String groupId);
 
+  Stream<List<Student>> watchAllStudents();
+
   Future<List<ClassSession>> getSessions(String groupId);
 
   Future<List<ClassSession>> getSessionsBetween(List<String> groupIds, DateTime from, DateTime until);

@@ -1,5 +1,6 @@
 import 'package:cairo_coding_app/admin/admin_providers.dart';
 import 'package:cairo_coding_app/core/error_handling/result.dart';
+import 'package:cairo_coding_app/core/helpers/bidi.dart';
 import 'package:cairo_coding_app/core/helpers/date_formats.dart';
 import 'package:cairo_coding_app/core/helpers/pickers.dart';
 import 'package:cairo_coding_app/core/helpers/spacing.dart';
@@ -183,6 +184,7 @@ class _SessionFormDialogState extends ConsumerState<SessionFormDialog> {
                       DropdownMenuEntry(
                         value: title,
                         label: title,
+                        labelWidget: Text(context.bidi(title)),
                         leadingIcon: Text(
                           '${index + 1}'.padLeft(2, '0'),
                           style: AppTextStyles.monoFont12Medium.copyWith(color: colorScheme.primary),

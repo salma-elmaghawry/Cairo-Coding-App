@@ -4,6 +4,7 @@ import 'package:cairo_coding_app/admin/instructors/widgets/add_instructor_panel.
 import 'package:cairo_coding_app/admin/widgets/admin_page.dart';
 import 'package:cairo_coding_app/admin/widgets/two_pane.dart';
 import 'package:cairo_coding_app/core/error_handling/result.dart';
+import 'package:cairo_coding_app/core/helpers/bidi.dart';
 import 'package:cairo_coding_app/core/helpers/ui_helpers.dart';
 import 'package:cairo_coding_app/core/utils/app_text_styles.dart';
 import 'package:cairo_coding_app/core/widgets/app_data_table.dart';
@@ -67,7 +68,7 @@ class InstructorsScreen extends ConsumerWidget {
                         children: [
                           for (final course in teaches)
                             ActionChip(
-                              label: Text(course.name),
+                              label: Text(context.bidi(course.name)),
                               onPressed: () => context.go(AdminRoutes.course(course.id, CourseTab.instructors)),
                             ),
                         ],

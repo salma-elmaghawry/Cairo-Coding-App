@@ -1,4 +1,5 @@
 import 'package:cairo_coding_app/admin/courses/widgets/course_form_dialog.dart';
+import 'package:cairo_coding_app/core/helpers/bidi.dart';
 import 'package:cairo_coding_app/core/helpers/spacing.dart';
 import 'package:cairo_coding_app/core/utils/app_text_styles.dart';
 import 'package:cairo_coding_app/core/widgets/app_data_table.dart';
@@ -45,7 +46,7 @@ class CourseSessionsTab extends StatelessWidget {
                     '${index + 1}'.padLeft(2, '0'),
                     style: AppTextStyles.monoFont14Bold.copyWith(color: colorScheme.primary),
                   ),
-                  Text(title, style: AppTextStyles.font14SemiBold),
+                  Text(context.bidi(title), style: AppTextStyles.font14SemiBold),
                 ],
             ],
           ),

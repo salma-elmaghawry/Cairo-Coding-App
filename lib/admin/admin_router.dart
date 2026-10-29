@@ -5,6 +5,7 @@ import 'package:cairo_coding_app/admin/group_detail/group_detail_screen.dart';
 import 'package:cairo_coding_app/admin/groups/groups_screen.dart';
 import 'package:cairo_coding_app/admin/instructors/instructors_screen.dart';
 import 'package:cairo_coding_app/admin/settings/admin_settings_screen.dart';
+import 'package:cairo_coding_app/admin/students/students_screen.dart';
 import 'package:cairo_coding_app/admin/shell/admin_scaffold.dart';
 import 'package:cairo_coding_app/core/widgets/not_found_screen.dart';
 import 'package:cairo_coding_app/shared/auth/blocked_screen.dart';
@@ -85,6 +86,7 @@ final adminRouterProvider = Provider<GoRouter>((ref) {
               ),
             ],
           ),
+          GoRoute(path: AdminRoutes.students, pageBuilder: (_, _) => page(const StudentsScreen())),
           GoRoute(path: AdminRoutes.instructors, pageBuilder: (_, _) => page(const InstructorsScreen())),
           GoRoute(path: AdminRoutes.settings, pageBuilder: (_, _) => page(const AdminSettingsScreen())),
         ],

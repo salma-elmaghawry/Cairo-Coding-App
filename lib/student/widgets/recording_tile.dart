@@ -1,3 +1,4 @@
+import 'package:cairo_coding_app/core/helpers/bidi.dart';
 import 'package:cairo_coding_app/core/helpers/date_formats.dart';
 import 'package:cairo_coding_app/core/helpers/link_launcher.dart';
 import 'package:cairo_coding_app/core/helpers/spacing.dart';
@@ -41,7 +42,7 @@ class RecordingTile extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(recording.title, style: AppTextStyles.font16Bold),
+                  Text(context.bidi(recording.title), style: AppTextStyles.font16Bold),
                   verticalSpace(2),
                   Text(meta, style: AppTextStyles.font14Normal.secondary(context)),
                 ],

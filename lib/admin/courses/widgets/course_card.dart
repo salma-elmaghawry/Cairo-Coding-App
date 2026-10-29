@@ -2,6 +2,7 @@ import 'package:cairo_coding_app/admin/admin_providers.dart';
 import 'package:cairo_coding_app/admin/admin_routes.dart';
 import 'package:cairo_coding_app/admin/courses/widgets/course_actions.dart';
 import 'package:cairo_coding_app/admin/courses/widgets/course_form_dialog.dart';
+import 'package:cairo_coding_app/core/helpers/bidi.dart';
 import 'package:cairo_coding_app/core/helpers/spacing.dart';
 import 'package:cairo_coding_app/core/utils/app_text_styles.dart';
 import 'package:cairo_coding_app/core/widgets/app_card.dart';
@@ -34,7 +35,10 @@ class CourseCard extends ConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Expanded(
-                child: Text(course.name, style: AppTextStyles.monoFont20Bold.copyWith(color: colorScheme.primary)),
+                child: Text(
+                  context.bidi(course.name),
+                  style: AppTextStyles.monoFont20Bold.copyWith(color: colorScheme.primary),
+                ),
               ),
               PopupMenuButton<_CourseAction>(
                 tooltip: 'admin.courses.actions'.tr(),

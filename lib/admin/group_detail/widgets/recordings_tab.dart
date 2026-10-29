@@ -2,6 +2,7 @@ import 'package:cairo_coding_app/admin/admin_providers.dart';
 import 'package:cairo_coding_app/admin/group_detail/widgets/recording_form.dart';
 import 'package:cairo_coding_app/admin/widgets/two_pane.dart';
 import 'package:cairo_coding_app/core/error_handling/result.dart';
+import 'package:cairo_coding_app/core/helpers/bidi.dart';
 import 'package:cairo_coding_app/core/helpers/date_formats.dart';
 import 'package:cairo_coding_app/core/helpers/link_launcher.dart';
 import 'package:cairo_coding_app/core/helpers/ui_helpers.dart';
@@ -71,7 +72,7 @@ class _RecordingsTabState extends ConsumerState<RecordingsTab> {
                 '${recording.sessionNumber}'.padLeft(2, '0'),
                 style: AppTextStyles.monoFont14Bold.copyWith(color: colorScheme.primary),
               ),
-              Text(recording.title, style: AppTextStyles.font14Bold),
+              Text(context.bidi(recording.title), style: AppTextStyles.font14Bold),
               Text(context.shortDay(recording.recordedAt), style: AppTextStyles.font14Normal.secondary(context)),
               TextButton.icon(
                 onPressed: () => openExternalLink(recording.url),

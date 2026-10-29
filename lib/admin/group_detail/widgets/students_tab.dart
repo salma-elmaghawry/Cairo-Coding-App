@@ -1,5 +1,6 @@
 import 'package:cairo_coding_app/admin/admin_providers.dart';
 import 'package:cairo_coding_app/admin/group_detail/widgets/add_students_panel.dart';
+import 'package:cairo_coding_app/admin/widgets/student_actions.dart';
 import 'package:cairo_coding_app/admin/widgets/two_pane.dart';
 import 'package:cairo_coding_app/core/error_handling/result.dart';
 import 'package:cairo_coding_app/core/helpers/ui_helpers.dart';
@@ -34,28 +35,9 @@ class StudentsTab extends ConsumerWidget {
     if (result case Err(:final failure)) showAppSnackBar(context, failure.message, isError: true);
   }
 
-  Future<void> _toggleActive(BuildContext context, WidgetRef ref, Student student) async {
-    if (student.active) {
-      final confirmed = await showConfirmDialog(
-        context,
-        title: 'admin.students.deactivate_title'.tr(),
-        message: 'admin.students.deactivate_message'.tr(args: [student.name]),
-        confirmLabel: 'admin.students.deactivate'.tr(),
-        cancelLabel: 'common.cancel'.tr(),
-        destructive: true,
-      );
-      if (!confirmed) return;
-    }
-    final result = await ref.read(academyRepositoryProvider).setStudentActive(student.uid, !student.active);
-    if (!context.mounted) return;
-    if (result case Err(:final failure)) showAppSnackBar(context, failure.message, isError: true);
-  }
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final students = ref.watch(groupStudentsProvider(group.id));
-    final colorScheme = Theme.of(context).colorScheme;
-
     final table = switch (students) {
       AsyncError(:final error) => ErrorView(message: error.toString()),
       AsyncData(:final value) when value.isEmpty => EmptyView(
@@ -89,14 +71,7 @@ class StudentsTab extends ConsumerWidget {
                     icon: const Icon(Icons.person_remove_outlined, size: 18),
                   ),
                   const SizedBox(width: 6),
-                  IconButton(
-                    tooltip: (student.active ? 'admin.students.deactivate' : 'admin.students.activate').tr(),
-                    style: IconButton.styleFrom(
-                      foregroundColor: student.active ? colorScheme.error : colorScheme.primary,
-                    ),
-                    onPressed: () => _toggleActive(context, ref, student),
-                    icon: Icon(student.active ? Icons.block_rounded : Icons.check_circle_outline_rounded, size: 18),
-                  ),
+                  StudentActiveButton(student: student),
                 ],
               ),
             ],

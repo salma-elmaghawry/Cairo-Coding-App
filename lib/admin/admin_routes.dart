@@ -5,6 +5,7 @@ enum GroupTab { students, schedule, recordings }
 class AdminRoutes {
   static const String courses = '/courses';
   static const String groups = '/groups';
+  static const String students = '/students';
   static const String instructors = '/instructors';
   static const String settings = '/settings';
 

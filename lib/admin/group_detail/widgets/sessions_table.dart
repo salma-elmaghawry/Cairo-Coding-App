@@ -1,6 +1,7 @@
 import 'package:cairo_coding_app/admin/admin_providers.dart';
 import 'package:cairo_coding_app/admin/group_detail/widgets/session_form_dialog.dart';
 import 'package:cairo_coding_app/core/error_handling/result.dart';
+import 'package:cairo_coding_app/core/helpers/bidi.dart';
 import 'package:cairo_coding_app/core/helpers/date_formats.dart';
 import 'package:cairo_coding_app/core/helpers/pickers.dart';
 import 'package:cairo_coding_app/core/helpers/spacing.dart';
@@ -150,7 +151,7 @@ class SessionsTable extends ConsumerWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                session.topic.isEmpty ? '—' : session.topic,
+                                session.topic.isEmpty ? '—' : context.bidi(session.topic),
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                                 style: AppTextStyles.font14SemiBold,

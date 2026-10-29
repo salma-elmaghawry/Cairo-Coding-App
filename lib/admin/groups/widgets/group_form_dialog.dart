@@ -1,5 +1,6 @@
 import 'package:cairo_coding_app/admin/admin_providers.dart';
 import 'package:cairo_coding_app/core/error_handling/result.dart';
+import 'package:cairo_coding_app/core/helpers/bidi.dart';
 import 'package:cairo_coding_app/core/helpers/date_formats.dart';
 import 'package:cairo_coding_app/core/helpers/pickers.dart';
 import 'package:cairo_coding_app/core/helpers/spacing.dart';
@@ -124,7 +125,7 @@ class _GroupFormDialogState extends ConsumerState<GroupFormDialog> {
                         for (final course in courses)
                           DropdownMenuItem(
                             value: course.id,
-                            child: Text(course.name, overflow: TextOverflow.ellipsis),
+                            child: Text(context.bidi(course.name), overflow: TextOverflow.ellipsis),
                           ),
                       ],
                       validator: _required,

@@ -54,6 +54,49 @@ final groupCountsProvider = Provider<({int active, int archived})>((ref) {
   return (active: groups.length - archived, archived: archived);
 });
 
+final allStudentsProvider = StreamProvider.autoDispose<List<Student>>(
+  (ref) => ref.watch(academyRepositoryProvider).watchAllStudents(),
+);
+
+class StudentsView {
+  const StudentsView({this.query = '', this.courseId});
+
+  final String query;
+
+  /// Only students in this course's groups; null shows everyone.
+  final String? courseId;
+}
+
+final studentsViewProvider = NotifierProvider<StudentsViewNotifier, StudentsView>(StudentsViewNotifier.new);
+
+class StudentsViewNotifier extends Notifier<StudentsView> {
+  @override
+  StudentsView build() => const StudentsView();
+
+  void search(String query) => state = StudentsView(query: query.trim().toLowerCase(), courseId: state.courseId);
+
+  void filterCourse(String? courseId) => state = StudentsView(query: state.query, courseId: courseId);
+}
+
+final visibleStudentsProvider = Provider.autoDispose<AsyncValue<List<Student>>>((ref) {
+  final view = ref.watch(studentsViewProvider);
+  final courseGroupIds = {
+    for (final group in ref.watch(adminGroupsProvider).value ?? const <AcademyGroup>[])
+      if (group.courseId == view.courseId) group.id,
+  };
+  // Phones are typed with spaces, so "0101234" should still find "010 1234 4821".
+  bool matches(Student s) =>
+      '${s.name} ${s.email} ${s.phone} ${s.phone.replaceAll(' ', '')}'.toLowerCase().contains(view.query);
+  return ref
+      .watch(allStudentsProvider)
+      .whenData(
+        (students) => students
+            .where((s) => view.courseId == null || s.groupIds.any(courseGroupIds.contains))
+            .where((s) => view.query.isEmpty || matches(s))
+            .toList(),
+      );
+});
+
 final groupProvider = Provider.family<AsyncValue<AcademyGroup?>, String>(
   (ref, groupId) =>
       ref.watch(adminGroupsProvider).whenData((groups) => groups.where((g) => g.id == groupId).firstOrNull),

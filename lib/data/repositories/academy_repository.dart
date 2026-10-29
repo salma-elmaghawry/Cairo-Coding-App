@@ -33,6 +33,10 @@ class AcademyRepository {
     _source.watchStudents(groupId).map((list) => [...list]..sort((a, b) => a.name.compareTo(b.name))),
   );
 
+  Stream<List<Student>> watchAllStudents() => ErrorMapper.mapStream(
+    _source.watchAllStudents().map((list) => [...list]..sort((a, b) => a.name.compareTo(b.name))),
+  );
+
   /// Students of several groups, each listed once.
   Stream<List<Student>> watchStudentsOf(List<String> groupIds) => ErrorMapper.mapStream(
     combineLatestLists([for (final groupId in groupIds) _source.watchStudents(groupId)]).map(

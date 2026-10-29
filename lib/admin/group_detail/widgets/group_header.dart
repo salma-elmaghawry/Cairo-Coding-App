@@ -2,6 +2,7 @@ import 'package:cairo_coding_app/admin/admin_providers.dart';
 import 'package:cairo_coding_app/admin/admin_routes.dart';
 import 'package:cairo_coding_app/admin/groups/widgets/group_form_dialog.dart';
 import 'package:cairo_coding_app/core/error_handling/result.dart';
+import 'package:cairo_coding_app/core/helpers/bidi.dart';
 import 'package:cairo_coding_app/core/helpers/date_formats.dart';
 import 'package:cairo_coding_app/core/helpers/spacing.dart';
 import 'package:cairo_coding_app/core/helpers/ui_helpers.dart';
@@ -41,7 +42,10 @@ class GroupHeader extends ConsumerWidget {
             else ...[
               TextButton(onPressed: () => context.go(AdminRoutes.courses), child: Text('admin.nav.courses'.tr())),
               slash,
-              TextButton(onPressed: () => context.go(AdminRoutes.course(course.id)), child: Text(course.name)),
+              TextButton(
+                onPressed: () => context.go(AdminRoutes.course(course.id)),
+                child: Text(context.bidi(course.name)),
+              ),
             ],
             slash,
             horizontalSpace(8),
@@ -65,7 +69,7 @@ class GroupHeader extends ConsumerWidget {
                   children: [
                     Text(group.name, style: AppTextStyles.monoFont28Bold.copyWith(color: colorScheme.primary)),
                     Text(
-                      course?.name ?? 'admin.groups.no_course'.tr(),
+                      course == null ? 'admin.groups.no_course'.tr() : context.bidi(course.name),
                       style: course == null
                           ? AppTextStyles.font24ExtraBold.secondary(context)
                           : AppTextStyles.font24ExtraBold,

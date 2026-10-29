@@ -38,6 +38,9 @@ class FakeAcademySource implements AcademySource {
       _store.watch(() => _store.students.values.where((s) => s.groupIds.contains(groupId)).toList());
 
   @override
+  Stream<List<Student>> watchAllStudents() => _store.watch(() => _store.students.values.toList());
+
+  @override
   Future<List<ClassSession>> getSessions(String groupId) async {
     await _latency();
     return _store.sessions.values.where((s) => s.groupId == groupId).toList();

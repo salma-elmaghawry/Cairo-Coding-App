@@ -39,6 +39,7 @@ class AdminSidebar extends ConsumerWidget {
             for (final (route, icon, label) in [
               (AdminRoutes.courses, Icons.menu_book_outlined, 'admin.nav.courses'),
               (AdminRoutes.groups, Icons.groups_outlined, 'admin.nav.groups'),
+              (AdminRoutes.students, Icons.school_outlined, 'admin.nav.students'),
               (AdminRoutes.instructors, Icons.co_present_outlined, 'admin.nav.instructors'),
               (AdminRoutes.settings, Icons.tune_outlined, 'admin.nav.settings'),
             ]) ...[

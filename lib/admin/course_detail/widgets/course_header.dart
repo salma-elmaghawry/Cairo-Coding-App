@@ -2,6 +2,7 @@ import 'package:cairo_coding_app/admin/admin_providers.dart';
 import 'package:cairo_coding_app/admin/admin_routes.dart';
 import 'package:cairo_coding_app/admin/courses/widgets/course_actions.dart';
 import 'package:cairo_coding_app/admin/courses/widgets/course_form_dialog.dart';
+import 'package:cairo_coding_app/core/helpers/bidi.dart';
 import 'package:cairo_coding_app/core/helpers/spacing.dart';
 import 'package:cairo_coding_app/core/utils/app_text_styles.dart';
 import 'package:cairo_coding_app/data/models/course.dart';
@@ -28,7 +29,7 @@ class CourseHeader extends ConsumerWidget {
             TextButton(onPressed: () => context.go(AdminRoutes.courses), child: Text('admin.nav.courses'.tr())),
             Text('/', style: AppTextStyles.font14Normal.secondary(context)),
             horizontalSpace(8),
-            Text(course.name, style: AppTextStyles.font14Normal.secondary(context)),
+            Text(context.bidi(course.name), style: AppTextStyles.font14Normal.secondary(context)),
           ],
         ),
         verticalSpace(8),
@@ -42,7 +43,10 @@ class CourseHeader extends ConsumerWidget {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(course.name, style: AppTextStyles.monoFont28Bold.copyWith(color: colorScheme.primary)),
+                Text(
+                  context.bidi(course.name),
+                  style: AppTextStyles.monoFont28Bold.copyWith(color: colorScheme.primary),
+                ),
                 verticalSpace(6),
                 Text(
                   [

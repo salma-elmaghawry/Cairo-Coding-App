@@ -60,6 +60,9 @@ class FirestoreAcademySource implements AcademySource {
       _users.where('groupIds', arrayContains: groupId).snapshots().map((s) => _map(s, Student.fromMap));
 
   @override
+  Stream<List<Student>> watchAllStudents() => _users.snapshots().map((s) => _map(s, Student.fromMap));
+
+  @override
   Future<List<ClassSession>> getSessions(String groupId) async =>
       _map(await _sessionsOf(groupId).get(), ClassSession.fromMap);
 

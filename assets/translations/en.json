@@ -7,7 +7,8 @@
     "retry": "Retry",
     "save": "Save",
     "add": "Add",
-    "delete": "Delete"
+    "delete": "Delete",
+    "close": "Close"
   },
   "validation": {
     "required": "This field is required"
@@ -158,6 +159,7 @@
     "nav": {
       "courses": "Courses",
       "groups": "Groups",
+      "students": "Students",
       "instructors": "Instructors",
       "settings": "Settings"
     },
@@ -272,6 +274,22 @@
       "add_all": "Add all",
       "added": "{} new accounts created, {} existing students added",
       "skipped": "Couldn't add (account exists without a profile, contact support): {}"
+    },
+    "students_page": {
+      "eyebrow": "dashboard",
+      "title": "Students",
+      "search": "Search by name, email or phone",
+      "all_courses": "All courses",
+      "count": {
+        "zero": "No students",
+        "one": "1 student",
+        "other": "{} students"
+      },
+      "empty": "No students match",
+      "no_group": "No group",
+      "add_title": "Add students",
+      "add_hint": "Pick the group they join, then add one student or paste a list of emails.",
+      "pick_group": "Group"
     },
     "schedule": {
       "slots_title": "Weekly slots",

@@ -42,6 +42,9 @@ abstract class AcademySource {
 
   Future<void> deleteInstructor(String id);
 
+  /// Puts [to] on every session that names [from] as its instructor.
+  Future<void> renameSessionInstructor(String from, String to);
+
   Stream<List<Course>> watchCourses();
 
   Future<Course> saveCourse(Course course);

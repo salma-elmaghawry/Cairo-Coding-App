@@ -137,4 +137,32 @@ void main() {
     await repository.deleteInstructor(amira);
     expect((await repository.watchInstructors().first).map((i) => i.name), isNot(contains('Eng. Amira Hassan')));
   });
+
+  test('editing an instructor updates their courses, groups and the name on their sessions', () async {
+    final store = FakeAcademyStore(now: DateTime(2026, 10, 28, 12));
+    final repository = AcademyRepository(FakeAcademySource(store));
+    final youssef = store.instructors['instructor_youssef']!;
+    final named = store.sessions.values.where((s) => s.instructor == youssef.name).map((s) => s.id).toList();
+    expect(named, isNotEmpty);
+
+    await repository.updateInstructor(
+      youssef,
+      youssef.copyWith(
+        name: ' Eng. Youssef Nabil Ali ',
+        email: ' Youssef.N@Example.com',
+        groupIds: ['workshop', 'cs150'],
+      ),
+      courses: await repository.watchCourses().first,
+      courseIds: {'cpp'},
+    );
+
+    final saved = store.instructors[youssef.id]!;
+    expect(saved.name, 'Eng. Youssef Nabil Ali');
+    expect(saved.email, 'youssef.n@example.com');
+    expect(saved.groupIds, ['workshop', 'cs150']);
+    expect(store.courses['cpp']!.instructorIds, ['instructor_salma', youssef.id]);
+    expect(store.courses['tools']!.instructorIds, isEmpty);
+    expect(named.map((id) => store.sessions[id]!.instructor).toSet(), {'Eng. Youssef Nabil Ali'});
+    expect(store.sessions.values.where((s) => s.instructor == 'Eng. Salma Elmaghawry'), isNotEmpty);
+  });
 }

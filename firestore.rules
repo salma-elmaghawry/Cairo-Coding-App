@@ -40,8 +40,10 @@ service cloud.firestore {
     match /instructors/{instructorId} {
       allow read, delete: if isAdmin();
       allow create, update: if isAdmin()
-        && request.resource.data.keys().hasOnly(['name'])
-        && request.resource.data.name is string;
+        && request.resource.data.keys().hasOnly(['name', 'email', 'groupIds'])
+        && request.resource.data.name is string
+        && request.resource.data.get('email', '') is string
+        && request.resource.data.get('groupIds', []) is list;
     }
 
     match /courses/{courseId} {

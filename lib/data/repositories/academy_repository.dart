@@ -59,8 +59,34 @@ class AcademyRepository {
     ),
   );
 
-  Future<Result<Instructor>> addInstructor(String name) =>
-      Result.guard(() => _source.saveInstructor(Instructor(id: '', name: name.trim())));
+  Future<Result<Instructor>> addInstructor(String name, {String email = ''}) => Result.guard(
+    () => _source.saveInstructor(Instructor(id: '', name: name.trim(), email: email.trim().toLowerCase())),
+  );
+
+  /// Saves [instructor] and adds them to or removes them from [courses] so they teach exactly [courseIds].
+  /// A new name replaces the old one on every session that carries it.
+  Future<Result<void>> updateInstructor(
+    Instructor previous,
+    Instructor instructor, {
+    required List<Course> courses,
+    required Set<String> courseIds,
+  }) => Result.guard(() async {
+    final saved = await _source.saveInstructor(
+      instructor.copyWith(name: instructor.name.trim(), email: instructor.email.trim().toLowerCase()),
+    );
+    for (final course in courses) {
+      final teaches = course.instructorIds.contains(saved.id);
+      if (teaches == courseIds.contains(course.id)) continue;
+      await _source.saveCourse(
+        course.copyWith(
+          instructorIds: teaches
+              ? course.instructorIds.where((id) => id != saved.id).toList()
+              : [...course.instructorIds, saved.id],
+        ),
+      );
+    }
+    if (saved.name != previous.name) await _source.renameSessionInstructor(previous.name, saved.name);
+  });
 
   Future<Result<void>> deleteInstructor(Instructor instructor) =>
       Result.guard(() => _source.deleteInstructor(instructor.id));

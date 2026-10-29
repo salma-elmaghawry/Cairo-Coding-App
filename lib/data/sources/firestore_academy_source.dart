@@ -187,6 +187,22 @@ class FirestoreAcademySource implements AcademySource {
   Future<void> deleteInstructor(String id) => _instructors.doc(id).delete();
 
   @override
+  Future<void> renameSessionInstructor(String from, String to) async {
+    final groups = await _groups.get();
+    final snapshots = await Future.wait([
+      for (final group in groups.docs) _sessionsOf(group.id).where('instructor', isEqualTo: from).get(),
+    ]);
+    final docs = [for (final snapshot in snapshots) ...snapshot.docs];
+    for (var i = 0; i < docs.length; i += 450) {
+      final batch = _db.batch();
+      for (final doc in docs.sublist(i, min(i + 450, docs.length))) {
+        batch.update(doc.reference, {'instructor': to, 'updatedAt': FieldValue.serverTimestamp()});
+      }
+      await batch.commit();
+    }
+  }
+
+  @override
   Stream<List<Course>> watchCourses() => _courses.snapshots().map((s) => _map(s, Course.fromMap));
 
   @override

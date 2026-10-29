@@ -74,8 +74,18 @@ class FakeAcademyStore {
     final today = DateTime(now.year, now.month, now.day);
     DateTime daysFrom(int days) => DateTime(today.year, today.month, today.day + days);
 
-    const salma = Instructor(id: 'instructor_salma', name: 'Eng. Salma Elmaghawry');
-    const youssef = Instructor(id: 'instructor_youssef', name: 'Eng. Youssef Nabil');
+    const salma = Instructor(
+      id: 'instructor_salma',
+      name: 'Eng. Salma Elmaghawry',
+      email: 'salma@example.com',
+      groupIds: ['cs140', 'cs150', 'cs120'],
+    );
+    const youssef = Instructor(
+      id: 'instructor_youssef',
+      name: 'Eng. Youssef Nabil',
+      email: 'youssef@example.com',
+      groupIds: ['workshop'],
+    );
     for (final instructor in [salma, youssef]) {
       instructors[instructor.id] = instructor;
     }

@@ -139,6 +139,13 @@ class FakeAcademySource implements AcademySource {
   Future<void> deleteInstructor(String id) => _write(() => _store.instructors.remove(id));
 
   @override
+  Future<void> renameSessionInstructor(String from, String to) => _write(() {
+    for (final session in _store.sessions.values.where((s) => s.instructor == from).toList()) {
+      _store.sessions[session.id] = session.copyWith(instructor: to);
+    }
+  });
+
+  @override
   Stream<List<Course>> watchCourses() => _store.watch(() => _store.courses.values.toList());
 
   @override

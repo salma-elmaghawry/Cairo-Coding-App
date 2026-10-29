@@ -349,7 +349,7 @@
     },
     "instructors": {
       "title": "Instructors",
-      "hint": "Add each instructor once, then add them to their courses.",
+      "hint": "Add each instructor once, then use Edit to pick their courses and groups.",
       "name": "Instructor name",
       "name_hint": "e.g. Eng. Salma Elmaghawry",
       "add": "Add instructor",
@@ -360,7 +360,24 @@
       "exists": "This instructor is already in the list",
       "eyebrow": "dashboard",
       "add_title": "New instructor",
-      "no_courses": "Not in a course yet"
+      "no_courses": "Not in a course yet",
+      "email": "Email",
+      "email_hint": "name@example.com",
+      "email_exists": "Another instructor already has this email",
+      "no_email": "No email yet",
+      "groups": "Groups",
+      "groups_count": {
+        "zero": "No groups yet",
+        "one": "1 group",
+        "other": "{} groups"
+      },
+      "edit": "Edit instructor",
+      "edit_title": "Edit instructor",
+      "rename_note": "A new name also replaces the old one on their sessions.",
+      "courses_label": "Courses they teach",
+      "groups_label": "Groups they teach",
+      "no_active_groups": "No active groups yet",
+      "saved": "Instructor saved"
     }
   }
 }

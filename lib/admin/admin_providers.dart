@@ -152,9 +152,17 @@ final courseInstructorsProvider = Provider.family<List<Instructor>, String>((ref
   return (ref.watch(instructorsProvider).value ?? const []).where((i) => ids.contains(i.id)).toList();
 });
 
-/// Who a session of this group can be given to: its course's instructors, or everyone while the course has none.
+final groupInstructorsProvider = Provider.family<List<Instructor>, String>(
+  (ref, groupId) =>
+      (ref.watch(instructorsProvider).value ?? const []).where((i) => i.groupIds.contains(groupId)).toList(),
+);
+
+/// Who a session of this group can be given to: the group's and its course's instructors,
+/// or everyone while neither has any.
 final sessionInstructorsProvider = Provider.family<List<Instructor>, String>((ref, groupId) {
   final courseId = ref.watch(groupProvider(groupId)).value?.courseId ?? '';
-  final assigned = ref.watch(courseInstructorsProvider(courseId));
-  return assigned.isEmpty ? ref.watch(instructorsProvider).value ?? const [] : assigned;
+  final assigned = {...ref.watch(courseInstructorsProvider(courseId)), ...ref.watch(groupInstructorsProvider(groupId))};
+  final all = ref.watch(instructorsProvider).value ?? const <Instructor>[];
+  // Filtering the full list keeps the instructors in name order.
+  return assigned.isEmpty ? all : all.where(assigned.contains).toList();
 });

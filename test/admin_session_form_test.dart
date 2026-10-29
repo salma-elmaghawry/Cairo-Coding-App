@@ -76,15 +76,19 @@ void main() {
     await tester.tap(find.text('Instructors').first);
     await settle(tester);
     expect(find.text('New instructor'), findsOneWidget);
-    await tester.enterText(find.byType(TextFormField), 'Eng. Amira Hassan');
+    await tester.enterText(find.byType(TextFormField).at(0), 'Eng. Amira Hassan');
+    await tester.enterText(find.byType(TextFormField).at(1), 'Amira@Example.com');
     await tester.tap(find.text('Add instructor'));
     await settle(tester);
     expect(find.text('Eng. Amira Hassan'), findsOneWidget);
+    expect(find.text('amira@example.com'), findsOneWidget);
     expect(find.text('Not in a course yet'), findsOneWidget);
 
-    await tester.enterText(find.byType(TextFormField), 'eng. amira hassan');
+    await tester.enterText(find.byType(TextFormField).at(0), 'eng. amira hassan');
+    await tester.enterText(find.byType(TextFormField).at(1), 'amira@example.com');
     await tester.tap(find.text('Add instructor'));
     await settle(tester);
     expect(find.text('This instructor is already in the list'), findsOneWidget);
+    expect(find.text('Another instructor already has this email'), findsOneWidget);
   });
 }

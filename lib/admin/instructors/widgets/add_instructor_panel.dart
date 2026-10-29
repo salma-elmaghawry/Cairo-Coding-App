@@ -1,4 +1,5 @@
 import 'package:cairo_coding_app/admin/admin_providers.dart';
+import 'package:cairo_coding_app/admin/instructors/widgets/instructor_validators.dart';
 import 'package:cairo_coding_app/core/error_handling/result.dart';
 import 'package:cairo_coding_app/core/helpers/spacing.dart';
 import 'package:cairo_coding_app/core/helpers/ui_helpers.dart';
@@ -21,31 +22,26 @@ class AddInstructorPanel extends ConsumerStatefulWidget {
 class _AddInstructorPanelState extends ConsumerState<AddInstructorPanel> {
   final _formKey = GlobalKey<FormState>();
   final _name = TextEditingController();
+  final _email = TextEditingController();
   bool _saving = false;
 
   @override
   void dispose() {
     _name.dispose();
+    _email.dispose();
     super.dispose();
-  }
-
-  String? _validate(String? value) {
-    final name = value?.trim() ?? '';
-    if (name.isEmpty) return 'validation.required'.tr();
-    final existing = ref.read(instructorsProvider).value ?? const [];
-    if (existing.any((i) => i.name.toLowerCase() == name.toLowerCase())) return 'admin.instructors.exists'.tr();
-    return null;
   }
 
   Future<void> _add() async {
     if (!_formKey.currentState!.validate()) return;
     setState(() => _saving = true);
-    final result = await ref.read(academyRepositoryProvider).addInstructor(_name.text);
+    final result = await ref.read(academyRepositoryProvider).addInstructor(_name.text, email: _email.text);
     if (!mounted) return;
     setState(() => _saving = false);
     switch (result) {
       case Ok():
         _name.clear();
+        _email.clear();
       case Err(:final failure):
         showAppSnackBar(context, failure.message, isError: true);
     }
@@ -54,6 +50,7 @@ class _AddInstructorPanelState extends ConsumerState<AddInstructorPanel> {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
+    final existing = ref.watch(instructorsProvider).value ?? const [];
 
     return AppCard(
       color: colorScheme.surfaceContainerHighest,
@@ -70,7 +67,16 @@ class _AddInstructorPanelState extends ConsumerState<AddInstructorPanel> {
               label: 'admin.instructors.name'.tr(),
               hint: 'admin.instructors.name_hint'.tr(),
               controller: _name,
-              validator: _validate,
+              validator: (value) => validateInstructorName(value, existing),
+              textInputAction: TextInputAction.next,
+            ),
+            verticalSpace(12),
+            AppTextField(
+              label: 'admin.instructors.email'.tr(),
+              hint: 'admin.instructors.email_hint'.tr(),
+              controller: _email,
+              validator: (value) => validateInstructorEmail(value, existing),
+              keyboardType: TextInputType.emailAddress,
               textInputAction: TextInputAction.done,
               onSubmitted: (_) => _add(),
             ),

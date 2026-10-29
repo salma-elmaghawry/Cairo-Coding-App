@@ -22,6 +22,7 @@ void main() {
     expect(find.text('2 groups'), findsOneWidget);
     expect(find.text('1 group'), findsOneWidget);
     expect(find.text('salma@example.com'), findsOneWidget);
+    expect(find.text('010 2222 3141'), findsOneWidget);
     expect(find.widgetWithText(ActionChip, 'CS120'), findsNothing);
 
     await tester.tap(find.byTooltip('Edit instructor').last);
@@ -39,6 +40,7 @@ void main() {
     expect(find.text('Another instructor already has this email'), findsOneWidget);
 
     await tester.enterText(fields.at(1), 'youssef.n@example.com');
+    await tester.enterText(fields.at(2), ' 012 7777 1618 ');
     await tester.tap(find.widgetWithText(ChoiceChip, 'C++'));
     await tester.tap(find.widgetWithText(ChoiceChip, 'CS150 · C++'));
     await tester.pump();
@@ -48,6 +50,8 @@ void main() {
     expect(find.text('Instructor saved'), findsOneWidget);
     expect(find.text('Eng. Youssef Nabil Ali'), findsOneWidget);
     expect(find.text('youssef.n@example.com'), findsOneWidget);
+    expect(find.text('012 7777 1618'), findsOneWidget);
+    expect(find.text('011 5555 2718'), findsNothing);
     expect(find.text('2 groups'), findsNWidgets(2));
     expect(find.widgetWithText(ActionChip, 'C++'), findsNWidgets(2));
   });

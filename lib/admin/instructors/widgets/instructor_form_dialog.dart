@@ -35,6 +35,7 @@ class _InstructorFormDialogState extends ConsumerState<InstructorFormDialog> {
   final _formKey = GlobalKey<FormState>();
   late final _name = TextEditingController(text: widget.instructor.name);
   late final _email = TextEditingController(text: widget.instructor.email);
+  late final _phone = TextEditingController(text: widget.instructor.phone);
   late final Set<String> _courseIds = {
     for (final course in ref.read(coursesProvider).value ?? const <Course>[])
       if (course.instructorIds.contains(widget.instructor.id)) course.id,
@@ -46,8 +47,9 @@ class _InstructorFormDialogState extends ConsumerState<InstructorFormDialog> {
 
   @override
   void dispose() {
-    _name.dispose();
-    _email.dispose();
+    for (final controller in [_name, _email, _phone]) {
+      controller.dispose();
+    }
     super.dispose();
   }
 
@@ -58,7 +60,12 @@ class _InstructorFormDialogState extends ConsumerState<InstructorFormDialog> {
         .read(academyRepositoryProvider)
         .updateInstructor(
           widget.instructor,
-          widget.instructor.copyWith(name: _name.text, email: _email.text, groupIds: _groupIds.toList()),
+          widget.instructor.copyWith(
+            name: _name.text,
+            email: _email.text,
+            phone: _phone.text,
+            groupIds: _groupIds.toList(),
+          ),
           courses: ref.read(coursesProvider).value ?? const [],
           courseIds: _courseIds,
         );
@@ -118,6 +125,12 @@ class _InstructorFormDialogState extends ConsumerState<InstructorFormDialog> {
                   controller: _email,
                   validator: (value) => validateInstructorEmail(value, others),
                   keyboardType: TextInputType.emailAddress,
+                ),
+                verticalSpace(14),
+                AppTextField(
+                  label: 'admin.instructors.phone'.tr(),
+                  controller: _phone,
+                  keyboardType: TextInputType.phone,
                 ),
                 verticalSpace(18),
                 Text('admin.instructors.courses_label'.tr(), style: AppTextStyles.font14Bold),

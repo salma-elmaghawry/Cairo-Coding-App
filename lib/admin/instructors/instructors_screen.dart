@@ -78,6 +78,8 @@ class InstructorsScreen extends ConsumerWidget {
                       overflow: TextOverflow.ellipsis,
                       style: AppTextStyles.font12Normal.secondary(context),
                     ),
+                    if (instructor.phone.isNotEmpty)
+                      Text(instructor.phone, style: AppTextStyles.monoFont12Medium.secondary(context)),
                   ],
                 ),
                 teaches.isEmpty

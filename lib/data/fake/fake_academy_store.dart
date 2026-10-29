@@ -78,12 +78,14 @@ class FakeAcademyStore {
       id: 'instructor_salma',
       name: 'Eng. Salma Elmaghawry',
       email: 'salma@example.com',
+      phone: '010 2222 3141',
       groupIds: ['cs140', 'cs150', 'cs120'],
     );
     const youssef = Instructor(
       id: 'instructor_youssef',
       name: 'Eng. Youssef Nabil',
       email: 'youssef@example.com',
+      phone: '011 5555 2718',
       groupIds: ['workshop'],
     );
     for (final instructor in [salma, youssef]) {

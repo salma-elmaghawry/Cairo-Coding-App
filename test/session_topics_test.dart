@@ -150,6 +150,7 @@ void main() {
       youssef.copyWith(
         name: ' Eng. Youssef Nabil Ali ',
         email: ' Youssef.N@Example.com',
+        phone: ' 012 7777 1618 ',
         groupIds: ['workshop', 'cs150'],
       ),
       courses: await repository.watchCourses().first,
@@ -159,6 +160,7 @@ void main() {
     final saved = store.instructors[youssef.id]!;
     expect(saved.name, 'Eng. Youssef Nabil Ali');
     expect(saved.email, 'youssef.n@example.com');
+    expect(saved.phone, '012 7777 1618');
     expect(saved.groupIds, ['workshop', 'cs150']);
     expect(store.courses['cpp']!.instructorIds, ['instructor_salma', youssef.id]);
     expect(store.courses['tools']!.instructorIds, isEmpty);

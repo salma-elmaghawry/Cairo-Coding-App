@@ -377,7 +377,8 @@
       "courses_label": "Courses they teach",
       "groups_label": "Groups they teach",
       "no_active_groups": "No active groups yet",
-      "saved": "Instructor saved"
+      "saved": "Instructor saved",
+      "phone": "Phone"
     }
   }
 }

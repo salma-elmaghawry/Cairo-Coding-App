@@ -59,8 +59,10 @@ class AcademyRepository {
     ),
   );
 
-  Future<Result<Instructor>> addInstructor(String name, {String email = ''}) => Result.guard(
-    () => _source.saveInstructor(Instructor(id: '', name: name.trim(), email: email.trim().toLowerCase())),
+  Future<Result<Instructor>> addInstructor(String name, {String email = '', String phone = ''}) => Result.guard(
+    () => _source.saveInstructor(
+      Instructor(id: '', name: name.trim(), email: email.trim().toLowerCase(), phone: phone.trim()),
+    ),
   );
 
   /// Saves [instructor] and adds them to or removes them from [courses] so they teach exactly [courseIds].
@@ -72,7 +74,11 @@ class AcademyRepository {
     required Set<String> courseIds,
   }) => Result.guard(() async {
     final saved = await _source.saveInstructor(
-      instructor.copyWith(name: instructor.name.trim(), email: instructor.email.trim().toLowerCase()),
+      instructor.copyWith(
+        name: instructor.name.trim(),
+        email: instructor.email.trim().toLowerCase(),
+        phone: instructor.phone.trim(),
+      ),
     );
     for (final course in courses) {
       final teaches = course.instructorIds.contains(saved.id);

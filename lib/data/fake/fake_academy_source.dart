@@ -126,6 +126,18 @@ class FakeAcademySource implements AcademySource {
   });
 
   @override
+  Future<void> updateStudent(Student student) => _write(() {
+    final current = _store.students[student.uid];
+    if (current == null) return;
+    _store.students[student.uid] = current.copyWith(
+      name: student.name,
+      phone: student.phone,
+      groupIds: student.groupIds,
+      active: student.active,
+    );
+  });
+
+  @override
   Stream<List<Instructor>> watchInstructors() => _store.watch(() => _store.instructors.values.toList());
 
   @override

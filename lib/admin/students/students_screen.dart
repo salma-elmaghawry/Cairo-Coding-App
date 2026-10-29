@@ -49,7 +49,7 @@ class StudentsScreen extends ConsumerWidget {
               AppTableColumn('admin.students.phone'.tr(), flex: 3),
               AppTableColumn('admin.courses.groups'.tr(), flex: 3),
               AppTableColumn('admin.students.status'.tr(), flex: 2),
-              AppTableColumn('admin.students.actions'.tr(), alignEnd: true),
+              AppTableColumn('admin.students.actions'.tr(), flex: 2, alignEnd: true),
             ],
             rows: [
               for (final student in value)
@@ -77,7 +77,13 @@ class StudentsScreen extends ConsumerWidget {
                     label: (student.active ? 'admin.students.active' : 'admin.students.inactive').tr(),
                     tone: student.active ? StatusTone.accent : StatusTone.danger,
                   ),
-                  StudentActiveButton(student: student),
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      StudentEditButton(student: student),
+                      StudentActiveButton(student: student),
+                    ],
+                  ),
                 ],
             ],
           ),

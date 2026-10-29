@@ -40,11 +40,11 @@ class Student extends Equatable {
     'active': active,
   };
 
-  Student copyWith({List<String>? groupIds, bool? active}) => Student(
+  Student copyWith({String? name, String? phone, List<String>? groupIds, bool? active}) => Student(
     uid: uid,
-    name: name,
+    name: name ?? this.name,
     email: email,
-    phone: phone,
+    phone: phone ?? this.phone,
     groupIds: groupIds ?? this.groupIds,
     active: active ?? this.active,
   );

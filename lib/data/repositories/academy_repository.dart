@@ -223,4 +223,8 @@ class AcademyRepository {
 
   Future<Result<void>> setStudentActive(String uid, bool active) =>
       Result.guard(() => _source.setStudentActive(uid, active));
+
+  Future<Result<void>> updateStudent(Student student) => Result.guard(
+    () => _source.updateStudent(student.copyWith(name: student.name.trim(), phone: student.phone.trim())),
+  );
 }

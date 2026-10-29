@@ -36,6 +36,9 @@ abstract class AcademySource {
 
   Future<void> setStudentActive(String uid, bool active);
 
+  /// Saves what an admin can change on [student]; the sign-in email stays as it is.
+  Future<void> updateStudent(Student student);
+
   Stream<List<Instructor>> watchInstructors();
 
   Future<Instructor> saveInstructor(Instructor instructor);

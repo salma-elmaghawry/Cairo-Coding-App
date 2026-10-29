@@ -45,12 +45,13 @@ class StudentsTab extends ConsumerWidget {
         icon: Icons.person_add_alt_outlined,
       ),
       AsyncData(:final value) => AppDataTable(
+        minWidth: 720,
         columns: [
           AppTableColumn('admin.students.name'.tr(), flex: 3),
           AppTableColumn('admin.students.email'.tr(), flex: 4),
           AppTableColumn('admin.students.phone'.tr(), flex: 3),
           AppTableColumn('admin.students.status'.tr(), flex: 2),
-          AppTableColumn('admin.students.actions'.tr(), flex: 2, alignEnd: true),
+          AppTableColumn('admin.students.actions'.tr(), flex: 4, alignEnd: true),
         ],
         rows: [
           for (final student in value)
@@ -65,6 +66,7 @@ class StudentsTab extends ConsumerWidget {
               Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
+                  StudentEditButton(student: student),
                   IconButton(
                     tooltip: 'admin.students.remove'.tr(),
                     onPressed: () => _remove(context, ref, student),

@@ -174,6 +174,14 @@ class FirestoreAcademySource implements AcademySource {
   Future<void> setStudentActive(String uid, bool active) => _users.doc(uid).update({'active': active});
 
   @override
+  Future<void> updateStudent(Student student) => _users.doc(student.uid).update({
+    'name': student.name,
+    'phone': student.phone,
+    'groupIds': student.groupIds,
+    'active': student.active,
+  });
+
+  @override
   Stream<List<Instructor>> watchInstructors() => _instructors.snapshots().map((s) => _map(s, Instructor.fromMap));
 
   @override

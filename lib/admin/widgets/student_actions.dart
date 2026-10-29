@@ -1,3 +1,4 @@
+import 'package:cairo_coding_app/admin/widgets/student_form_dialog.dart';
 import 'package:cairo_coding_app/core/error_handling/result.dart';
 import 'package:cairo_coding_app/core/helpers/ui_helpers.dart';
 import 'package:cairo_coding_app/data/data_providers.dart';
@@ -22,6 +23,21 @@ Future<void> toggleStudentActive(BuildContext context, WidgetRef ref, Student st
   final result = await ref.read(academyRepositoryProvider).setStudentActive(student.uid, !student.active);
   if (!context.mounted) return;
   if (result case Err(:final failure)) showAppSnackBar(context, failure.message, isError: true);
+}
+
+class StudentEditButton extends StatelessWidget {
+  const StudentEditButton({super.key, required this.student});
+
+  final Student student;
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      tooltip: 'admin.students.edit'.tr(),
+      onPressed: () => StudentFormDialog.show(context, student),
+      icon: const Icon(Icons.edit_outlined, size: 18),
+    );
+  }
 }
 
 class StudentActiveButton extends ConsumerWidget {

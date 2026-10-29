@@ -273,7 +273,14 @@
       "add_one": "Add student",
       "add_all": "Add all",
       "added": "{} new accounts created, {} existing students added",
-      "skipped": "Couldn't add (account exists without a profile, contact support): {}"
+      "skipped": "Couldn't add (account exists without a profile, contact support): {}",
+      "edit": "Edit student",
+      "edit_title": "Edit student",
+      "email_locked": "This is the email they sign in with, so it can't be changed here.",
+      "groups_label": "Groups they're in",
+      "active_label": "Account active",
+      "active_hint": "When off, they can't sign in until you turn it back on.",
+      "saved": "Student saved"
     },
     "students_page": {
       "eyebrow": "dashboard",

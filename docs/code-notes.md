@@ -49,7 +49,7 @@ The student entry point never imports `admin/`, so admin code isn't compiled int
 - Adding students (admin): `StudentAccountCreator` signs up the new email on a second FirebaseApp, so the admin stays signed in, then writes `users/{uid}` and sends the password-reset email that works as the welcome email. An email that already has a `users` doc only gets the group added.
 - Weekly slots are Cairo local time. `SessionGenerator` converts them through `CairoTime` (Africa/Cairo, DST-aware) into real instants.
 - Rules: `firestore.rules`. Admins are whoever has an `admins/{uid}` doc (only creatable from the console). Students can read their own `users` doc and the groups in their `groupIds` while `active == true`.
-- Deploy rules: `firebase deploy --only firestore`. Deploy the dashboard: `flutter build web -t lib/main_admin.dart && firebase deploy --only hosting`.
+- Deploy rules: `firebase deploy --only firestore`. Deploy the dashboard: `flutter build web -t lib/main_admin.dart && firebase deploy --only hosting`. The hosting `predeploy` hook runs `tool/hash_icon_font.sh`, which renames the tree-shaken icon font after its content (and updates `FontManifest.json`), so browsers never show new icons blank from an older cached font.
 
 ## Tests
 - `test/routing_and_schedule_test.dart`: auth redirect rules and the session generator.

@@ -2,6 +2,7 @@ import 'package:cairo_coding_app/core/providers/core_providers.dart';
 import 'package:cairo_coding_app/data/data_providers.dart';
 import 'package:cairo_coding_app/data/models/academy_group.dart';
 import 'package:cairo_coding_app/data/models/class_session.dart';
+import 'package:cairo_coding_app/data/models/course.dart';
 import 'package:cairo_coding_app/data/models/instructor.dart';
 import 'package:cairo_coding_app/data/models/recording.dart';
 import 'package:cairo_coding_app/data/models/student.dart';
@@ -31,12 +32,18 @@ class GroupsViewNotifier extends Notifier<GroupsView> {
 
 final visibleGroupsProvider = Provider<AsyncValue<List<AcademyGroup>>>((ref) {
   final view = ref.watch(groupsViewProvider);
+  final courseNames = {
+    for (final course in ref.watch(coursesProvider).value ?? const <Course>[]) course.id: course.name,
+  };
   return ref
       .watch(adminGroupsProvider)
       .whenData(
         (groups) => groups
             .where((g) => g.archived == view.archived)
-            .where((g) => view.query.isEmpty || '${g.name} ${g.track}'.toLowerCase().contains(view.query))
+            .where(
+              (g) =>
+                  view.query.isEmpty || '${g.name} ${courseNames[g.courseId] ?? ''}'.toLowerCase().contains(view.query),
+            )
             .toList(),
       );
 });
@@ -73,3 +80,38 @@ final groupNextSessionProvider = Provider.autoDispose.family<ClassSession?, Stri
 final instructorsProvider = StreamProvider<List<Instructor>>(
   (ref) => ref.watch(academyRepositoryProvider).watchInstructors(),
 );
+
+final coursesProvider = StreamProvider<List<Course>>((ref) => ref.watch(academyRepositoryProvider).watchCourses());
+
+final courseProvider = Provider.family<AsyncValue<Course?>, String>(
+  (ref, courseId) =>
+      ref.watch(coursesProvider).whenData((courses) => courses.where((c) => c.id == courseId).firstOrNull),
+);
+
+/// The course's groups that aren't archived.
+final courseGroupsProvider = Provider.family<AsyncValue<List<AcademyGroup>>, String>(
+  (ref, courseId) => ref
+      .watch(adminGroupsProvider)
+      .whenData((groups) => groups.where((g) => g.courseId == courseId && !g.archived).toList()),
+);
+
+final courseStudentsProvider = StreamProvider.autoDispose.family<List<Student>, String>((ref, courseId) async* {
+  final repository = ref.watch(academyRepositoryProvider);
+  final groups = await ref.watch(adminGroupsProvider.future);
+  yield* repository.watchStudentsOf([
+    for (final group in groups)
+      if (group.courseId == courseId && !group.archived) group.id,
+  ]);
+});
+
+final courseInstructorsProvider = Provider.family<List<Instructor>, String>((ref, courseId) {
+  final ids = ref.watch(courseProvider(courseId)).value?.instructorIds ?? const [];
+  return (ref.watch(instructorsProvider).value ?? const []).where((i) => ids.contains(i.id)).toList();
+});
+
+/// Who a session of this group can be given to: its course's instructors, or everyone while the course has none.
+final sessionInstructorsProvider = Provider.family<List<Instructor>, String>((ref, groupId) {
+  final courseId = ref.watch(groupProvider(groupId)).value?.courseId ?? '';
+  final assigned = ref.watch(courseInstructorsProvider(courseId));
+  return assigned.isEmpty ? ref.watch(instructorsProvider).value ?? const [] : assigned;
+});

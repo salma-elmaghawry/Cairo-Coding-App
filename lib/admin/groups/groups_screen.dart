@@ -1,10 +1,8 @@
-import 'dart:math' as math;
-
 import 'package:cairo_coding_app/admin/admin_providers.dart';
-import 'package:cairo_coding_app/admin/groups/widgets/group_card.dart';
 import 'package:cairo_coding_app/admin/groups/widgets/group_form_dialog.dart';
+import 'package:cairo_coding_app/admin/groups/widgets/group_card.dart';
 import 'package:cairo_coding_app/admin/widgets/admin_page.dart';
-import 'package:cairo_coding_app/core/animations/animations.dart';
+import 'package:cairo_coding_app/admin/widgets/card_grid.dart';
 import 'package:cairo_coding_app/core/helpers/spacing.dart';
 import 'package:cairo_coding_app/core/widgets/primary_button.dart';
 import 'package:cairo_coding_app/core/widgets/state_views.dart';
@@ -68,24 +66,7 @@ class GroupsScreen extends ConsumerWidget {
             message: 'admin.groups.empty'.tr(),
             icon: Icons.groups_outlined,
           ),
-          AsyncData(:final value) => LayoutBuilder(
-            builder: (context, constraints) {
-              const gap = 16.0;
-              final columns = math.max(1, (constraints.maxWidth + gap) ~/ (320 + gap));
-              final width = (constraints.maxWidth - gap * (columns - 1)) / columns;
-              return Wrap(
-                spacing: gap,
-                runSpacing: gap,
-                children: [
-                  for (final group in value)
-                    SizedBox(
-                      width: width,
-                      child: GroupCard(group: group),
-                    ),
-                ].animateList(),
-              );
-            },
-          ),
+          AsyncData(:final value) => CardGrid(children: [for (final group in value) GroupCard(group: group)]),
           _ => const SkeletonList(count: 3, itemHeight: 120),
         },
       ],

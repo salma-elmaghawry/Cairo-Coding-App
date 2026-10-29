@@ -1,5 +1,5 @@
 import 'package:cairo_coding_app/admin/admin_providers.dart';
-import 'package:cairo_coding_app/admin/group_detail/widgets/session_details_dialog.dart';
+import 'package:cairo_coding_app/admin/group_detail/widgets/session_form_dialog.dart';
 import 'package:cairo_coding_app/core/error_handling/result.dart';
 import 'package:cairo_coding_app/core/helpers/date_formats.dart';
 import 'package:cairo_coding_app/core/helpers/pickers.dart';
@@ -37,11 +37,14 @@ class SessionsTable extends ConsumerWidget {
     await _run(context, ref.read(academyRepositoryProvider).reschedule(session, picked));
   }
 
-  Future<void> _addExtra(BuildContext context, WidgetRef ref) async {
-    final picked = await pickDateTime(context, initial: ref.read(clockProvider)());
-    if (picked == null || !context.mounted) return;
-    final duration = group.weeklySlots.firstOrNull?.durationMin ?? 120;
-    await _run(context, ref.read(academyRepositoryProvider).addExtraSession(group, picked, duration));
+  void _add(BuildContext context, List<ClassSession> sessions) {
+    final lastNumber = sessions.map((s) => s.number ?? 0).fold<int>(0, (max, n) => n > max ? n : max);
+    SessionFormDialog.show(
+      context,
+      group: group,
+      nextNumber: lastNumber + 1,
+      suggestedInstructor: sessions.where((s) => s.instructor.isNotEmpty).lastOrNull?.instructor ?? '',
+    );
   }
 
   Future<void> _delete(BuildContext context, WidgetRef ref, ClassSession session) async {
@@ -64,10 +67,10 @@ class SessionsTable extends ConsumerWidget {
     }
   }
 
-  void _editDetails(BuildContext context, List<ClassSession> sessions, ClassSession session) {
+  void _edit(BuildContext context, List<ClassSession> sessions, ClassSession session) {
     final before = sessions.takeWhile((s) => s.id != session.id);
     final suggested = before.lastWhere((s) => s.instructor.isNotEmpty, orElse: () => session).instructor;
-    SessionDetailsDialog.show(context, session, suggestedInstructor: suggested);
+    SessionFormDialog.show(context, group: group, session: session, suggestedInstructor: suggested);
   }
 
   (String, StatusTone) _status(ClassSession session, bool past) => switch (session.status) {
@@ -92,9 +95,9 @@ class SessionsTable extends ConsumerWidget {
           children: [
             Expanded(child: Text('admin.schedule.sessions_title'.tr(), style: AppTextStyles.font18ExtraBold)),
             OutlinedButton.icon(
-              onPressed: () => _addExtra(context, ref),
+              onPressed: () => _add(context, sessions.value ?? const []),
               icon: const Icon(Icons.add_rounded, size: 18),
-              label: Text('admin.schedule.extra'.tr()),
+              label: Text('admin.schedule.add_session'.tr()),
             ),
           ],
         ),
@@ -164,8 +167,8 @@ class SessionsTable extends ConsumerWidget {
                         ),
                         IconButton(
                           style: IconButton.styleFrom(side: BorderSide.none),
-                          tooltip: 'admin.schedule.edit_details'.tr(),
-                          onPressed: () => _editDetails(context, value, session),
+                          tooltip: 'admin.schedule.edit_title'.tr(),
+                          onPressed: () => _edit(context, value, session),
                           icon: const Icon(Icons.edit_outlined, size: 16),
                         ),
                       ],

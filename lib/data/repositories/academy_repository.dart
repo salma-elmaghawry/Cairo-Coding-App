@@ -1,7 +1,9 @@
 import 'package:cairo_coding_app/core/error_handling/error_mapper.dart';
 import 'package:cairo_coding_app/core/error_handling/result.dart';
+import 'package:cairo_coding_app/core/utils/stream_utils.dart';
 import 'package:cairo_coding_app/data/models/academy_group.dart';
 import 'package:cairo_coding_app/data/models/class_session.dart';
+import 'package:cairo_coding_app/data/models/course.dart';
 import 'package:cairo_coding_app/data/models/instructor.dart';
 import 'package:cairo_coding_app/data/models/recording.dart';
 import 'package:cairo_coding_app/data/models/student.dart';
@@ -31,6 +33,14 @@ class AcademyRepository {
     _source.watchStudents(groupId).map((list) => [...list]..sort((a, b) => a.name.compareTo(b.name))),
   );
 
+  /// Students of several groups, each listed once.
+  Stream<List<Student>> watchStudentsOf(List<String> groupIds) => ErrorMapper.mapStream(
+    combineLatestLists([for (final groupId in groupIds) _source.watchStudents(groupId)]).map(
+      (list) =>
+          {for (final student in list) student.uid: student}.values.toList()..sort((a, b) => a.name.compareTo(b.name)),
+    ),
+  );
+
   Future<Result<List<ClassSession>>> sessionsBetween(List<String> groupIds, DateTime from, DateTime until) =>
       Result.guard(() => _source.getSessionsBetween(groupIds, from, until));
 
@@ -51,12 +61,75 @@ class AcademyRepository {
   Future<Result<void>> deleteInstructor(Instructor instructor) =>
       Result.guard(() => _source.deleteInstructor(instructor.id));
 
-  Future<Result<void>> updateSessionDetails(
+  Stream<List<Course>> watchCourses() => ErrorMapper.mapStream(
+    _source.watchCourses().map(
+      (list) => [...list]..sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase())),
+    ),
+  );
+
+  Future<Result<Course>> saveCourse(Course course) => Result.guard(
+    () => _source.saveCourse(
+      course.copyWith(
+        name: course.name.trim(),
+        sessionTitles: [
+          for (final title in course.sessionTitles)
+            if (title.trim().isNotEmpty) title.trim(),
+        ],
+      ),
+    ),
+  );
+
+  Future<Result<void>> deleteCourse(Course course) => Result.guard(() => _source.deleteCourse(course.id));
+
+  Future<Result<void>> setCourseInstructors(Course course, List<String> instructorIds) =>
+      Result.guard(() => _source.saveCourse(course.copyWith(instructorIds: instructorIds)));
+
+  Future<Result<void>> addSession(
+    AcademyGroup group, {
+    required String topic,
+    required int number,
+    required DateTime startsAt,
+    required String instructor,
+    required String meetingLink,
+  }) => Result.guard(
+    () => _source.saveSessions([
+      ClassSession(
+        id: '',
+        groupId: group.id,
+        number: number,
+        startsAt: startsAt,
+        durationMin: group.weeklySlots.firstOrNull?.durationMin ?? 120,
+        topic: topic.trim(),
+        instructor: instructor.trim(),
+        meetingLinkOverride: meetingLink.trim(),
+        manual: true,
+      ),
+    ]),
+  );
+
+  Future<Result<void>> updateSession(
     ClassSession session, {
     required String topic,
+    required int number,
+    required DateTime startsAt,
     required String instructor,
-  }) =>
-      Result.guard(() => _source.saveSessions([session.copyWith(topic: topic.trim(), instructor: instructor.trim())]));
+    required String meetingLink,
+  }) {
+    // Same as Reschedule: a generated session that changes time is marked moved, so regenerating keeps it.
+    final moved = startsAt != session.startsAt && session.status == SessionStatus.scheduled && !session.manual;
+    return Result.guard(
+      () => _source.saveSessions([
+        session.copyWith(
+          topic: topic.trim(),
+          number: number,
+          startsAt: startsAt,
+          instructor: instructor.trim(),
+          meetingLinkOverride: meetingLink.trim(),
+          status: moved ? SessionStatus.moved : null,
+        ),
+      ]),
+    );
+  }
 
   Future<Result<void>> setSessionStatus(ClassSession session, SessionStatus status) =>
       Result.guard(() => _source.saveSessions([session.copyWith(status: status)]));
@@ -67,42 +140,40 @@ class AcademyRepository {
   Future<Result<void>> reschedule(ClassSession session, DateTime startsAt) =>
       Result.guard(() => _source.saveSessions([session.copyWith(startsAt: startsAt, status: SessionStatus.moved)]));
 
-  Future<Result<void>> addExtraSession(AcademyGroup group, DateTime startsAt, int durationMin) => Result.guard(
-    () => _source.saveSessions([
-      ClassSession(
-        id: '',
-        groupId: group.id,
-        startsAt: startsAt,
-        durationMin: durationMin,
-        status: SessionStatus.extra,
-      ),
-    ]),
-  );
+  /// A new session that doesn't inherit a name gets the one [course] plans for its number.
+  Future<Result<int>> saveSlotsAndGenerate(AcademyGroup group, List<WeeklySlot> slots, {Course? course}) =>
+      Result.guard(() async {
+        final updated = group.copyWith(weeklySlots: slots);
+        await _source.saveGroup(updated);
 
-  Future<Result<int>> saveSlotsAndGenerate(AcademyGroup group, List<WeeklySlot> slots) => Result.guard(() async {
-    final updated = group.copyWith(weeklySlots: slots);
-    await _source.saveGroup(updated);
+        final now = _clock();
+        final existing = await _source.getSessions(group.id);
+        final replaceable = existing
+            .where((s) => !s.isPast(now) && s.status == SessionStatus.scheduled && !s.manual)
+            .toList();
+        final kept = existing.where((s) => !replaceable.contains(s));
+        final lastNumber = kept.map((s) => s.number ?? 0).fold<int>(0, (max, n) => n > max ? n : max);
+        final from = now.isAfter(group.startDate) ? now : group.startDate;
+        // Topics follow the course order, so the n-th replaced session hands its topic to the n-th new one.
+        replaceable.sort((a, b) => a.startsAt.compareTo(b.startsAt));
+        final generated = [
+          for (final (index, session)
+              in const SessionGenerator().generate(group: updated, from: from, firstNumber: lastNumber + 1).indexed)
+            () {
+              final replaced = index < replaceable.length ? replaceable[index] : null;
+              final topic = replaced?.topic ?? '';
+              return session.copyWith(
+                topic: topic.isNotEmpty ? topic : course?.titleOf(session.number) ?? '',
+                instructor: replaced?.instructor,
+                meetingLinkOverride: replaced?.meetingLinkOverride,
+              );
+            }(),
+        ];
 
-    final now = _clock();
-    final existing = await _source.getSessions(group.id);
-    final replaceable = existing.where((s) => !s.isPast(now) && s.status == SessionStatus.scheduled).toList();
-    final kept = existing.where((s) => !replaceable.contains(s));
-    final lastNumber = kept.map((s) => s.number ?? 0).fold<int>(0, (max, n) => n > max ? n : max);
-    final from = now.isAfter(group.startDate) ? now : group.startDate;
-    // Topics follow the course order, so the n-th replaced session hands its topic to the n-th new one.
-    replaceable.sort((a, b) => a.startsAt.compareTo(b.startsAt));
-    final generated = [
-      for (final (index, session)
-          in const SessionGenerator().generate(group: updated, from: from, firstNumber: lastNumber + 1).indexed)
-        index < replaceable.length
-            ? session.copyWith(topic: replaceable[index].topic, instructor: replaceable[index].instructor)
-            : session,
-    ];
-
-    await _source.deleteSessions(group.id, replaceable.map((s) => s.id).toList());
-    await _source.saveSessions(generated);
-    return generated.length;
-  });
+        await _source.deleteSessions(group.id, replaceable.map((s) => s.id).toList());
+        await _source.saveSessions(generated);
+        return generated.length;
+      });
 
   Future<Result<Recording>> saveRecording(Recording recording) => Result.guard(() => _source.saveRecording(recording));
 

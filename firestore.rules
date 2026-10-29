@@ -44,6 +44,15 @@ service cloud.firestore {
         && request.resource.data.name is string;
     }
 
+    match /courses/{courseId} {
+      allow read, delete: if isAdmin();
+      allow create, update: if isAdmin()
+        && request.resource.data.keys().hasOnly(['name', 'sessionTitles', 'instructorIds'])
+        && request.resource.data.name is string
+        && request.resource.data.sessionTitles is list
+        && request.resource.data.instructorIds is list;
+    }
+
     match /groups/{groupId} {
       allow read: if isAdmin() || isActiveMemberOf(groupId);
       allow write: if isAdmin();

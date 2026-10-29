@@ -1,8 +1,10 @@
+import 'package:cairo_coding_app/admin/admin_providers.dart';
 import 'package:cairo_coding_app/core/error_handling/result.dart';
 import 'package:cairo_coding_app/core/helpers/date_formats.dart';
 import 'package:cairo_coding_app/core/helpers/pickers.dart';
 import 'package:cairo_coding_app/core/helpers/spacing.dart';
 import 'package:cairo_coding_app/core/helpers/ui_helpers.dart';
+import 'package:cairo_coding_app/core/utils/app_text_styles.dart';
 import 'package:cairo_coding_app/core/widgets/app_text_field.dart';
 import 'package:cairo_coding_app/core/widgets/primary_button.dart';
 import 'package:cairo_coding_app/data/data_providers.dart';
@@ -12,14 +14,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class GroupFormDialog extends ConsumerStatefulWidget {
-  const GroupFormDialog({super.key, this.group});
+  const GroupFormDialog({super.key, this.group, this.courseId});
 
   final AcademyGroup? group;
 
-  static Future<void> show(BuildContext context, {AcademyGroup? group}) {
+  /// Pre-selected course for a new group, when it's created from a course page.
+  final String? courseId;
+
+  static Future<void> show(BuildContext context, {AcademyGroup? group, String? courseId}) {
     return showDialog<void>(
       context: context,
-      builder: (_) => GroupFormDialog(group: group),
+      builder: (_) => GroupFormDialog(group: group, courseId: courseId),
     );
   }
 
@@ -30,7 +35,7 @@ class GroupFormDialog extends ConsumerStatefulWidget {
 class _GroupFormDialogState extends ConsumerState<GroupFormDialog> {
   final _formKey = GlobalKey<FormState>();
   late final _name = TextEditingController(text: widget.group?.name);
-  late final _track = TextEditingController(text: widget.group?.track);
+  late String _courseId = widget.group?.courseId ?? widget.courseId ?? '';
   late final _link = TextEditingController(text: widget.group?.meetingLink);
   late final _location = TextEditingController(text: widget.group?.location);
   late DateTime _start = widget.group?.startDate ?? DateTime.now();
@@ -39,7 +44,7 @@ class _GroupFormDialogState extends ConsumerState<GroupFormDialog> {
 
   @override
   void dispose() {
-    for (final controller in [_name, _track, _link, _location]) {
+    for (final controller in [_name, _link, _location]) {
       controller.dispose();
     }
     super.dispose();
@@ -61,14 +66,13 @@ class _GroupFormDialogState extends ConsumerState<GroupFormDialog> {
     }
     setState(() => _saving = true);
     final base =
-        widget.group ??
-        AcademyGroup(id: '', name: '', track: '', meetingLink: '', location: '', startDate: _start, endDate: _end);
+        widget.group ?? AcademyGroup(id: '', name: '', meetingLink: '', location: '', startDate: _start, endDate: _end);
     final result = await ref
         .read(academyRepositoryProvider)
         .saveGroup(
           base.copyWith(
             name: _name.text.trim(),
-            track: _track.text.trim(),
+            courseId: _courseId,
             meetingLink: _link.text.trim(),
             location: _location.text.trim(),
             startDate: _start,
@@ -88,6 +92,8 @@ class _GroupFormDialogState extends ConsumerState<GroupFormDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final courses = ref.watch(coursesProvider).value ?? const [];
+
     return AlertDialog(
       title: Text((widget.group == null ? 'admin.group_form.new_title' : 'admin.group_form.edit_title').tr()),
       content: SizedBox(
@@ -105,7 +111,31 @@ class _GroupFormDialogState extends ConsumerState<GroupFormDialog> {
                   validator: _required,
                 ),
                 verticalSpace(14),
-                AppTextField(label: 'admin.group_form.track'.tr(), controller: _track, validator: _required),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Text('admin.group_form.course'.tr(), style: AppTextStyles.font14Bold),
+                    verticalSpace(8),
+                    DropdownButtonFormField<String>(
+                      // A course that was deleted can't be picked again, so the field asks for a new one.
+                      initialValue: courses.any((c) => c.id == _courseId) ? _courseId : null,
+                      isExpanded: true,
+                      items: [
+                        for (final course in courses)
+                          DropdownMenuItem(
+                            value: course.id,
+                            child: Text(course.name, overflow: TextOverflow.ellipsis),
+                          ),
+                      ],
+                      validator: _required,
+                      onChanged: (value) => setState(() => _courseId = value ?? ''),
+                    ),
+                    if (courses.isEmpty) ...[
+                      verticalSpace(8),
+                      Text('admin.group_form.no_courses'.tr(), style: AppTextStyles.font12Normal.secondary(context)),
+                    ],
+                  ],
+                ),
                 verticalSpace(14),
                 AppTextField(
                   label: 'admin.group_form.meeting_link'.tr(),

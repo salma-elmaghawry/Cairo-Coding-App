@@ -5,4 +5,5 @@ class FirestorePaths {
   static const String sessions = 'sessions';
   static const String recordings = 'recordings';
   static const String instructors = 'instructors';
+  static const String courses = 'courses';
 }

@@ -60,6 +60,20 @@ class AppTheme {
       borderSide: BorderSide(color: color, width: width),
     );
 
+    final inputDecoration = InputDecorationThemeData(
+      filled: true,
+      fillColor: colorScheme.surface,
+      hintStyle: AppTextStyles.font14Normal.copyWith(color: textSecondary),
+      contentPadding: EdgeInsets.symmetric(horizontal: 14, vertical: 14),
+      border: fieldBorder(colorScheme.outline),
+      enabledBorder: fieldBorder(colorScheme.outline),
+      focusedBorder: fieldBorder(colorScheme.primary, 1.5),
+      errorBorder: fieldBorder(colorScheme.error),
+      focusedErrorBorder: fieldBorder(colorScheme.error, 1.5),
+      prefixIconColor: textSecondary,
+      suffixIconColor: textSecondary,
+    );
+
     return ThemeData(
       useMaterial3: true,
       brightness: brightness,
@@ -168,18 +182,16 @@ class AppTheme {
         secondaryLabelStyle: AppTextStyles.font14ExtraBold.copyWith(color: colorScheme.onPrimary),
         padding: EdgeInsets.symmetric(horizontal: 8, vertical: 6),
       ),
-      inputDecorationTheme: InputDecorationTheme(
-        filled: true,
-        fillColor: colorScheme.surface,
-        hintStyle: AppTextStyles.font14Normal.copyWith(color: textSecondary),
-        contentPadding: EdgeInsets.symmetric(horizontal: 14, vertical: 14),
-        border: fieldBorder(colorScheme.outline),
-        enabledBorder: fieldBorder(colorScheme.outline),
-        focusedBorder: fieldBorder(colorScheme.primary, 1.5),
-        errorBorder: fieldBorder(colorScheme.error),
-        focusedErrorBorder: fieldBorder(colorScheme.error, 1.5),
-        prefixIconColor: textSecondary,
-        suffixIconColor: textSecondary,
+      inputDecorationTheme: inputDecoration,
+      // DropdownMenu falls back to Material defaults, not to inputDecorationTheme, so it gets the same look here.
+      dropdownMenuTheme: DropdownMenuThemeData(
+        inputDecorationTheme: inputDecoration,
+        textStyle: AppTextStyles.font16Normal.copyWith(color: textPrimary),
+        menuStyle: MenuStyle(
+          backgroundColor: WidgetStatePropertyAll(colorScheme.surface),
+          side: WidgetStatePropertyAll(BorderSide(color: colorScheme.outline)),
+          shape: WidgetStatePropertyAll(RoundedRectangleBorder(borderRadius: fieldRadius)),
+        ),
       ),
       navigationBarTheme: NavigationBarThemeData(
         backgroundColor: colorScheme.surfaceContainerHighest,

@@ -18,7 +18,11 @@ void main() {
     expect(find.text('Admin dashboard'), findsOneWidget);
 
     await signIn(tester, FakeAcademyStore.demoAdminEmail);
-    expect(find.text('Groups'), findsWidgets);
+    expect(find.text('Courses'), findsWidgets);
+    expect(find.text('C++'), findsOneWidget);
+
+    await tester.tap(find.text('Groups').first);
+    await settle(tester);
     expect(find.text('CS140'), findsOneWidget);
 
     await tester.tap(find.text('Open group').first);

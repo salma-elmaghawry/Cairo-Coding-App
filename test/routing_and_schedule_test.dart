@@ -46,7 +46,6 @@ void main() {
     final group = AcademyGroup(
       id: 'g',
       name: 'G',
-      track: '',
       meetingLink: '',
       location: '',
       startDate: DateTime(2026, 10, 1),

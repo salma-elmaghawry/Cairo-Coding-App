@@ -30,7 +30,8 @@ void main() {
 
     await tester.tap(find.text('Recordings').last);
     await settle(tester);
-    expect(find.text('Pointers and references'), findsWidgets);
+    final newest = FakeAcademyStore().recordings.values.reduce((a, b) => a.recordedAt.isAfter(b.recordedAt) ? a : b);
+    expect(find.text(newest.title), findsWidgets);
 
     await tester.tap(find.text('Settings').last);
     await settle(tester);

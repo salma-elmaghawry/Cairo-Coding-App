@@ -1,3 +1,4 @@
+import 'package:cairo_coding_app/admin/admin_providers.dart';
 import 'package:cairo_coding_app/admin/admin_routes.dart';
 import 'package:cairo_coding_app/admin/groups/widgets/group_form_dialog.dart';
 import 'package:cairo_coding_app/core/error_handling/result.dart';
@@ -26,14 +27,23 @@ class GroupHeader extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final colorScheme = Theme.of(context).colorScheme;
+    final course = ref.watch(courseProvider(group.courseId)).value;
+    final slash = Text('/', style: AppTextStyles.font14Normal.secondary(context));
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
+        Wrap(
+          crossAxisAlignment: WrapCrossAlignment.center,
           children: [
-            TextButton(onPressed: () => context.go(AdminRoutes.groups), child: Text('admin.nav.groups'.tr())),
-            Text('/', style: AppTextStyles.font14Normal.secondary(context)),
+            if (course == null)
+              TextButton(onPressed: () => context.go(AdminRoutes.groups), child: Text('admin.nav.groups'.tr()))
+            else ...[
+              TextButton(onPressed: () => context.go(AdminRoutes.courses), child: Text('admin.nav.courses'.tr())),
+              slash,
+              TextButton(onPressed: () => context.go(AdminRoutes.course(course.id)), child: Text(course.name)),
+            ],
+            slash,
             horizontalSpace(8),
             Text(group.name, style: AppTextStyles.font14Normal.secondary(context)),
           ],
@@ -54,7 +64,12 @@ class GroupHeader extends ConsumerWidget {
                   crossAxisAlignment: WrapCrossAlignment.end,
                   children: [
                     Text(group.name, style: AppTextStyles.monoFont28Bold.copyWith(color: colorScheme.primary)),
-                    Text(group.track, style: AppTextStyles.font24ExtraBold),
+                    Text(
+                      course?.name ?? 'admin.groups.no_course'.tr(),
+                      style: course == null
+                          ? AppTextStyles.font24ExtraBold.secondary(context)
+                          : AppTextStyles.font24ExtraBold,
+                    ),
                   ],
                 ),
                 verticalSpace(6),

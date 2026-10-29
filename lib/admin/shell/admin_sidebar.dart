@@ -36,19 +36,15 @@ class AdminSidebar extends ConsumerWidget {
           children: [
             const Align(alignment: AlignmentDirectional.centerStart, child: Wordmark(fontSize: 24)),
             verticalSpace(32),
-            _NavItem(
-              icon: Icons.groups_outlined,
-              label: 'admin.nav.groups'.tr(),
-              selected: location.startsWith(AdminRoutes.groups),
-              onTap: () => go(AdminRoutes.groups),
-            ),
-            verticalSpace(4),
-            _NavItem(
-              icon: Icons.tune_outlined,
-              label: 'admin.nav.settings'.tr(),
-              selected: location.startsWith(AdminRoutes.settings),
-              onTap: () => go(AdminRoutes.settings),
-            ),
+            for (final (route, icon, label) in [
+              (AdminRoutes.courses, Icons.menu_book_outlined, 'admin.nav.courses'),
+              (AdminRoutes.groups, Icons.groups_outlined, 'admin.nav.groups'),
+              (AdminRoutes.instructors, Icons.co_present_outlined, 'admin.nav.instructors'),
+              (AdminRoutes.settings, Icons.tune_outlined, 'admin.nav.settings'),
+            ]) ...[
+              _NavItem(icon: icon, label: label.tr(), selected: location.startsWith(route), onTap: () => go(route)),
+              verticalSpace(4),
+            ],
             const Spacer(),
             const Divider(),
             verticalSpace(14),
@@ -110,10 +106,13 @@ class _NavItem extends StatelessWidget {
             children: [
               Icon(icon, size: 20, color: selected ? colorScheme.primary : colorScheme.onSurfaceVariant),
               horizontalSpace(12),
-              Text(
-                label,
-                style: (selected ? AppTextStyles.font16ExtraBold : AppTextStyles.font16SemiBold).copyWith(
-                  color: selected ? colorScheme.onSurface : colorScheme.onSurfaceVariant,
+              Expanded(
+                child: Text(
+                  label,
+                  overflow: TextOverflow.ellipsis,
+                  style: (selected ? AppTextStyles.font16ExtraBold : AppTextStyles.font16SemiBold).copyWith(
+                    color: selected ? colorScheme.onSurface : colorScheme.onSurfaceVariant,
+                  ),
                 ),
               ),
             ],

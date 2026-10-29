@@ -38,6 +38,7 @@ class GroupCard extends ConsumerWidget {
     final colorScheme = Theme.of(context).colorScheme;
     final studentCount = ref.watch(groupStudentsProvider(group.id).select((value) => value.value?.length));
     final next = ref.watch(groupNextSessionProvider(group.id));
+    final course = ref.watch(courseProvider(group.courseId)).value;
 
     return AppCard(
       padding: const EdgeInsets.all(20),
@@ -52,7 +53,10 @@ class GroupCard extends ConsumerWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(group.name, style: AppTextStyles.monoFont20Bold.copyWith(color: colorScheme.primary)),
-                    Text(group.track, style: AppTextStyles.font16Bold),
+                    Text(
+                      course?.name ?? 'admin.groups.no_course'.tr(),
+                      style: course == null ? AppTextStyles.font16Bold.secondary(context) : AppTextStyles.font16Bold,
+                    ),
                   ],
                 ),
               ),

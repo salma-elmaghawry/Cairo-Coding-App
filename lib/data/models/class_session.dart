@@ -13,6 +13,7 @@ class ClassSession extends Equatable {
     this.meetingLinkOverride,
     this.topic = '',
     this.instructor = '',
+    this.manual = false,
   });
 
   factory ClassSession.fromMap(String id, Map<String, dynamic> map) => ClassSession(
@@ -25,6 +26,7 @@ class ClassSession extends Equatable {
     meetingLinkOverride: map['meetingLinkOverride'] as String?,
     topic: map['topic'] as String? ?? '',
     instructor: map['instructor'] as String? ?? '',
+    manual: map['manual'] as bool? ?? false,
   );
 
   final String id;
@@ -36,6 +38,9 @@ class ClassSession extends Equatable {
   final String? meetingLinkOverride;
   final String topic;
   final String instructor;
+
+  /// Added by hand from the dashboard, so regenerating the weekly slots never replaces it.
+  final bool manual;
 
   DateTime get endsAt => startsAt.add(Duration(minutes: durationMin));
 
@@ -52,19 +57,29 @@ class ClassSession extends Equatable {
     'meetingLinkOverride': meetingLinkOverride,
     'topic': topic,
     'instructor': instructor,
+    'manual': manual,
   };
 
-  ClassSession copyWith({String? id, DateTime? startsAt, SessionStatus? status, String? topic, String? instructor}) {
+  ClassSession copyWith({
+    String? id,
+    int? number,
+    DateTime? startsAt,
+    SessionStatus? status,
+    String? meetingLinkOverride,
+    String? topic,
+    String? instructor,
+  }) {
     return ClassSession(
       id: id ?? this.id,
       groupId: groupId,
-      number: number,
+      number: number ?? this.number,
       startsAt: startsAt ?? this.startsAt,
       durationMin: durationMin,
       status: status ?? this.status,
-      meetingLinkOverride: meetingLinkOverride,
+      meetingLinkOverride: meetingLinkOverride ?? this.meetingLinkOverride,
       topic: topic ?? this.topic,
       instructor: instructor ?? this.instructor,
+      manual: manual,
     );
   }
 
@@ -79,5 +94,6 @@ class ClassSession extends Equatable {
     meetingLinkOverride,
     topic,
     instructor,
+    manual,
   ];
 }

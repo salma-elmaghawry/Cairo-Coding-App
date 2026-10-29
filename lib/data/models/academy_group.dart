@@ -5,7 +5,7 @@ class AcademyGroup extends Equatable {
   const AcademyGroup({
     required this.id,
     required this.name,
-    required this.track,
+    this.courseId = '',
     required this.meetingLink,
     required this.location,
     required this.startDate,
@@ -17,7 +17,7 @@ class AcademyGroup extends Equatable {
   factory AcademyGroup.fromMap(String id, Map<String, dynamic> map) => AcademyGroup(
     id: id,
     name: map['name'] as String,
-    track: map['track'] as String? ?? '',
+    courseId: map['courseId'] as String? ?? '',
     meetingLink: map['meetingLink'] as String? ?? '',
     location: map['location'] as String? ?? '',
     startDate: DateTime.fromMillisecondsSinceEpoch(map['startDate'] as int),
@@ -30,7 +30,7 @@ class AcademyGroup extends Equatable {
 
   final String id;
   final String name;
-  final String track;
+  final String courseId;
   final String meetingLink;
   final String location;
   final DateTime startDate;
@@ -40,7 +40,7 @@ class AcademyGroup extends Equatable {
 
   Map<String, dynamic> toMap() => {
     'name': name,
-    'track': track,
+    'courseId': courseId,
     'meetingLink': meetingLink,
     'location': location,
     'startDate': startDate.millisecondsSinceEpoch,
@@ -52,7 +52,7 @@ class AcademyGroup extends Equatable {
   AcademyGroup copyWith({
     String? id,
     String? name,
-    String? track,
+    String? courseId,
     String? meetingLink,
     String? location,
     DateTime? startDate,
@@ -63,7 +63,7 @@ class AcademyGroup extends Equatable {
     return AcademyGroup(
       id: id ?? this.id,
       name: name ?? this.name,
-      track: track ?? this.track,
+      courseId: courseId ?? this.courseId,
       meetingLink: meetingLink ?? this.meetingLink,
       location: location ?? this.location,
       startDate: startDate ?? this.startDate,
@@ -74,5 +74,5 @@ class AcademyGroup extends Equatable {
   }
 
   @override
-  List<Object> get props => [id, name, track, meetingLink, location, startDate, endDate, weeklySlots, archived];
+  List<Object> get props => [id, name, courseId, meetingLink, location, startDate, endDate, weeklySlots, archived];
 }

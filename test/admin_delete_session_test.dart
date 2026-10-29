@@ -31,25 +31,27 @@ void main() {
 
     await pumpApp(tester, AppFlavor.admin, adminRouterProvider);
     await signIn(tester, FakeAcademyStore.demoAdminEmail);
+    await tester.tap(find.text('Groups').first);
+    await settle(tester);
     await tester.tap(find.text('Open group').first);
     await settle(tester);
     await tester.tap(find.text('Schedule'));
     await settle(tester);
-    expect(find.text('Intro to C++'), findsOneWidget);
+    expect(find.text('Intro To Programming & Datatypes'), findsOneWidget);
 
     await tester.tap(find.byTooltip('Delete session').first);
     await settle(tester);
     expect(find.text('Delete Session 1?'), findsOneWidget);
     await tester.tap(find.text('Cancel').last);
     await settle(tester);
-    expect(find.text('Intro to C++'), findsOneWidget);
+    expect(find.text('Intro To Programming & Datatypes'), findsOneWidget);
 
     await tester.tap(find.byTooltip('Delete session').first);
     await settle(tester);
     await tester.tap(find.text('Delete'));
     await settle(tester);
     expect(find.text('Session deleted'), findsOneWidget);
-    expect(find.text('Intro to C++'), findsNothing);
-    expect(find.text('Variables and types'), findsOneWidget);
+    expect(find.text('Intro To Programming & Datatypes'), findsNothing);
+    expect(find.text('Operators In C++'), findsOneWidget);
   });
 }

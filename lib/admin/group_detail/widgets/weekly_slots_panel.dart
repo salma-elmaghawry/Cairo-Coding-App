@@ -1,3 +1,4 @@
+import 'package:cairo_coding_app/admin/admin_providers.dart';
 import 'package:cairo_coding_app/admin/group_detail/widgets/slot_dialog.dart';
 import 'package:cairo_coding_app/admin/widgets/slot_labels.dart';
 import 'package:cairo_coding_app/core/error_handling/result.dart';
@@ -46,7 +47,8 @@ class _WeeklySlotsPanelState extends ConsumerState<WeeklySlotsPanel> {
     );
     if (!confirmed || !mounted) return;
     setState(() => _saving = true);
-    final result = await ref.read(academyRepositoryProvider).saveSlotsAndGenerate(widget.group, _slots);
+    final course = ref.read(courseProvider(widget.group.courseId)).value;
+    final result = await ref.read(academyRepositoryProvider).saveSlotsAndGenerate(widget.group, _slots, course: course);
     if (!mounted) return;
     setState(() => _saving = false);
     switch (result) {

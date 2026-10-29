@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:cairo_coding_app/data/models/academy_group.dart';
 import 'package:cairo_coding_app/data/models/class_session.dart';
+import 'package:cairo_coding_app/data/models/course.dart';
 import 'package:cairo_coding_app/data/models/instructor.dart';
 import 'package:cairo_coding_app/data/models/recording.dart';
 import 'package:cairo_coding_app/data/models/student.dart';
@@ -16,11 +17,37 @@ class FakeAcademyStore {
   static const String demoStudentEmail = 'mariam.adel@example.com';
   static const String demoAdminEmail = 'admin@cairocoding.school';
 
+  static const List<String> cppSessions = [
+    'Intro To Programming & Datatypes',
+    'Operators In C++',
+    'Conditions In C++',
+    'Loops In C++',
+    'Array & String In C++',
+    'Function In C++',
+    'Pointer & Dynamic Allocation In C++',
+    'Struct In C++ & Project XO',
+    'OOP (Encapsulation)',
+    'OOP (Inheritance)',
+    'OOP (Polymorphism)',
+    'OOP (Abstract) & SOLID',
+    'Time Complexity & Algorithm Searching',
+    'Sorting Algorithm',
+    'Intro to DS & Linked List',
+    'Stack & Queue',
+    'Trees & Graph & Hash Table',
+    'Intro To Database',
+    'Intro To SQL',
+    'Intro To Design Pattern',
+    'Intro To Unit Testing',
+    'File Handling & Exception Handling',
+  ];
+
   final Map<String, AcademyGroup> groups = {};
   final Map<String, ClassSession> sessions = {};
   final Map<String, Recording> recordings = {};
   final Map<String, Student> students = {};
   final Map<String, Instructor> instructors = {};
+  final Map<String, Course> courses = {};
   final StreamController<void> _changes = StreamController<void>.broadcast();
   int _nextId = 1;
 
@@ -47,11 +74,29 @@ class FakeAcademyStore {
     final today = DateTime(now.year, now.month, now.day);
     DateTime daysFrom(int days) => DateTime(today.year, today.month, today.day + days);
 
+    const salma = Instructor(id: 'instructor_salma', name: 'Eng. Salma Elmaghawry');
+    const youssef = Instructor(id: 'instructor_youssef', name: 'Eng. Youssef Nabil');
+    for (final instructor in [salma, youssef]) {
+      instructors[instructor.id] = instructor;
+    }
+    final seededCourses = [
+      Course(id: 'cpp', name: 'C++', sessionTitles: cppSessions, instructorIds: [salma.id]),
+      Course(
+        id: 'tools',
+        name: 'Tools and setup',
+        sessionTitles: const ['Setting up VS Code', 'Git basics', 'Debugging', 'Clean code'],
+        instructorIds: [youssef.id],
+      ),
+    ];
+    for (final course in seededCourses) {
+      courses[course.id] = course;
+    }
+
     final seededGroups = [
       AcademyGroup(
         id: 'cs140',
         name: 'CS140',
-        track: 'C++ programming',
+        courseId: 'cpp',
         meetingLink: 'https://meet.google.com/',
         location: 'Online · Google Meet',
         startDate: daysFrom(-24),
@@ -64,7 +109,7 @@ class FakeAcademyStore {
       AcademyGroup(
         id: 'cs150',
         name: 'CS150',
-        track: 'C++ programming',
+        courseId: 'cpp',
         meetingLink: 'https://meet.google.com/',
         location: 'Online · Google Meet',
         startDate: daysFrom(-5),
@@ -77,7 +122,7 @@ class FakeAcademyStore {
       AcademyGroup(
         id: 'workshop',
         name: 'Workshop',
-        track: 'Tools and setup',
+        courseId: 'tools',
         meetingLink: 'https://meet.google.com/',
         location: 'Online · Google Meet',
         startDate: daysFrom(-20),
@@ -87,7 +132,7 @@ class FakeAcademyStore {
       AcademyGroup(
         id: 'cs120',
         name: 'CS120',
-        track: 'C++ programming',
+        courseId: 'cpp',
         meetingLink: 'https://meet.google.com/',
         location: 'Online · Google Meet',
         startDate: daysFrom(-150),
@@ -126,54 +171,24 @@ class FakeAcademyStore {
       );
     }
 
-    const titlesByGroup = {
-      'cs140': [
-        'Intro to C++',
-        'Variables and types',
-        'Conditions',
-        'Loops',
-        'Arrays and strings',
-        'Functions and scope',
-        'Pointers and references',
-        'Structs',
-      ],
-      'workshop': ['Setting up VS Code', 'Git basics', 'Debugging'],
-    };
-    final topicsByGroup = {
-      'cs140': [
-        ...?titlesByGroup['cs140'],
-        'Operators',
-        'Classes and objects',
-        'Vectors',
-        'Recursion',
-        'File input and output',
-        'Final project',
-      ],
-      'workshop': [...?titlesByGroup['workshop'], 'Clean code'],
-    };
-    const instructorsByGroup = {'cs140': 'Eng. Salma Elmaghawry', 'workshop': 'Eng. Youssef Nabil'};
-    for (final name in instructorsByGroup.values) {
-      final id = newId('instructor');
-      instructors[id] = Instructor(id: id, name: name);
-    }
+    // Groups that are teaching in the demo, with how many of their past sessions have a recording.
+    const recordedByGroup = {'cs140': 8, 'workshop': 3};
+    final instructorByCourse = {'cpp': salma.name, 'tools': youssef.name};
     for (final session in sessions.values.toList()) {
-      final topics = topicsByGroup[session.groupId] ?? const <String>[];
-      final number = session.number ?? 0;
-      if (number < 1 || number > topics.length) continue;
-      sessions[session.id] = session.copyWith(
-        topic: topics[number - 1],
-        instructor: instructorsByGroup[session.groupId],
-      );
+      if (!recordedByGroup.containsKey(session.groupId)) continue;
+      final courseId = groups[session.groupId]!.courseId;
+      final topic = courses[courseId]!.titleOf(session.number);
+      if (topic == null) continue;
+      sessions[session.id] = session.copyWith(topic: topic, instructor: instructorByCourse[courseId]);
     }
     for (final session in sessions.values.where((s) => s.isPast(now)).toList()) {
-      final titles = titlesByGroup[session.groupId] ?? const <String>[];
       final number = session.number ?? 0;
-      if (number < 1 || number > titles.length) continue;
+      if (session.topic.isEmpty || number > (recordedByGroup[session.groupId] ?? 0)) continue;
       final id = newId('recording');
       recordings[id] = Recording(
         id: id,
         groupId: session.groupId,
-        title: titles[number - 1],
+        title: session.topic,
         sessionNumber: number,
         url: 'https://www.youtube.com/',
         recordedAt: session.startsAt,

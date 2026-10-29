@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:cairo_coding_app/core/utils/stream_utils.dart';
 import 'package:cairo_coding_app/data/models/academy_group.dart';
 import 'package:cairo_coding_app/data/models/class_session.dart';
+import 'package:cairo_coding_app/data/models/course.dart';
 import 'package:cairo_coding_app/data/models/instructor.dart';
 import 'package:cairo_coding_app/data/models/recording.dart';
 import 'package:cairo_coding_app/data/models/student.dart';
@@ -21,6 +22,7 @@ class FirestoreAcademySource implements AcademySource {
   CollectionReference<Map<String, dynamic>> get _groups => _db.collection(FirestorePaths.groups);
   CollectionReference<Map<String, dynamic>> get _users => _db.collection(FirestorePaths.users);
   CollectionReference<Map<String, dynamic>> get _instructors => _db.collection(FirestorePaths.instructors);
+  CollectionReference<Map<String, dynamic>> get _courses => _db.collection(FirestorePaths.courses);
   CollectionReference<Map<String, dynamic>> _sessionsOf(String groupId) =>
       _groups.doc(groupId).collection(FirestorePaths.sessions);
   CollectionReference<Map<String, dynamic>> _recordingsOf(String groupId) =>
@@ -180,4 +182,17 @@ class FirestoreAcademySource implements AcademySource {
 
   @override
   Future<void> deleteInstructor(String id) => _instructors.doc(id).delete();
+
+  @override
+  Stream<List<Course>> watchCourses() => _courses.snapshots().map((s) => _map(s, Course.fromMap));
+
+  @override
+  Future<Course> saveCourse(Course course) async {
+    final doc = course.id.isEmpty ? _courses.doc() : _courses.doc(course.id);
+    await doc.set(course.toMap());
+    return course.copyWith(id: doc.id);
+  }
+
+  @override
+  Future<void> deleteCourse(String id) => _courses.doc(id).delete();
 }

@@ -2,13 +2,17 @@ import 'package:cairo_coding_app/core/providers/core_providers.dart';
 import 'package:cairo_coding_app/data/fake/fake_academy_source.dart';
 import 'package:cairo_coding_app/data/fake/fake_academy_store.dart';
 import 'package:cairo_coding_app/data/fake/fake_auth_source.dart';
+import 'package:cairo_coding_app/data/fake/fake_quiz_source.dart';
 import 'package:cairo_coding_app/data/models/app_user.dart';
 import 'package:cairo_coding_app/data/repositories/academy_repository.dart';
 import 'package:cairo_coding_app/data/repositories/auth_repository.dart';
+import 'package:cairo_coding_app/data/repositories/quiz_repository.dart';
 import 'package:cairo_coding_app/data/sources/academy_source.dart';
 import 'package:cairo_coding_app/data/sources/auth_source.dart';
 import 'package:cairo_coding_app/data/sources/firebase_auth_source.dart';
 import 'package:cairo_coding_app/data/sources/firestore_academy_source.dart';
+import 'package:cairo_coding_app/data/sources/firestore_quiz_source.dart';
+import 'package:cairo_coding_app/data/sources/quiz_source.dart';
 import 'package:cairo_coding_app/data/sources/student_account_creator.dart';
 import 'package:cairo_coding_app/firebase_options.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -31,10 +35,15 @@ final authSourceProvider = Provider<AuthSource>(
       FirebaseAuthSource(ref.watch(firebaseAuthProvider), ref.watch(firestoreProvider), ref.watch(appFlavorProvider)),
 );
 
-final fakeAcademyStoreProvider = Provider<FakeAcademyStore>((ref) => FakeAcademyStore());
+final quizSourceProvider = Provider<QuizSource>((ref) => FirestoreQuizSource(ref.watch(firestoreProvider)));
+
+final fakeAcademyStoreProvider = Provider<FakeAcademyStore>((ref) => FakeAcademyStore(now: ref.read(clockProvider)()));
 
 final fakeSourceOverrides = [
   academySourceProvider.overrideWith((ref) => FakeAcademySource(ref.watch(fakeAcademyStoreProvider))),
+  quizSourceProvider.overrideWith(
+    (ref) => FakeQuizSource(ref.watch(fakeAcademyStoreProvider), clock: ref.watch(clockProvider)),
+  ),
   authSourceProvider.overrideWith(
     (ref) => FakeAuthSource(ref.watch(fakeAcademyStoreProvider), ref.watch(appFlavorProvider)),
   ),
@@ -43,6 +52,8 @@ final fakeSourceOverrides = [
 final academyRepositoryProvider = Provider<AcademyRepository>(
   (ref) => AcademyRepository(ref.watch(academySourceProvider), clock: ref.watch(clockProvider)),
 );
+
+final quizRepositoryProvider = Provider<QuizRepository>((ref) => QuizRepository(ref.watch(quizSourceProvider)));
 
 final authRepositoryProvider = Provider<AuthRepository>((ref) => AuthRepository(ref.watch(authSourceProvider)));
 

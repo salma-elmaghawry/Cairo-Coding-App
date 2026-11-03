@@ -4,14 +4,20 @@ import 'package:cairo_coding_app/admin/courses/courses_screen.dart';
 import 'package:cairo_coding_app/admin/group_detail/group_detail_screen.dart';
 import 'package:cairo_coding_app/admin/groups/groups_screen.dart';
 import 'package:cairo_coding_app/admin/instructors/instructors_screen.dart';
+import 'package:cairo_coding_app/admin/quizzes/admin_quizzes_screen.dart';
+import 'package:cairo_coding_app/admin/quizzes/quiz_admin_providers.dart';
+import 'package:cairo_coding_app/admin/quizzes/quiz_analytics_screen.dart';
+import 'package:cairo_coding_app/admin/quizzes/quiz_builder_screen.dart';
 import 'package:cairo_coding_app/admin/settings/admin_settings_screen.dart';
-import 'package:cairo_coding_app/admin/students/students_screen.dart';
 import 'package:cairo_coding_app/admin/shell/admin_scaffold.dart';
+import 'package:cairo_coding_app/admin/students/students_screen.dart';
+import 'package:cairo_coding_app/core/helpers/ui_helpers.dart';
 import 'package:cairo_coding_app/core/widgets/not_found_screen.dart';
 import 'package:cairo_coding_app/shared/auth/blocked_screen.dart';
 import 'package:cairo_coding_app/shared/auth/login_screen.dart';
 import 'package:cairo_coding_app/shared/routing/auth_listenable.dart';
 import 'package:cairo_coding_app/shared/splash_screen.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -20,6 +26,21 @@ final adminRouterProvider = Provider<GoRouter>((ref) {
   final auth = authListenable(ref);
 
   NoTransitionPage<void> page(Widget child) => NoTransitionPage(child: child);
+
+  // A sidebar click would otherwise lose a half-written quiz without warning.
+  Future<bool> confirmLeavingBuilder(BuildContext context, GoRouterState state) async {
+    if (!ref.read(quizBuilderDirtyProvider)) return true;
+    final leave = await showConfirmDialog(
+      context,
+      title: 'admin.quiz_builder.leave_title'.tr(),
+      message: 'admin.quiz_builder.leave_message'.tr(),
+      confirmLabel: 'admin.quiz_builder.leave'.tr(),
+      cancelLabel: 'admin.quiz_builder.stay'.tr(),
+      destructive: true,
+    );
+    if (leave) ref.read(quizBuilderDirtyProvider.notifier).set(false);
+    return leave;
+  }
 
   // `/<section>/:id` opens the first tab, and an unknown tab falls back to it.
   GoRoute tabbedDetail<T extends Enum>({
@@ -88,6 +109,27 @@ final adminRouterProvider = Provider<GoRouter>((ref) {
           ),
           GoRoute(path: AdminRoutes.students, pageBuilder: (_, _) => page(const StudentsScreen())),
           GoRoute(path: AdminRoutes.instructors, pageBuilder: (_, _) => page(const InstructorsScreen())),
+          GoRoute(
+            path: AdminRoutes.quizzes,
+            pageBuilder: (_, _) => page(const AdminQuizzesScreen()),
+            routes: [
+              // Listed before ':quizId' so "new" isn't read as a quiz id.
+              GoRoute(
+                path: 'new',
+                onExit: confirmLeavingBuilder,
+                pageBuilder: (_, _) => page(const QuizBuilderScreen()),
+              ),
+              GoRoute(
+                path: ':quizId/edit',
+                onExit: confirmLeavingBuilder,
+                pageBuilder: (_, state) => page(QuizBuilderScreen(quizId: state.pathParameters['quizId'])),
+              ),
+              GoRoute(
+                path: ':quizId/analytics',
+                pageBuilder: (_, state) => page(QuizAnalyticsScreen(quizId: state.pathParameters['quizId']!)),
+              ),
+            ],
+          ),
           GoRoute(path: AdminRoutes.settings, pageBuilder: (_, _) => page(const AdminSettingsScreen())),
         ],
       ),

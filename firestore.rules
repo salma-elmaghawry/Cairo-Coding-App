@@ -69,6 +69,159 @@ service cloud.firestore {
         allow read: if isAdmin() || isActiveMemberOf(groupId);
         allow write: if isAdmin();
       }
+
+      // What students see of a published quiz: no questions and no answers.
+      match /quizzes/{quizId} {
+        allow read: if isAdmin() || isActiveMemberOf(groupId);
+        allow write: if isAdmin();
+      }
+
+      // The group's ranking for one quiz: { uid: { name, score, correctCount, durationMs } }.
+      match /quizBoards/{quizId} {
+        allow read: if isAdmin() || isActiveMemberOf(groupId);
+        allow delete: if isAdmin();
+        allow create, update: if isAdmin() || postsOwnFirstResult(groupId, quizId);
+      }
+    }
+
+    // Quizzes. There is no server on the Spark plan, so these rules do its job: the student's phone
+    // does the arithmetic, and every step it reports has to pass here.
+    //   start   -> the questions become readable
+    //   answer  -> one at a time, locked once written, on the server's clock
+    //   submit  -> answers are frozen, and only now does the key become readable
+    //   grade   -> the score must equal the rules' own recount against the key
+
+    function attemptPath(quizId, uid, number) {
+      return /databases/$(database)/documents/quizAttempts/$(quizId + '_' + uid + '_' + string(number));
+    }
+
+    function hasStarted(quizId) {
+      return signedIn() && exists(attemptPath(quizId, request.auth.uid, 1));
+    }
+
+    function hasSubmitted(quizId) {
+      return signedIn() && get(attemptPath(quizId, request.auth.uid, 1)).data.status in ['submitted', 'graded'];
+    }
+
+    // Only the first attempt ranks: the key is readable after it, so a retake can't be proven fair.
+    function postsOwnFirstResult(groupId, quizId) {
+      let uid = request.auth.uid;
+      let before = resource == null ? {} : resource.data;
+      let after = request.resource.data;
+      let attempt = getAfter(attemptPath(quizId, uid, 1)).data;
+      let entry = after[uid];
+      return after.diff(before).affectedKeys().hasOnly([uid])
+        && !(uid in before)
+        && attempt.status == 'graded'
+        && groupId in attempt.groupIds
+        && entry.keys().hasOnly(['name', 'score', 'correctCount', 'durationMs'])
+        && entry.name == attempt.studentName
+        && entry.score == attempt.score
+        && entry.correctCount == attempt.correctCount
+        && entry.durationMs == attempt.lastAnswerAt.toMillis() - attempt.startedAt.toMillis();
+    }
+
+    match /quizzes/{quizId} {
+      allow read, write: if isAdmin();
+
+      match /content/paper {
+        allow read: if isAdmin() || hasStarted(quizId);
+        allow write: if isAdmin();
+      }
+
+      match /content/key {
+        allow read: if isAdmin() || hasSubmitted(quizId);
+        allow write: if isAdmin();
+      }
+    }
+
+    match /quizAttempts/{attemptId} {
+      function startsValidly() {
+        let data = request.resource.data;
+        let quiz = get(/databases/$(database)/documents/quizzes/$(data.quizId)).data;
+        let student = profile();
+        return data.keys().hasOnly(['quizId', 'uid', 'number', 'studentName', 'groupIds', 'status', 'startedAt',
+            'lastAnswerAt', 'durationMin', 'closesAt', 'questionCount', 'answers'])
+          && data.uid == request.auth.uid
+          // A fixed id means a repeated start can't create a second attempt.
+          && attemptId == data.quizId + '_' + data.uid + '_' + string(data.number)
+          && data.number is int
+          && data.number >= 1
+          && data.number <= quiz.maxAttempts
+          && (data.number == 1
+            || get(attemptPath(data.quizId, data.uid, data.number - 1)).data.status in ['submitted', 'graded'])
+          && quiz.status == 'published'
+          && request.time >= quiz.opensAt
+          && request.time < quiz.closesAt
+          && student.active == true
+          && data.studentName == student.name
+          && data.groupIds.size() > 0
+          && quiz.groupIds.hasAll(data.groupIds)
+          && student.groupIds.hasAll(data.groupIds)
+          && data.status == 'inProgress'
+          && data.startedAt == request.time
+          && data.lastAnswerAt == request.time
+          && data.durationMin == quiz.durationMin
+          && data.closesAt == quiz.closesAt
+          && data.questionCount == quiz.questionCount
+          && data.answers.size() == 0;
+      }
+
+      // 30 seconds of grace so an answer given at the last moment survives the trip to the server.
+      function isBeforeDeadline(attempt) {
+        let grace = duration.value(30, 's');
+        return request.time < attempt.closesAt + grace
+          && (attempt.durationMin == 0
+            || request.time < attempt.startedAt + duration.value(attempt.durationMin, 'm') + grace);
+      }
+
+      function addsOneAnswer() {
+        let before = resource.data;
+        let after = request.resource.data;
+        let change = after.answers.diff(before.answers);
+        return before.status == 'inProgress'
+          && after.diff(before).affectedKeys().hasOnly(['answers', 'lastAnswerAt'])
+          && after.lastAnswerAt == request.time
+          && change.addedKeys().size() == 1
+          && change.affectedKeys().size() == 1
+          && after.answers.size() <= before.questionCount
+          && isBeforeDeadline(before);
+      }
+
+      // Allowed after the deadline too: the app may only reopen later, and the answers can't change by then.
+      function submits() {
+        let after = request.resource.data;
+        return resource.data.status == 'inProgress'
+          && after.diff(resource.data).affectedKeys().hasOnly(['status', 'submittedAt'])
+          && after.status == 'submitted'
+          && after.submittedAt == request.time;
+      }
+
+      // How many of the student's answers match one bucket of the key.
+      function hits(answers, bucket) {
+        return answers.diff(bucket).unchangedKeys().size();
+      }
+
+      // The key groups questions by their points, because rules have no loops but can count matches per bucket.
+      function gradesCorrectly() {
+        let after = request.resource.data;
+        let answers = resource.data.answers;
+        let key = get(/databases/$(database)/documents/quizzes/$(resource.data.quizId)/content/key).data;
+        return resource.data.status == 'submitted'
+          && after.status == 'graded'
+          && after.diff(resource.data).affectedKeys().hasOnly(['status', 'score', 'correctCount'])
+          && after.correctCount == hits(answers, key.p1) + hits(answers, key.p2) + hits(answers, key.p3)
+            + hits(answers, key.p5) + hits(answers, key.p10) + hits(answers, key.p20)
+          && after.score == hits(answers, key.p1) + hits(answers, key.p2) * 2 + hits(answers, key.p3) * 3
+            + hits(answers, key.p5) * 5 + hits(answers, key.p10) * 10 + hits(answers, key.p20) * 20;
+      }
+
+      allow read: if isAdmin() || (signedIn() && resource.data.uid == request.auth.uid);
+      allow create: if signedIn() && startsValidly();
+      allow update: if signedIn()
+        && resource.data.uid == request.auth.uid
+        && (addsOneAnswer() || submits() || gradesCorrectly());
+      allow delete: if isAdmin();
     }
   }
 }

@@ -1,6 +1,18 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-const Set<String> _dateFields = {'startDate', 'endDate', 'startsAt', 'recordedAt', 'createdAt', 'updatedAt'};
+const Set<String> _dateFields = {
+  'startDate',
+  'endDate',
+  'startsAt',
+  'recordedAt',
+  'createdAt',
+  'updatedAt',
+  'opensAt',
+  'closesAt',
+  'startedAt',
+  'lastAnswerAt',
+  'submittedAt',
+};
 
 Map<String, dynamic> fromFirestore(Map<String, dynamic> data) => {
   for (final MapEntry(:key, :value) in data.entries) key: value is Timestamp ? value.millisecondsSinceEpoch : value,

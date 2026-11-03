@@ -10,15 +10,25 @@ import 'package:cairo_coding_app/student/reminders/reminder_providers.dart';
 import 'package:cairo_coding_app/student/reminders/reminder_scheduler.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/misc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-Future<void> pumpApp(WidgetTester tester, AppFlavor flavor, Provider<GoRouter> router) async {
+Future<void> pumpApp(
+  WidgetTester tester,
+  AppFlavor flavor,
+  Provider<GoRouter> router, {
+  List<Override> overrides = const [],
+  Locale startLocale = const Locale('en'),
+}) async {
   SharedPreferences.setMockInitialValues({});
   final prefs = await SharedPreferences.getInstance();
+  // The bundle caches futures, and one from an earlier test in this file never completes on this test's clock.
+  rootBundle.clear();
   await tester.pumpWidget(
     ProviderScope(
       overrides: [
@@ -26,11 +36,12 @@ Future<void> pumpApp(WidgetTester tester, AppFlavor flavor, Provider<GoRouter> r
         appFlavorProvider.overrideWithValue(flavor),
         reminderSchedulerProvider.overrideWithValue(SilentReminderScheduler()),
         ...fakeSourceOverrides,
+        ...overrides,
       ],
       child: EasyLocalization(
         supportedLocales: const [Locale('en'), Locale('ar')],
         fallbackLocale: const Locale('en'),
-        startLocale: const Locale('en'),
+        startLocale: startLocale,
         saveLocale: false,
         path: AppAssets.translations,
         child: CairoCodingApp(routerProvider: router),

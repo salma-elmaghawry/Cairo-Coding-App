@@ -41,6 +41,7 @@ class AdminSidebar extends ConsumerWidget {
               (AdminRoutes.groups, Icons.groups_outlined, 'admin.nav.groups'),
               (AdminRoutes.students, Icons.school_outlined, 'admin.nav.students'),
               (AdminRoutes.instructors, Icons.co_present_outlined, 'admin.nav.instructors'),
+              (AdminRoutes.quizzes, Icons.quiz_outlined, 'admin.nav.quizzes'),
               (AdminRoutes.settings, Icons.tune_outlined, 'admin.nav.settings'),
             ]) ...[
               _NavItem(icon: icon, label: label.tr(), selected: location.startsWith(route), onTap: () => go(route)),

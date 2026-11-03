@@ -54,3 +54,7 @@ android/key.properties
 .firebase/
 firebase-debug.log
 firestore-debug.log
+
+# Security rules tests
+tool/rules_test/node_modules/
+tool/rules_test/*.log

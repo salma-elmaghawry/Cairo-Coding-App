@@ -6,4 +6,10 @@ class FirestorePaths {
   static const String recordings = 'recordings';
   static const String instructors = 'instructors';
   static const String courses = 'courses';
+  static const String quizzes = 'quizzes';
+  static const String quizContent = 'content';
+  static const String quizPaper = 'paper';
+  static const String quizKey = 'key';
+  static const String quizAttempts = 'quizAttempts';
+  static const String quizBoards = 'quizBoards';
 }

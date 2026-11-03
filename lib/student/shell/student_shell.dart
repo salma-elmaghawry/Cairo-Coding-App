@@ -34,6 +34,11 @@ class StudentShell extends ConsumerWidget {
               label: 'student.nav.schedule'.tr(),
             ),
             NavigationDestination(
+              icon: const Icon(Icons.quiz_outlined),
+              selectedIcon: const Icon(Icons.quiz_rounded),
+              label: 'student.nav.quizzes'.tr(),
+            ),
+            NavigationDestination(
               icon: const Icon(Icons.smart_display_outlined),
               selectedIcon: const Icon(Icons.smart_display_rounded),
               label: 'student.nav.recordings'.tr(),

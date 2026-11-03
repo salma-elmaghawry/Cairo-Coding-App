@@ -13,12 +13,14 @@ A Flutter Web admin dashboard and a mobile student app for **Cairo Coding School
 - Set weekly time slots and generate the group's sessions. Cancel, restore, reschedule, or add extra sessions.
 - Add, edit and delete session recordings (YouTube or Google Drive links).
 - Deactivate or remove students.
+- Build quizzes on one page (questions, four options, points, timers, drag to reorder, preview), publish them to groups, and read per-quiz analytics.
 
 **Student app (Android / iOS)**
 - Next session with a live countdown and a one-tap "Join meeting".
 - Full schedule with upcoming and past sessions, with moved, cancelled and extra sessions marked.
 - Recordings, filterable by group.
 - Session reminders 24 hours and 1 hour before, kept in step with schedule changes by a background sync every 6 hours.
+- Quizzes: one question at a time with countdowns, automatic submit, results, and a leaderboard for their group.
 - Arabic / English and light / dark / system theme.
 
 ## Technical highlights
@@ -29,6 +31,7 @@ A Flutter Web admin dashboard and a mobile student app for **Cairo Coding School
 - **Scheduling engine** that turns weekly slots into dated sessions in Africa/Cairo time, correct across daylight saving, and only regenerates sessions nobody has touched.
 - **No server code (Firebase Spark plan).** Student accounts are created from the dashboard through a secondary Firebase app, so the admin stays signed in, and a password-reset email works as the welcome email.
 - **Role-based Firestore security rules:** admins are listed in `admins/{uid}`, and students can only read their own groups while their account is active.
+- **Tamper-proof quizzes without a server.** Security rules hide the answer key until an attempt is submitted, lock each answer, enforce time limits on the server's clock, and recompute every score the phone reports.
 - **Offline cache** turned on to cut reads and keep the app usable on a weak connection.
 - **Repository layer with swappable data sources.** Firebase in the app, an in-memory fake in tests. Errors are mapped to typed, translated messages through a sealed `Result` type.
 - Arabic and English with full right-to-left layout, bundled fonts (Nunito, Cairo, JetBrains Mono), and a responsive sidebar / drawer layout.
@@ -81,6 +84,8 @@ flutter test
 
 - Auth redirect rules and the scheduling engine, including the daylight-saving change.
 - End-to-end smoke tests that boot each app on the fake backend, sign in, and walk through every screen.
+- Quiz scoring, ranking and analytics, plus the full student and admin quiz flows.
+- Quiz security rules against the Firestore emulator: `cd tool/rules_test && npm install && npm test`. Run these after any change to `firestore.rules`.
 
 ## Status
 

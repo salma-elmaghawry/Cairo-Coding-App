@@ -7,9 +7,15 @@ class AdminRoutes {
   static const String groups = '/groups';
   static const String students = '/students';
   static const String instructors = '/instructors';
+  static const String quizzes = '/quizzes';
+  static const String newQuiz = '$quizzes/new';
   static const String settings = '/settings';
 
   static String course(String courseId, [CourseTab tab = CourseTab.groups]) => '$courses/$courseId/${tab.name}';
 
   static String group(String groupId, [GroupTab tab = GroupTab.students]) => '$groups/$groupId/${tab.name}';
+
+  static String editQuiz(String quizId) => '$quizzes/$quizId/edit';
+
+  static String quizAnalytics(String quizId) => '$quizzes/$quizId/analytics';
 }

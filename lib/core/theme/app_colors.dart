@@ -33,4 +33,9 @@ class AppColors {
   static const Color success = Color(0xFF16A34A);
   static const Color warning = Color(0xFFFACC15);
   static const Color info = Color(0xFF0EA5E9);
+
+  static const Color medalGold = Color(0xFFFACC15);
+  static const Color medalSilver = Color(0xFFB8BCC9);
+  static const Color medalBronze = Color(0xFFD08A4E);
+  static const Color onMedal = Color(0xFF1B0F26);
 }

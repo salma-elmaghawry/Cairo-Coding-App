@@ -1,7 +1,8 @@
+import 'package:cairo_coding_app/core/theme/app_colors.dart';
 import 'package:cairo_coding_app/core/utils/app_text_styles.dart';
 import 'package:flutter/material.dart';
 
-enum StatusTone { accent, neutral, danger }
+enum StatusTone { accent, neutral, danger, success, gold }
 
 class StatusChip extends StatelessWidget {
   const StatusChip({super.key, required this.label, this.tone = StatusTone.accent});
@@ -16,6 +17,8 @@ class StatusChip extends StatelessWidget {
       StatusTone.accent => colorScheme.primary,
       StatusTone.neutral => colorScheme.onSurfaceVariant,
       StatusTone.danger => colorScheme.error,
+      StatusTone.success => AppColors.success,
+      StatusTone.gold => colorScheme.tertiary,
     };
 
     return Container(

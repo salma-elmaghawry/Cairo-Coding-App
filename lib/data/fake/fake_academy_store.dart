@@ -1,9 +1,14 @@
 import 'dart:async';
 
+import 'package:cairo_coding_app/data/fake/fake_quiz_seed.dart';
 import 'package:cairo_coding_app/data/models/academy_group.dart';
 import 'package:cairo_coding_app/data/models/class_session.dart';
 import 'package:cairo_coding_app/data/models/course.dart';
 import 'package:cairo_coding_app/data/models/instructor.dart';
+import 'package:cairo_coding_app/data/models/quiz.dart';
+import 'package:cairo_coding_app/data/models/quiz_attempt.dart';
+import 'package:cairo_coding_app/data/models/quiz_board.dart';
+import 'package:cairo_coding_app/data/models/quiz_question.dart';
 import 'package:cairo_coding_app/data/models/recording.dart';
 import 'package:cairo_coding_app/data/models/student.dart';
 import 'package:cairo_coding_app/data/models/weekly_slot.dart';
@@ -48,6 +53,12 @@ class FakeAcademyStore {
   final Map<String, Student> students = {};
   final Map<String, Instructor> instructors = {};
   final Map<String, Course> courses = {};
+  final Map<String, Quiz> quizzes = {};
+  final Map<String, QuizContent> quizContents = {};
+  final Map<String, QuizAttempt> quizAttempts = {};
+
+  /// Group id, then quiz id, then student uid.
+  final Map<String, Map<String, Map<String, BoardEntry>>> quizBoards = {};
   final StreamController<void> _changes = StreamController<void>.broadcast();
   int _nextId = 1;
 
@@ -223,5 +234,7 @@ class FakeAcademyStore {
       final uid = newId('user');
       students[uid] = Student(uid: uid, name: name, email: email, phone: phone, groupIds: groupIds, active: active);
     }
+
+    seedFakeQuizzes(this, now);
   }
 }

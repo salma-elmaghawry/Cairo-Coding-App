@@ -9,8 +9,9 @@ class AdminSettingsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AdminPage(
-      eyebrow: 'settings.eyebrow'.tr(),
-      title: 'settings.title'.tr(),
+      // The language is switched on this page, so the header has to listen for it.
+      eyebrow: 'settings.eyebrow'.tr(context: context),
+      title: 'settings.title'.tr(context: context),
       children: [
         Align(
           alignment: AlignmentDirectional.topStart,

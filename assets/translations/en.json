@@ -272,7 +272,7 @@
       "add_hint": "New emails get an account and a set-password email. Emails that already have an account are just added to this group.",
       "add_one": "Add student",
       "add_all": "Add all",
-      "added": "{} new accounts created, {} existing students added",
+      "added": "New accounts: {} · Existing students added: {}",
       "skipped": "Couldn't add (account exists without a profile, contact support): {}",
       "edit": "Edit student",
       "edit_title": "Edit student",

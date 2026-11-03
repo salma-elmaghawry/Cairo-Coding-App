@@ -27,6 +27,7 @@ class PrimaryButton extends StatelessWidget {
     final enabled = onPressed != null;
 
     return Semantics(
+      container: true,
       button: true,
       enabled: enabled && !isLoading,
       label: label,

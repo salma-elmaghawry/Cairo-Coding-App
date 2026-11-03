@@ -113,7 +113,9 @@ class _AddStudentsPanelState extends ConsumerState<AddStudentsPanel> {
               verticalSpace(12),
               AppTextField(label: 'admin.students.phone'.tr(), controller: _phone, keyboardType: TextInputType.phone),
             ] else
+              // Keyed so it doesn't take over the name field's state, and with it a leftover "Name is required".
               AppTextField(
+                key: const ValueKey(_AddMode.bulk),
                 label: 'admin.students.bulk_label'.tr(),
                 hint: 'student1@example.com\nstudent2@example.com',
                 controller: _bulk,

@@ -12,7 +12,7 @@ import 'package:cairo_coding_app/core/widgets/state_views.dart';
 import 'package:cairo_coding_app/core/widgets/status_chip.dart';
 import 'package:cairo_coding_app/data/models/academy_group.dart';
 import 'package:cairo_coding_app/data/models/course.dart';
-import 'package:easy_localization/easy_localization.dart';
+import 'package:easy_localization/easy_localization.dart' hide TextDirection;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -56,7 +56,11 @@ class StudentsScreen extends ConsumerWidget {
                 [
                   Text(student.name, style: AppTextStyles.font14Bold),
                   Text(student.email, style: AppTextStyles.font14Normal.secondary(context)),
-                  Text(student.phone, style: AppTextStyles.monoFont12Medium.secondary(context)),
+                  Text(
+                    student.phone,
+                    textDirection: TextDirection.ltr,
+                    style: AppTextStyles.monoFont12Medium.secondary(context),
+                  ),
                   Wrap(
                     spacing: 6,
                     runSpacing: 6,

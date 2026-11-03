@@ -15,7 +15,7 @@ import 'package:cairo_coding_app/data/data_providers.dart';
 import 'package:cairo_coding_app/data/models/academy_group.dart';
 import 'package:cairo_coding_app/data/models/course.dart';
 import 'package:cairo_coding_app/data/models/instructor.dart';
-import 'package:easy_localization/easy_localization.dart';
+import 'package:easy_localization/easy_localization.dart' hide TextDirection;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -79,7 +79,11 @@ class InstructorsScreen extends ConsumerWidget {
                       style: AppTextStyles.font12Normal.secondary(context),
                     ),
                     if (instructor.phone.isNotEmpty)
-                      Text(instructor.phone, style: AppTextStyles.monoFont12Medium.secondary(context)),
+                      Text(
+                        instructor.phone,
+                        textDirection: TextDirection.ltr,
+                        style: AppTextStyles.monoFont12Medium.secondary(context),
+                      ),
                   ],
                 ),
                 teaches.isEmpty

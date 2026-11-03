@@ -48,6 +48,8 @@ class AppTextField extends StatelessWidget {
         TextFormField(
           controller: controller,
           keyboardType: keyboardType,
+          // Digit groups have no direction of their own, so in Arabic "010 1234 5678" would read backwards.
+          textDirection: keyboardType == TextInputType.phone ? TextDirection.ltr : null,
           textInputAction: textInputAction,
           obscureText: obscureText,
           validator: validator,

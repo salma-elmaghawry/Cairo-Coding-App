@@ -20,17 +20,24 @@ class DateBadge extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: colorScheme.outline),
       ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            top,
-            style: (bottom == null ? AppTextStyles.monoFont14Bold : AppTextStyles.monoFont10Medium).copyWith(
-              color: colorScheme.primary,
-            ),
+      // Arabic weekdays fall back to a taller font than the mono one, so the content shrinks to fit.
+      child: Center(
+        child: FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                top,
+                style: (bottom == null ? AppTextStyles.monoFont14Bold : AppTextStyles.monoFont10Medium).copyWith(
+                  color: colorScheme.primary,
+                ),
+              ),
+              if (bottom != null)
+                Text(bottom!, style: AppTextStyles.monoFont16Bold.copyWith(color: colorScheme.primary)),
+            ],
           ),
-          if (bottom != null) Text(bottom!, style: AppTextStyles.monoFont16Bold.copyWith(color: colorScheme.primary)),
-        ],
+        ),
       ),
     );
   }

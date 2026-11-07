@@ -3,6 +3,7 @@ import 'package:cairo_coding_app/shared/auth/blocked_screen.dart';
 import 'package:cairo_coding_app/shared/auth/login_screen.dart';
 import 'package:cairo_coding_app/shared/routing/auth_listenable.dart';
 import 'package:cairo_coding_app/shared/splash_screen.dart';
+import 'package:cairo_coding_app/student/announcements/announcements_screen.dart';
 import 'package:cairo_coding_app/student/home/home_screen.dart';
 import 'package:cairo_coding_app/student/quizzes/leaderboard_screen.dart';
 import 'package:cairo_coding_app/student/quizzes/quiz_intro_screen.dart';
@@ -43,7 +44,19 @@ final studentRouterProvider = Provider<GoRouter>((ref) {
         builder: (context, state, shell) => StudentShell(shell: shell),
         branches: [
           StatefulShellBranch(
-            routes: [GoRoute(path: StudentRoutes.home, builder: (_, _) => const HomeScreen())],
+            routes: [
+              GoRoute(
+                path: StudentRoutes.home,
+                builder: (_, _) => const HomeScreen(),
+                routes: [
+                  GoRoute(
+                    path: 'announcements',
+                    parentNavigatorKey: rootKey,
+                    builder: (_, _) => const AnnouncementsScreen(),
+                  ),
+                ],
+              ),
+            ],
           ),
           StatefulShellBranch(
             routes: [GoRoute(path: StudentRoutes.schedule, builder: (_, _) => const ScheduleScreen())],

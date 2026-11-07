@@ -22,6 +22,16 @@ service cloud.firestore {
         && groupId in profile().groupIds;
     }
 
+    // Lets a student add only their own uid to a list field and change nothing else, so joining a call or
+    // opening a recording can't remove anyone or touch other fields.
+    function addsOnlySelf(field) {
+      let before = resource.data.get(field, []);
+      let after = request.resource.data.get(field, []);
+      return request.resource.data.diff(resource.data).affectedKeys().hasOnly([field])
+        && after is list
+        && after.toSet() == before.toSet().union([request.auth.uid].toSet());
+    }
+
     match /admins/{uid} {
       allow read: if signedIn() && request.auth.uid == uid;
       allow write: if false;
@@ -30,10 +40,15 @@ service cloud.firestore {
     match /users/{uid} {
       allow read: if isAdmin() || (signedIn() && request.auth.uid == uid);
       allow create, update: if isAdmin()
-        && request.resource.data.keys().hasOnly(['name', 'email', 'phone', 'groupIds', 'active', 'locale', 'createdAt'])
+        && request.resource.data.keys().hasOnly(['name', 'email', 'phone', 'groupIds', 'active', 'locale', 'createdAt',
+            'lastSeenAt'])
         && request.resource.data.email is string
         && request.resource.data.groupIds is list
         && request.resource.data.active is bool;
+      // The app stamps when a student last opened it, so the dashboard can tell who never signed in.
+      allow update: if signedIn() && request.auth.uid == uid
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['lastSeenAt'])
+        && request.resource.data.lastSeenAt == request.time;
       allow delete: if false;
     }
 
@@ -63,11 +78,33 @@ service cloud.firestore {
       match /sessions/{sessionId} {
         allow read: if isAdmin() || isActiveMemberOf(groupId);
         allow write: if isAdmin();
+        // Attendance: a student marks themselves present by joining the call, from 30 minutes before the
+        // session starts until it ends. The admin can correct it any time.
+        allow update: if isActiveMemberOf(groupId)
+          && addsOnlySelf('attendees')
+          && resource.data.status != 'cancelled'
+          && request.time >= resource.data.startsAt - duration.value(30, 'm')
+          && request.time < resource.data.startsAt + duration.value(resource.data.durationMin, 'm');
       }
 
       match /recordings/{recordingId} {
         allow read: if isAdmin() || isActiveMemberOf(groupId);
         allow write: if isAdmin();
+        // Opening a recording adds the student to its viewers.
+        allow update: if isActiveMemberOf(groupId) && addsOnlySelf('viewers');
+      }
+
+      // Messages from the academy. One copy per group it was sent to, all with the same id.
+      match /announcements/{announcementId} {
+        allow read: if isAdmin() || isActiveMemberOf(groupId);
+        allow delete: if isAdmin();
+        allow create, update: if isAdmin()
+          && request.resource.data.keys().hasOnly(['title', 'body', 'groupIds', 'createdAt'])
+          && request.resource.data.title is string
+          && request.resource.data.title.size() > 0
+          && request.resource.data.body is string
+          && request.resource.data.groupIds is list
+          && groupId in request.resource.data.groupIds;
       }
 
       // What students see of a published quiz: no questions and no answers.

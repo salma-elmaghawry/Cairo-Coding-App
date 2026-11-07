@@ -1,3 +1,5 @@
+import 'package:cairo_coding_app/core/helpers/bidi.dart';
+import 'package:cairo_coding_app/core/widgets/filter_pill.dart';
 import 'package:cairo_coding_app/student/student_providers.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -12,13 +14,16 @@ class GroupFilterChips extends ConsumerWidget {
     final selected = ref.watch(recordingsFilterProvider);
     final filter = ref.read(recordingsFilterProvider.notifier);
 
-    Widget chip(String label, String? groupId) =>
-        ChoiceChip(label: Text(label), selected: selected == groupId, onSelected: (_) => filter.select(groupId));
-
-    return Wrap(
-      spacing: 8,
-      runSpacing: 8,
-      children: [chip('recordings.all'.tr(), null), for (final group in groups) chip(group.name, group.id)],
+    return FilterPillBar(
+      children: [
+        FilterPill(label: 'recordings.all'.tr(), selected: selected == null, onSelected: () => filter.select(null)),
+        for (final group in groups)
+          FilterPill(
+            label: context.bidi(group.name),
+            selected: selected == group.id,
+            onSelected: () => filter.select(group.id),
+          ),
+      ],
     );
   }
 }

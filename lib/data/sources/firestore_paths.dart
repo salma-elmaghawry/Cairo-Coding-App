@@ -12,4 +12,5 @@ class FirestorePaths {
   static const String quizKey = 'key';
   static const String quizAttempts = 'quizAttempts';
   static const String quizBoards = 'quizBoards';
+  static const String announcements = 'announcements';
 }

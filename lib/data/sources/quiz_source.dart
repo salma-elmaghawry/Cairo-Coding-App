@@ -50,4 +50,7 @@ abstract class QuizSource {
   Stream<List<QuizAttempt>> watchAttemptsForQuiz(String quizId);
 
   Future<bool> hasAttempts(String quizId);
+
+  /// The latest submitted attempts across every quiz, newest first, for the dashboard's activity.
+  Stream<List<QuizAttempt>> watchRecentSubmissions(int limit);
 }

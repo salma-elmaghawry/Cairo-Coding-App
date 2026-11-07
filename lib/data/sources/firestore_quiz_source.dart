@@ -177,4 +177,9 @@ class FirestoreQuizSource implements QuizSource {
   @override
   Future<bool> hasAttempts(String quizId) async =>
       (await _attempts.where('quizId', isEqualTo: quizId).limit(1).get()).docs.isNotEmpty;
+
+  // Attempts still in progress have no submittedAt, so ordering by it leaves them out.
+  @override
+  Stream<List<QuizAttempt>> watchRecentSubmissions(int limit) =>
+      _attempts.orderBy('submittedAt', descending: true).limit(limit).snapshots().map(_attemptList);
 }

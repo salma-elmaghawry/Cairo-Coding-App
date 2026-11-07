@@ -24,7 +24,7 @@ void main() {
     await settle(tester);
     expect(find.text('Intro To Programming & Datatypes'), findsOneWidget);
 
-    await tester.tap(find.byIcon(Icons.edit_outlined).first);
+    await tester.tap(find.byTooltip('Edit session').first);
     await settle(tester);
     final dialog = find.byType(AlertDialog);
     final menus = find.descendant(of: dialog, matching: find.byType(DropdownMenu<String>));

@@ -14,16 +14,16 @@ extension QuizAvailabilityLabels on QuizAvailability {
 
   StatusTone get tone => switch (this) {
     QuizAvailability.available => StatusTone.accent,
-    QuizAvailability.upcoming => StatusTone.gold,
+    QuizAvailability.upcoming => StatusTone.neutral,
     QuizAvailability.completed => StatusTone.success,
-    QuizAvailability.expired => StatusTone.neutral,
+    QuizAvailability.expired => StatusTone.danger,
   };
 
   IconData get icon => switch (this) {
     QuizAvailability.available => Icons.play_circle_outline_rounded,
-    QuizAvailability.upcoming => Icons.schedule_rounded,
+    QuizAvailability.upcoming => Icons.lock_outline_rounded,
     QuizAvailability.completed => Icons.check_circle_outline_rounded,
-    QuizAvailability.expired => Icons.event_busy_outlined,
+    QuizAvailability.expired => Icons.history_rounded,
   };
 }
 

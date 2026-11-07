@@ -14,6 +14,7 @@ class ClassSession extends Equatable {
     this.topic = '',
     this.instructor = '',
     this.manual = false,
+    this.attendees,
   });
 
   factory ClassSession.fromMap(String id, Map<String, dynamic> map) => ClassSession(
@@ -27,6 +28,7 @@ class ClassSession extends Equatable {
     topic: map['topic'] as String? ?? '',
     instructor: map['instructor'] as String? ?? '',
     manual: map['manual'] as bool? ?? false,
+    attendees: map['attendees'] == null ? null : List<String>.from(map['attendees'] as List),
   );
 
   final String id;
@@ -41,6 +43,13 @@ class ClassSession extends Equatable {
 
   /// Added by hand from the dashboard, so regenerating the weekly slots never replaces it.
   final bool manual;
+
+  /// Students who joined the live call, by uid. Null until anyone joins or the admin takes attendance, which
+  /// tells a session nobody attended apart from one from before attendance was recorded.
+  /// Written on its own ([AcademySource.markAttended], [AcademySource.setAttendance]), never by [toMap].
+  final List<String>? attendees;
+
+  bool get hasAttendance => attendees != null;
 
   DateTime get endsAt => startsAt.add(Duration(minutes: durationMin));
 
@@ -68,6 +77,7 @@ class ClassSession extends Equatable {
     String? meetingLinkOverride,
     String? topic,
     String? instructor,
+    List<String>? attendees,
   }) {
     return ClassSession(
       id: id ?? this.id,
@@ -80,6 +90,7 @@ class ClassSession extends Equatable {
       topic: topic ?? this.topic,
       instructor: instructor ?? this.instructor,
       manual: manual,
+      attendees: attendees ?? this.attendees,
     );
   }
 
@@ -95,5 +106,6 @@ class ClassSession extends Equatable {
     topic,
     instructor,
     manual,
+    attendees,
   ];
 }

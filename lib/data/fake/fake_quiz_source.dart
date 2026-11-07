@@ -182,4 +182,13 @@ class FakeQuizSource implements QuizSource {
     await _latency();
     return _store.quizAttempts.values.any((a) => a.quizId == quizId);
   }
+
+  @override
+  Stream<List<QuizAttempt>> watchRecentSubmissions(int limit) => _store.watch(
+    () =>
+        (_store.quizAttempts.values.where((a) => a.submittedAt != null).toList()
+              ..sort((a, b) => b.submittedAt!.compareTo(a.submittedAt!)))
+            .take(limit)
+            .toList(),
+  );
 }

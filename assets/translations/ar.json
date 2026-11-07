@@ -59,7 +59,8 @@
       "hide_password": "إخفاء كلمة المرور",
       "forgot_password": "نسيت كلمة المرور؟",
       "submit": "تسجيل الدخول",
-      "no_account": "ليس لديك حساب؟ الأكاديمية تنشئه لك. راجع بريدك لرسالة تعيين كلمة المرور."
+      "no_account_title": "ليس لديك حساب؟",
+      "no_account_body": "الأكاديمية تنشئه لك. راجع بريدك لرسالة تعيين كلمة المرور."
     },
     "signup": {
       "name_required": "الاسم مطلوب",
@@ -116,11 +117,25 @@
     "reminders": "تنبيه قبلها بـ 24 ساعة وبساعة",
     "join": "انضم للاجتماع",
     "no_upcoming": "لا توجد سيشنات قادمة حالياً",
-    "this_week": "هذا الأسبوع",
-    "full_schedule": "الجدول كامل",
-    "week_empty": "لا يوجد شيء آخر هذا الأسبوع",
     "latest_recording": "أحدث تسجيل",
-    "all_recordings": "كل التسجيلات"
+    "all_recordings": "كل التسجيلات",
+    "your_progress": "تقدّمك",
+    "course": "الكورس",
+    "sessions_done": "سيشنات انتهت",
+    "quiz_avg": "متوسط الاختبارات",
+    "due_soon": "ينتهي قريباً",
+    "all_quizzes": "كل الاختبارات",
+    "start": "ابدأ",
+    "resume": "أكمل",
+    "days_left": "باقي {} يوم",
+    "hours_left": "باقي {} ساعة",
+    "minutes_left": "باقي {} دقيقة",
+    "unit_days": "يوم",
+    "unit_hours": "ساعة",
+    "unit_minutes": "دقيقة",
+    "unit_seconds": "ثانية",
+    "profile": "ملفك الشخصي",
+    "attendance": "الحضور"
   },
   "schedule": {
     "eyebrow": "سيشناتك",
@@ -129,14 +144,19 @@
     "past": "السابقة",
     "next": "القادمة",
     "empty_upcoming": "لا توجد سيشنات قادمة",
-    "empty_past": "لا توجد سيشنات سابقة بعد"
+    "empty_past": "لا توجد سيشنات سابقة بعد",
+    "recorded": "مسجّلة"
   },
   "recordings": {
     "eyebrow": "شاهد مرة أخرى",
     "title": "التسجيلات",
     "all": "الكل",
     "empty": "لا توجد تسجيلات بعد",
-    "hint": "التسجيلات تفتح على YouTube أو Google Drive."
+    "hint": "التسجيلات تفتح على YouTube أو Google Drive.",
+    "search_hint": "ابحث بالموضوع أو رقم السيشن",
+    "latest": "الأحدث",
+    "no_match": "لا توجد تسجيلات مطابقة لبحثك",
+    "watched": "تمت المشاهدة"
   },
   "reminders": {
     "tomorrow": "{} غداً الساعة {}",
@@ -153,7 +173,14 @@
     "logout_message": "ستحتاج بريدك وكلمة المرور لتسجيل الدخول مرة أخرى.",
     "privacy_policy": "سياسة الخصوصية",
     "delete_account": "حذف حسابي",
-    "reminders_blocked": "الإشعارات متوقفة لتطبيق كايرو كودينج. فعّلها من إعدادات الهاتف."
+    "reminders_blocked": "الإشعارات متوقفة لتطبيق كايرو كودينج. فعّلها من إعدادات الهاتف.",
+    "section_appearance": "الشكل واللغة",
+    "section_notifications": "الإشعارات",
+    "section_account": "الخصوصية والحساب",
+    "reminders_hint": "قبل كل سيشن بـ 24 ساعة وبساعة",
+    "stat_groups": "المجموعات",
+    "stat_rank": "الترتيب",
+    "stat_attended": "حضرت"
   },
   "admin": {
     "role": "مسؤول",
@@ -163,7 +190,11 @@
       "students": "الطلاب",
       "instructors": "المدرّبون",
       "settings": "الإعدادات",
-      "quizzes": "الاختبارات"
+      "quizzes": "الاختبارات",
+      "workspace": "مساحة العمل",
+      "academy": "الأكاديمية",
+      "overview": "نظرة عامة",
+      "announcements": "الإعلانات"
     },
     "courses": {
       "eyebrow": "لوحة التحكم",
@@ -217,19 +248,35 @@
       "title": "المجموعات",
       "search": "ابحث في المجموعات",
       "new": "مجموعة جديدة",
-      "active": "نشطة · {}",
-      "archived": "مؤرشفة · {}",
       "empty": "لا توجد مجموعات هنا بعد",
       "actions": "إجراءات المجموعة",
       "edit": "تعديل المجموعة",
       "archive": "أرشفة",
       "unarchive": "إلغاء الأرشفة",
-      "students": "الطلاب",
       "weekly": "أسبوعياً",
       "runs": "المدة",
       "next_session": "السيشن القادمة",
       "open": "فتح المجموعة",
-      "no_course": "بدون كورس"
+      "no_course": "بدون كورس",
+      "subtitle": "لكل مجموعة طلابها ومواعيدها الأسبوعية وتسجيلاتها واختباراتها.",
+      "export": "تصدير",
+      "tab_active": "النشطة",
+      "tab_archived": "المؤرشفة",
+      "sort": "ترتيب حسب",
+      "sort_next": "السيشن القادمة",
+      "sort_name": "الاسم",
+      "sort_students": "عدد الطلاب",
+      "sum_groups": "مجموعات نشطة",
+      "sum_students": "طلاب مسجلون",
+      "sum_attendance": "متوسط الحضور",
+      "sum_weekly": "سيشنات في الأسبوع",
+      "status_active": "نشطة",
+      "status_ending": "تنتهي قريباً",
+      "status_archived": "مؤرشفة",
+      "progress": "تقدم الكورس",
+      "attendance": "الحضور",
+      "create_title": "أنشئ مجموعة",
+      "create_hint": "حدد مواعيدها ثم أضف الطلاب"
     },
     "group_form": {
       "new_title": "مجموعة جديدة",
@@ -247,7 +294,18 @@
     "group": {
       "tab_students": "الطلاب",
       "tab_schedule": "الجدول",
-      "tab_recordings": "التسجيلات"
+      "tab_recordings": "التسجيلات",
+      "tab_quizzes": "الاختبارات",
+      "stat_sessions": "السيشنات",
+      "stat_attendance": "الحضور",
+      "stat_quiz": "متوسط الاختبارات",
+      "quiz": "الاختبار",
+      "closes": "يغلق",
+      "submitted": "سلّموا",
+      "average": "المتوسط",
+      "quiz_open": "مفتوح",
+      "quiz_closed": "مغلق",
+      "no_quizzes": "لا توجد اختبارات لهذه المجموعة بعد"
     },
     "students": {
       "name": "الاسم بالكامل",
@@ -282,7 +340,19 @@
       "groups_label": "المجموعات المسجّل فيها",
       "active_label": "الحساب مفعّل",
       "active_hint": "عند الإيقاف لن يتمكن من تسجيل الدخول حتى تعيد تفعيله.",
-      "saved": "تم حفظ الطالب"
+      "saved": "تم حفظ الطالب",
+      "student": "الطالب",
+      "attendance": "الحضور",
+      "quiz_avg": "متوسط الاختبارات",
+      "invited": "مدعو",
+      "no_data": "لا توجد بيانات",
+      "search": "ابحث عن طالب",
+      "download": "تنزيل CSV",
+      "resend": "أعد إرسال رسالة تعيين كلمة المرور",
+      "invite_sent": "تم إرسال رسالة تعيين كلمة المرور إلى {}",
+      "more": "إجراءات أخرى",
+      "add_heading": "أضف طلاباً",
+      "add_to": "إلى {}"
     },
     "students_page": {
       "eyebrow": "لوحة التحكم",
@@ -301,7 +371,9 @@
       "no_group": "بدون مجموعة",
       "add_title": "إضافة طلاب",
       "add_hint": "اختر المجموعة التي سينضمون إليها، ثم أضف طالباً واحداً أو الصق قائمة بريد إلكتروني.",
-      "pick_group": "المجموعة"
+      "pick_group": "المجموعة",
+      "last_seen": "آخر ظهور",
+      "never": "لم يسجل الدخول بعد"
     },
     "schedule": {
       "slots_title": "المواعيد الأسبوعية",
@@ -341,23 +413,44 @@
       "date_required": "اختر تاريخ ووقت السيشن",
       "link": "رابط السيشن",
       "link_hint": "اتركه فارغاً لاستخدام رابط المجموعة",
-      "session_added": "تمت إضافة السيشن"
+      "session_added": "تمت إضافة السيشن",
+      "attended": "الحضور",
+      "attendance": "الحضور",
+      "not_yet": "لم تبدأ",
+      "timeline": "مسار الكورس",
+      "legend_done": "انتهت {}",
+      "legend_upcoming": "قادمة {}",
+      "legend_cancelled": "ملغاة {}"
     },
     "recordings": {
       "title": "العنوان",
-      "number": "رقم السيشن",
-      "date": "تاريخ التسجيل",
-      "link": "الرابط",
       "url": "الرابط (YouTube غير مدرج أو Drive)",
       "add": "إضافة تسجيل",
       "edit": "تعديل التسجيل",
       "save": "حفظ التسجيل",
       "saved": "تم حفظ التسجيل",
       "empty": "لا توجد تسجيلات بعد",
-      "number_invalid": "أدخل رقم السيشن",
       "url_invalid": "أدخل رابطاً صحيحاً",
       "delete_title": "حذف التسجيل؟",
-      "delete_message": "حذف \"{}\"؟ لن يراه الطلاب بعد ذلك."
+      "delete_message": "حذف \"{}\"؟ لن يراه الطلاب بعد ذلك.",
+      "count": "{} تسجيلات",
+      "all_covered": "كل السيشنات السابقة لها تسجيل",
+      "missing": "{} سيشنات سابقة بدون تسجيل",
+      "missing_list": "لا يوجد تسجيل بعد لـ {}. تظهر أيضاً في التنبيهات.",
+      "reminder_on": "سيصلك تنبيه إذا مر يوم على انتهاء سيشن بدون تسجيل.",
+      "grid": "عرض شبكي",
+      "list": "عرض قائمة",
+      "copy": "انسخ الرابط",
+      "copied": "تم نسخ الرابط",
+      "watched": "شاهده {}",
+      "session": "السيشن",
+      "session_required": "اختر السيشن",
+      "minutes": "المدة بالدقائق (اختياري)",
+      "minutes_invalid": "اكتب الدقائق كرقم",
+      "notify": "أبلغ الطلاب",
+      "notify_hint": "ينشر إعلاناً للمجموعة داخل التطبيق",
+      "notify_title": "تسجيل جديد: {}",
+      "notify_body": "تسجيل السيشن {} متاح الآن في تبويب التسجيلات."
     },
     "instructors": {
       "title": "المدرّبون",
@@ -505,6 +598,97 @@
       "status_completed": "أكمل",
       "status_in_progress": "جارٍ",
       "status_not_started": "لم يبدأ"
+    },
+    "badge": "ADMIN",
+    "export_failed": "تعذّر تنزيل الملف هنا. افتح لوحة التحكم من المتصفح.",
+    "top": {
+      "search": "ابحث عن طلاب أو مجموعات أو كورسات",
+      "new": "جديد",
+      "new_course": "كورس جديد",
+      "new_group": "مجموعة جديدة",
+      "new_quiz": "اختبار جديد",
+      "new_announcement": "إعلان جديد"
+    },
+    "alerts": {
+      "title": "التنبيهات",
+      "none": "لا يوجد ما يحتاجك الآن.",
+      "no_recording": "{} #{} بدون تسجيل حتى الآن",
+      "falling_behind": "{} طلاب في {} غابوا عن آخر سيشنين",
+      "quiz_closing": "{} يغلق خلال {} س"
+    },
+    "table": {
+      "showing": "عرض {} من {}",
+      "previous": "الصفحة السابقة",
+      "next": "الصفحة التالية"
+    },
+    "overview": {
+      "eyebrow": "نظرة عامة",
+      "greeting_morning": "صباح الخير، {}",
+      "greeting_afternoon": "مساء الخير، {}",
+      "greeting_evening": "مساء الخير، {}",
+      "summary": "{} مجموعات نشطة · {} سيشنات متبقية هذا الأسبوع · {} اختبارات تغلق قريباً",
+      "period_week": "7 أيام",
+      "period_month": "30 يوماً",
+      "period_all": "كل الوقت",
+      "vs_week": "مقارنة بالأيام السبعة السابقة",
+      "vs_month": "مقارنة بالثلاثين يوماً السابقة",
+      "kpi_students": "الطلاب النشطون",
+      "kpi_attendance": "نسبة الحضور",
+      "kpi_quiz": "متوسط الاختبارات",
+      "kpi_sessions": "سيشنات هذا الأسبوع",
+      "done_left": "انتهت {} · متبقية {}",
+      "attendance_title": "الحضور في كل سيشن",
+      "attendance_hint": "نسبة من دخل المكالمة من المجموعة",
+      "attendance_empty": "سيظهر الحضور هنا عندما يدخل الطلاب السيشنات من التطبيق.",
+      "attendance_label": "حضور {} في آخر السيشنات: {}",
+      "coming_up": "القادم",
+      "all_groups": "كل المجموعات",
+      "in_days": "بعد {}ي {}س",
+      "in_hours": "بعد {}س {}د",
+      "students": "{} طالب",
+      "start_meeting": "ابدأ الاجتماع",
+      "quiz_title": "درجات الاختبارات لكل مجموعة",
+      "quiz_hint": "متوسط كل المحاولات الأولى",
+      "quiz_empty": "لا توجد نتائج اختبارات بعد",
+      "results": "{} نتيجة",
+      "attention_title": "يحتاجون متابعة",
+      "attention_hint": "غابوا عن آخر سيشنين أو أكثر",
+      "attention_empty": "لم يغب أحد عن سيشنين متتاليتين.",
+      "missed": "{} · غاب عن {}",
+      "message": "راسل {}",
+      "activity_title": "آخر النشاط",
+      "activity_empty": "لا يوجد شيء بعد",
+      "missed_count": "{} · غاب عن آخر {} سيشنات"
+    },
+    "activity": {
+      "you": "أنت",
+      "submitted": "سلّم {}",
+      "scored": "سلّم {} · {}",
+      "recording": "أضفت تسجيل {} #{}",
+      "joined": "انضم إلى {}",
+      "announced": "نشرت \"{}\""
+    },
+    "attendance": {
+      "title": "الحضور · {}",
+      "hint": "{}. الطلاب الذين دخلوا من التطبيق محددون بالفعل.",
+      "count": "حضر {} من {}",
+      "saved": "تم حفظ الحضور"
+    },
+    "announcements": {
+      "eyebrow": "الأكاديمية",
+      "title": "الإعلانات",
+      "subtitle": "رسائل يراها الطلاب في التطبيق، من الجرس في الصفحة الرئيسية.",
+      "new": "إعلان جديد",
+      "title_label": "العنوان",
+      "body_label": "الرسالة",
+      "to": "أرسل إلى",
+      "pick_group": "اختر مجموعة واحدة على الأقل",
+      "in_app": "يراها الطلاب في التطبيق عند فتحه. لا توجد إشعارات فورية في الخطة المجانية.",
+      "send": "إرسال",
+      "sent": "تم إرسال الإعلان",
+      "empty": "لا توجد إعلانات بعد",
+      "delete_title": "حذف الإعلان؟",
+      "delete_message": "حذف \"{}\"؟ لن يراه الطلاب بعد ذلك."
     }
   },
   "quizzes": {
@@ -614,6 +798,25 @@
     "errors": {
       "not_available": "هذا الاختبار غير متاح لك الآن.",
       "no_attempt": "انتهت هذه المحاولة. ارجع وافتح الاختبار مرة أخرى."
-    }
+    },
+    "stat_open": "مفتوحة",
+    "stat_done": "مكتملة",
+    "stat_total_points": "النقاط",
+    "avg": "المتوسط",
+    "your_rank": "ترتيبك {} من {} في {}",
+    "details": "التفاصيل",
+    "review": "مراجعة",
+    "your_score": "درجتك"
+  },
+  "time": {
+    "just_now": "الآن",
+    "minutes_ago": "منذ {} د",
+    "hours_ago": "منذ {} س",
+    "yesterday_at": "أمس، {}"
+  },
+  "announcements": {
+    "title": "الإعلانات",
+    "empty": "لا توجد إعلانات بعد",
+    "unread": "الإعلانات، {} جديدة"
   }
 }

@@ -8,6 +8,8 @@ class Student extends Equatable {
     required this.phone,
     required this.groupIds,
     required this.active,
+    this.lastSeenAt,
+    this.createdAt,
   });
 
   factory Student.fromMap(String uid, Map<String, dynamic> map) => Student(
@@ -17,7 +19,11 @@ class Student extends Equatable {
     phone: map['phone'] as String? ?? '',
     groupIds: List<String>.from(map['groupIds'] as List? ?? const []),
     active: map['active'] as bool? ?? true,
+    lastSeenAt: _date(map['lastSeenAt']),
+    createdAt: _date(map['createdAt']),
   );
+
+  static DateTime? _date(Object? millis) => millis is int ? DateTime.fromMillisecondsSinceEpoch(millis) : null;
 
   final String uid;
   final String name;
@@ -25,6 +31,10 @@ class Student extends Equatable {
   final String phone;
   final List<String> groupIds;
   final bool active;
+
+  /// When the student last opened the app; null means they never signed in yet.
+  final DateTime? lastSeenAt;
+  final DateTime? createdAt;
 
   String get initials {
     final parts = name.trim().split(RegExp(r'\s+')).where((p) => p.isNotEmpty).toList();
@@ -47,10 +57,12 @@ class Student extends Equatable {
     phone: phone ?? this.phone,
     groupIds: groupIds ?? this.groupIds,
     active: active ?? this.active,
+    lastSeenAt: lastSeenAt,
+    createdAt: createdAt,
   );
 
   @override
-  List<Object> get props => [uid, name, email, phone, groupIds, active];
+  List<Object?> get props => [uid, name, email, phone, groupIds, active, lastSeenAt, createdAt];
 }
 
 class NewStudent extends Equatable {

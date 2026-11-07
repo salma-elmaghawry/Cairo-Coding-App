@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:cairo_coding_app/core/utils/stream_utils.dart';
 import 'package:cairo_coding_app/data/models/academy_group.dart';
+import 'package:cairo_coding_app/data/models/announcement.dart';
 import 'package:cairo_coding_app/data/models/class_session.dart';
 import 'package:cairo_coding_app/data/models/course.dart';
 import 'package:cairo_coding_app/data/models/instructor.dart';
@@ -27,6 +28,8 @@ class FirestoreAcademySource implements AcademySource {
       _groups.doc(groupId).collection(FirestorePaths.sessions);
   CollectionReference<Map<String, dynamic>> _recordingsOf(String groupId) =>
       _groups.doc(groupId).collection(FirestorePaths.recordings);
+  CollectionReference<Map<String, dynamic>> _announcementsOf(String groupId) =>
+      _groups.doc(groupId).collection(FirestorePaths.announcements);
 
   List<T> _map<T>(
     QuerySnapshot<Map<String, dynamic>> snapshot,
@@ -92,7 +95,11 @@ class FirestoreAcademySource implements AcademySource {
       for (final session in sessions.sublist(i, min(i + 450, sessions.length))) {
         final collection = _sessionsOf(session.groupId);
         final doc = session.id.isEmpty ? collection.doc() : collection.doc(session.id);
-        batch.set(doc, {...toFirestore(session.toMap()), 'updatedAt': FieldValue.serverTimestamp()});
+        // Merged, so attendance taken meanwhile isn't wiped by an older copy of the session.
+        batch.set(doc, {
+          ...toFirestore(session.toMap()),
+          'updatedAt': FieldValue.serverTimestamp(),
+        }, SetOptions(merge: true));
       }
       await batch.commit();
     }
@@ -222,4 +229,51 @@ class FirestoreAcademySource implements AcademySource {
 
   @override
   Future<void> deleteCourse(String id) => _courses.doc(id).delete();
+
+  @override
+  Future<void> markAttended(String groupId, String sessionId, String uid) =>
+      _sessionsOf(groupId).doc(sessionId).update({
+        'attendees': FieldValue.arrayUnion([uid]),
+      });
+
+  @override
+  Future<void> setAttendance(String groupId, String sessionId, List<String> uids) =>
+      _sessionsOf(groupId).doc(sessionId).update({'attendees': uids, 'updatedAt': FieldValue.serverTimestamp()});
+
+  @override
+  Future<void> markViewed(String groupId, String recordingId, String uid) =>
+      _recordingsOf(groupId).doc(recordingId).update({
+        'viewers': FieldValue.arrayUnion([uid]),
+      });
+
+  @override
+  Future<void> touchLastSeen(String uid) => _users.doc(uid).update({'lastSeenAt': FieldValue.serverTimestamp()});
+
+  @override
+  Stream<List<Announcement>> watchAnnouncements(List<String> groupIds) => combineLatestLists([
+    for (final groupId in groupIds) _announcementsOf(groupId).snapshots().map((s) => _map(s, Announcement.fromMap)),
+  ]);
+
+  @override
+  Future<Announcement> saveAnnouncement(Announcement announcement) async {
+    final id = announcement.id.isEmpty ? _db.collection(FirestorePaths.announcements).doc().id : announcement.id;
+    final batch = _db.batch();
+    for (final groupId in announcement.groupIds) {
+      batch.set(_announcementsOf(groupId).doc(id), {
+        ...toFirestore(announcement.toMap()),
+        'createdAt': FieldValue.serverTimestamp(),
+      });
+    }
+    await batch.commit();
+    return announcement.copyWith(id: id);
+  }
+
+  @override
+  Future<void> deleteAnnouncement(Announcement announcement) async {
+    final batch = _db.batch();
+    for (final groupId in announcement.groupIds) {
+      batch.delete(_announcementsOf(groupId).doc(announcement.id));
+    }
+    await batch.commit();
+  }
 }

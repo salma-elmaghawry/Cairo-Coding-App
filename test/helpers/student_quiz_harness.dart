@@ -48,3 +48,12 @@ Future<void> answer(WidgetTester tester, String option) async {
   await tapText(tester, option);
   await tapText(tester, 'Next');
 }
+
+/// Filter pills sit in a row that scrolls sideways, so the one asked for may start off screen.
+Future<void> tapPill(WidgetTester tester, String label) async {
+  final pill = find.widgetWithText(ChoiceChip, label);
+  await tester.ensureVisible(pill);
+  await tester.pump();
+  await tester.tap(pill);
+  await settle(tester);
+}

@@ -1,11 +1,11 @@
 import 'package:cairo_coding_app/admin/admin_providers.dart';
 import 'package:cairo_coding_app/admin/group_detail/widgets/slot_dialog.dart';
-import 'package:cairo_coding_app/admin/widgets/slot_labels.dart';
 import 'package:cairo_coding_app/core/error_handling/result.dart';
 import 'package:cairo_coding_app/core/helpers/spacing.dart';
 import 'package:cairo_coding_app/core/helpers/ui_helpers.dart';
 import 'package:cairo_coding_app/core/utils/app_text_styles.dart';
-import 'package:cairo_coding_app/core/widgets/app_card.dart';
+import 'package:cairo_coding_app/admin/widgets/admin_panel.dart';
+import 'package:cairo_coding_app/core/helpers/date_formats.dart';
 import 'package:cairo_coding_app/core/widgets/primary_button.dart';
 import 'package:cairo_coding_app/data/data_providers.dart';
 import 'package:cairo_coding_app/data/models/academy_group.dart';
@@ -63,29 +63,64 @@ class _WeeklySlotsPanelState extends ConsumerState<WeeklySlotsPanel> {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
 
-    return AppCard(
-      color: colorScheme.surfaceContainerHighest,
-      padding: const EdgeInsets.all(20),
+    return AdminPanel(
+      title: 'admin.schedule.slots_title'.tr(),
+      subtitle: 'admin.schedule.slots_hint'.tr(),
+      trailing: OutlinedButton.icon(
+        style: OutlinedButton.styleFrom(minimumSize: const Size(0, 36), foregroundColor: colorScheme.primary),
+        onPressed: _addSlot,
+        icon: const Icon(Icons.add_rounded, size: 16),
+        label: Text('admin.schedule.add_slot'.tr()),
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Text('admin.schedule.slots_title'.tr(), style: AppTextStyles.font18ExtraBold),
-          Text('admin.schedule.slots_hint'.tr(), style: AppTextStyles.font12Normal.secondary(context)),
-          verticalSpace(14),
           for (final slot in _slots) ...[
             Container(
-              padding: const EdgeInsetsDirectional.fromSTEB(14, 6, 6, 6),
+              padding: const EdgeInsetsDirectional.fromSTEB(12, 10, 6, 10),
               decoration: BoxDecoration(
-                color: colorScheme.surfaceContainerLowest,
-                borderRadius: BorderRadius.circular(12),
+                color: Theme.of(context).scaffoldBackgroundColor,
+                borderRadius: BorderRadius.circular(14),
                 border: Border.all(color: colorScheme.outline),
               ),
               child: Row(
                 children: [
+                  Container(
+                    width: 48,
+                    height: 40,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      color: colorScheme.primary.withValues(alpha: .16),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: FittedBox(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 4),
+                        child: Text(
+                          context.weekdayShortName(slot.weekday).toUpperCase(),
+                          style: AppTextStyles.monoFont12Bold.copyWith(color: colorScheme.primary),
+                        ),
+                      ),
+                    ),
+                  ),
+                  horizontalSpace(12),
                   Expanded(
-                    child: Text(
-                      '${context.slotLabel(slot)} · ${'session.minutes'.tr(args: ['${slot.durationMin}'])}',
-                      style: AppTextStyles.font14Bold,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          '${context.timeOfDay(slot.hour, slot.minute)} – '
+                          '${context.timeOfDay((slot.minuteOfDay + slot.durationMin) ~/ 60 % 24, (slot.minuteOfDay + slot.durationMin) % 60)}',
+                          style: AppTextStyles.font14ExtraBold,
+                        ),
+                        Text(
+                          [
+                            'session.minutes'.tr(args: ['${slot.durationMin}']),
+                            if (widget.group.location.isNotEmpty) widget.group.location,
+                          ].join(' · '),
+                          style: AppTextStyles.font12Normal.secondary(context),
+                        ),
+                      ],
                     ),
                   ),
                   IconButton(
@@ -99,12 +134,7 @@ class _WeeklySlotsPanelState extends ConsumerState<WeeklySlotsPanel> {
             ),
             verticalSpace(8),
           ],
-          OutlinedButton.icon(
-            onPressed: _addSlot,
-            icon: const Icon(Icons.add_rounded, size: 18),
-            label: Text('admin.schedule.add_slot'.tr()),
-          ),
-          verticalSpace(12),
+          verticalSpace(6),
           PrimaryButton(
             label: 'admin.schedule.generate'.tr(),
             height: 48,

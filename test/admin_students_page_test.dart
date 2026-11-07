@@ -27,11 +27,11 @@ void main() {
     expect(find.text('Omar Khaled'), findsNothing);
 
     await tester.tap(find.widgetWithText(ChoiceChip, 'All courses'));
-    await tester.enterText(find.byType(TextField).first, '0159012');
+    await tester.enterText(pageField(), '0159012');
     await settle(tester);
     expect(find.text('1 student'), findsOneWidget);
     expect(find.text('Hana Ibrahim'), findsOneWidget);
-    await tester.enterText(find.byType(TextField).first, '');
+    await tester.enterText(pageField(), '');
     await settle(tester);
 
     await tester.tap(find.text('Add students'));

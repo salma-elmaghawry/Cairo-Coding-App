@@ -23,6 +23,7 @@ class AppColors {
   static const Color surfaceDark = Color(0xFF2C1A40);
   static const Color borderDark = Color(0x38C084FC);
   static const Color deepDark = Color(0xFF120A1A);
+  static const Color sidebarDark = Color(0xFF170C21);
   static const Color textPrimaryDark = Color(0xFFF2ECFA);
   static const Color textSecondaryDark = Color(0xFFC9BEDD);
 
@@ -31,6 +32,7 @@ class AppColors {
   static const Color errorDark = Color(0xFFF87171);
 
   static const Color success = Color(0xFF16A34A);
+  static const Color successDark = Color(0xFF86EFAC);
   static const Color warning = Color(0xFFFACC15);
   static const Color info = Color(0xFF0EA5E9);
 

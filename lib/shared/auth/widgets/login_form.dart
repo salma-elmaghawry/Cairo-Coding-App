@@ -1,6 +1,7 @@
 import 'package:cairo_coding_app/core/animations/animations.dart';
 import 'package:cairo_coding_app/core/helpers/app_validators.dart';
 import 'package:cairo_coding_app/core/helpers/spacing.dart';
+import 'package:cairo_coding_app/core/utils/app_text_styles.dart';
 import 'package:cairo_coding_app/core/widgets/app_text_field.dart';
 import 'package:cairo_coding_app/core/widgets/primary_button.dart';
 import 'package:cairo_coding_app/shared/auth/login_controller.dart';
@@ -38,6 +39,26 @@ class _LoginFormState extends ConsumerState<LoginForm> {
       return;
     }
     ref.read(loginControllerProvider.notifier).signIn(email: _emailController.text, password: _passwordController.text);
+  }
+
+  /// Taller, rounder fields on the sunken card color, as on the sign-in design.
+  ThemeData _fieldTheme(ThemeData theme) {
+    final colorScheme = theme.colorScheme;
+    OutlineInputBorder border(Color color, [double width = 1]) => OutlineInputBorder(
+      borderRadius: BorderRadius.circular(16),
+      borderSide: BorderSide(color: color, width: width),
+    );
+    return theme.copyWith(
+      inputDecorationTheme: theme.inputDecorationTheme.copyWith(
+        fillColor: colorScheme.surfaceContainer,
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 18),
+        border: border(colorScheme.primary.withValues(alpha: .25)),
+        enabledBorder: border(colorScheme.primary.withValues(alpha: .25)),
+        focusedBorder: border(colorScheme.primary, 1.5),
+        errorBorder: border(colorScheme.error),
+        focusedErrorBorder: border(colorScheme.error, 1.5),
+      ),
+    );
   }
 
   @override
@@ -89,16 +110,28 @@ class _LoginFormState extends ConsumerState<LoginForm> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          _shakeCount == 0 ? fields : KeyedSubtree(key: ValueKey(_shakeCount), child: fields.shake()),
+          Theme(
+            data: _fieldTheme(Theme.of(context)),
+            child: _shakeCount == 0 ? fields : KeyedSubtree(key: ValueKey(_shakeCount), child: fields.shake()),
+          ),
+          verticalSpace(4),
           Align(
             alignment: AlignmentDirectional.centerEnd,
             child: TextButton(
+              style: TextButton.styleFrom(textStyle: AppTextStyles.font14ExtraBold),
               onPressed: () => ForgotPasswordSheet.show(context, initialEmail: _emailController.text),
               child: Text('auth.login.forgot_password'.tr()),
             ),
           ),
-          verticalSpace(8),
-          PrimaryButton(label: 'auth.login.submit'.tr(), isLoading: isLoading, onPressed: _submit),
+          verticalSpace(12),
+          PrimaryButton(
+            label: 'auth.login.submit'.tr(),
+            trailingIcon: Icons.arrow_forward_rounded,
+            height: 56,
+            glow: true,
+            isLoading: isLoading,
+            onPressed: _submit,
+          ),
           if (errorMessage != null && !isLoading) ...[verticalSpace(14), LoginErrorBanner(message: errorMessage)],
         ],
       ),

@@ -2,6 +2,7 @@ import 'package:cairo_coding_app/core/error_handling/error_mapper.dart';
 import 'package:cairo_coding_app/core/error_handling/result.dart';
 import 'package:cairo_coding_app/core/utils/stream_utils.dart';
 import 'package:cairo_coding_app/data/models/academy_group.dart';
+import 'package:cairo_coding_app/data/models/announcement.dart';
 import 'package:cairo_coding_app/data/models/class_session.dart';
 import 'package:cairo_coding_app/data/models/course.dart';
 import 'package:cairo_coding_app/data/models/instructor.dart';
@@ -227,4 +228,37 @@ class AcademyRepository {
   Future<Result<void>> updateStudent(Student student) => Result.guard(
     () => _source.updateStudent(student.copyWith(name: student.name.trim(), phone: student.phone.trim())),
   );
+
+  Future<Result<void>> markAttended(ClassSession session, String uid) =>
+      Result.guard(() => _source.markAttended(session.groupId, session.id, uid));
+
+  Future<Result<void>> setAttendance(ClassSession session, List<String> uids) =>
+      Result.guard(() => _source.setAttendance(session.groupId, session.id, uids));
+
+  Future<Result<void>> markViewed(Recording recording, String uid) =>
+      Result.guard(() => _source.markViewed(recording.groupId, recording.id, uid));
+
+  Future<Result<void>> touchLastSeen(String uid) => Result.guard(() => _source.touchLastSeen(uid));
+
+  /// Newest first, each announcement once however many of the groups it went to.
+  Stream<List<Announcement>> watchAnnouncements(List<String> groupIds) => ErrorMapper.mapStream(
+    _source
+        .watchAnnouncements(groupIds)
+        .map(
+          (list) => {for (final a in list) a.id: a}.values.toList()..sort((a, b) => b.createdAt.compareTo(a.createdAt)),
+        ),
+  );
+
+  Future<Result<Announcement>> postAnnouncement({
+    required String title,
+    required String body,
+    required List<String> groupIds,
+  }) => Result.guard(
+    () => _source.saveAnnouncement(
+      Announcement(id: '', title: title.trim(), body: body.trim(), groupIds: groupIds, createdAt: _clock()),
+    ),
+  );
+
+  Future<Result<void>> deleteAnnouncement(Announcement announcement) =>
+      Result.guard(() => _source.deleteAnnouncement(announcement));
 }

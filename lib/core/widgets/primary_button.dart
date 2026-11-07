@@ -9,6 +9,8 @@ class PrimaryButton extends StatelessWidget {
     required this.label,
     this.onPressed,
     this.icon,
+    this.trailingIcon,
+    this.glow = false,
     this.isLoading = false,
     this.height = 52,
     this.expand = true,
@@ -17,6 +19,12 @@ class PrimaryButton extends StatelessWidget {
   final String label;
   final VoidCallback? onPressed;
   final IconData? icon;
+
+  /// Shown after the label, such as an arrow that points onward.
+  final IconData? trailingIcon;
+
+  /// Casts a soft shadow in the button's color, for the one main action on a screen.
+  final bool glow;
   final bool isLoading;
   final double height;
   final bool expand;
@@ -26,7 +34,7 @@ class PrimaryButton extends StatelessWidget {
     final colorScheme = Theme.of(context).colorScheme;
     final enabled = onPressed != null;
 
-    return Semantics(
+    final button = Semantics(
       container: true,
       button: true,
       enabled: enabled && !isLoading,
@@ -38,7 +46,7 @@ class PrimaryButton extends StatelessWidget {
         isLoading: isLoading,
         height: height,
         shrinkWrap: !expand,
-        borderRadius: BorderRadius.circular(14),
+        borderRadius: BorderRadius.circular(16),
         backgroundColor: enabled ? colorScheme.primary : colorScheme.primary.withValues(alpha: .4),
         loadingColor: colorScheme.onPrimary,
         child: Padding(
@@ -49,10 +57,30 @@ class PrimaryButton extends StatelessWidget {
             children: [
               if (icon != null) ...[Icon(icon, size: 20, color: colorScheme.onPrimary), horizontalSpace(8)],
               if (expand) Flexible(child: _label(colorScheme)) else _label(colorScheme),
+              if (trailingIcon != null) ...[
+                horizontalSpace(8),
+                Icon(trailingIcon, size: 20, color: colorScheme.onPrimary),
+              ],
             ],
           ),
         ),
       ),
+    );
+
+    if (!glow || !enabled) return button;
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: colorScheme.primary.withValues(alpha: .6),
+            blurRadius: 26,
+            spreadRadius: -12,
+            offset: const Offset(0, 12),
+          ),
+        ],
+      ),
+      child: button,
     );
   }
 

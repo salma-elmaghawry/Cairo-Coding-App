@@ -3,7 +3,10 @@ import 'package:cairo_coding_app/core/helpers/app_validators.dart';
 import 'package:cairo_coding_app/core/helpers/spacing.dart';
 import 'package:cairo_coding_app/core/helpers/ui_helpers.dart';
 import 'package:cairo_coding_app/core/utils/app_text_styles.dart';
-import 'package:cairo_coding_app/core/widgets/app_card.dart';
+import 'package:cairo_coding_app/core/widgets/icon_tile.dart';
+import 'package:cairo_coding_app/core/widgets/segmented_control.dart';
+import 'package:cairo_coding_app/admin/admin_providers.dart';
+import 'package:cairo_coding_app/admin/widgets/admin_panel.dart';
 import 'package:cairo_coding_app/core/widgets/app_text_field.dart';
 import 'package:cairo_coding_app/core/widgets/primary_button.dart';
 import 'package:cairo_coding_app/data/data_providers.dart';
@@ -81,26 +84,47 @@ class _AddStudentsPanelState extends ConsumerState<AddStudentsPanel> {
 
   @override
   Widget build(BuildContext context) {
-    return AppCard(
-      color: Theme.of(context).colorScheme.surfaceContainerHighest,
-      padding: const EdgeInsets.all(20),
+    final colorScheme = Theme.of(context).colorScheme;
+    final course = ref.watch(courseProvider(widget.group.courseId)).value;
+
+    return AdminPanel(
       child: Form(
         key: _formKey,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            SegmentedButton<_AddMode>(
-              showSelectedIcon: false,
-              segments: [
-                ButtonSegment(value: _AddMode.one, label: Text('admin.students.mode_one'.tr())),
-                ButtonSegment(value: _AddMode.bulk, label: Text('admin.students.mode_bulk'.tr())),
+            Row(
+              children: [
+                const IconTile(icon: Icons.person_add_alt_rounded, size: 40, iconSize: 19),
+                horizontalSpace(12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('admin.students.add_heading'.tr(), style: AppTextStyles.font18ExtraBold),
+                      Text(
+                        'admin.students.add_to'.tr(
+                          args: [
+                            [widget.group.name, ?course?.name].join(' · '),
+                          ],
+                        ),
+                        style: AppTextStyles.font12Normal.secondary(context),
+                      ),
+                    ],
+                  ),
+                ),
               ],
-              selected: {_mode},
-              onSelectionChanged: (selection) => setState(() => _mode = selection.first),
             ),
             verticalSpace(16),
-            Text('admin.students.add_title'.tr(args: [widget.group.name]), style: AppTextStyles.font18ExtraBold),
-            verticalSpace(14),
+            AppSegmentedControl<_AddMode>(
+              segments: [
+                AppSegment(_AddMode.one, 'admin.students.mode_one'.tr()),
+                AppSegment(_AddMode.bulk, 'admin.students.mode_bulk'.tr()),
+              ],
+              selected: _mode,
+              onChanged: (mode) => setState(() => _mode = mode),
+            ),
+            verticalSpace(16),
             if (_mode == _AddMode.one) ...[
               AppTextField(label: 'admin.students.name'.tr(), controller: _name, validator: AppValidators.validateName),
               verticalSpace(12),
@@ -123,13 +147,31 @@ class _AddStudentsPanelState extends ConsumerState<AddStudentsPanel> {
                 monospace: true,
                 validator: _validateBulk,
               ),
-            verticalSpace(12),
-            Text('admin.students.add_hint'.tr(), style: AppTextStyles.font12Normal.secondary(context)),
+            verticalSpace(14),
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: Theme.of(context).scaffoldBackgroundColor,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: colorScheme.outline),
+              ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Icon(Icons.info_outline_rounded, size: 18, color: colorScheme.primary),
+                  horizontalSpace(10),
+                  Expanded(
+                    child: Text('admin.students.add_hint'.tr(), style: AppTextStyles.font12Normal.secondary(context)),
+                  ),
+                ],
+              ),
+            ),
             verticalSpace(16),
             PrimaryButton(
               label: (_mode == _AddMode.one ? 'admin.students.add_one' : 'admin.students.add_all').tr(),
               isLoading: _saving,
-              height: 48,
+              height: 46,
+              glow: true,
               onPressed: _submit,
             ),
           ],

@@ -59,7 +59,8 @@
       "hide_password": "Hide password",
       "forgot_password": "Forgot password?",
       "submit": "Sign in",
-      "no_account": "No account yet? Your academy creates it for you. Check your inbox for the set-password email."
+      "no_account_title": "No account yet?",
+      "no_account_body": "Your academy creates it for you. Check your inbox for the set-password email."
     },
     "signup": {
       "name_required": "Name is required",
@@ -116,11 +117,25 @@
     "reminders": "Reminders 24h and 1h before",
     "join": "Join meeting",
     "no_upcoming": "No upcoming sessions right now",
-    "this_week": "This week",
-    "full_schedule": "Full schedule",
-    "week_empty": "Nothing else this week",
     "latest_recording": "Latest recording",
-    "all_recordings": "All recordings"
+    "all_recordings": "All recordings",
+    "your_progress": "Your progress",
+    "course": "Course",
+    "sessions_done": "sessions done",
+    "quiz_avg": "Quiz avg",
+    "due_soon": "Due soon",
+    "all_quizzes": "All quizzes",
+    "start": "Start",
+    "resume": "Resume",
+    "days_left": "{}d left",
+    "hours_left": "{}h left",
+    "minutes_left": "{}m left",
+    "unit_days": "days",
+    "unit_hours": "hrs",
+    "unit_minutes": "min",
+    "unit_seconds": "sec",
+    "profile": "Your profile",
+    "attendance": "Attendance"
   },
   "schedule": {
     "eyebrow": "your sessions",
@@ -129,14 +144,19 @@
     "past": "Past",
     "next": "Next",
     "empty_upcoming": "No upcoming sessions",
-    "empty_past": "No past sessions yet"
+    "empty_past": "No past sessions yet",
+    "recorded": "Recorded"
   },
   "recordings": {
     "eyebrow": "watch again",
     "title": "Recordings",
     "all": "All",
     "empty": "No recordings yet",
-    "hint": "Recordings open in YouTube or Google Drive."
+    "hint": "Recordings open in YouTube or Google Drive.",
+    "search_hint": "Search by topic or session",
+    "latest": "Latest",
+    "no_match": "No recordings match your search",
+    "watched": "Watched"
   },
   "reminders": {
     "tomorrow": "{} is tomorrow at {}",
@@ -153,7 +173,14 @@
     "logout_message": "You'll need your email and password to sign in again.",
     "privacy_policy": "Privacy policy",
     "delete_account": "Delete my account",
-    "reminders_blocked": "Notifications are blocked for Cairo Coding. Allow them in your phone settings."
+    "reminders_blocked": "Notifications are blocked for Cairo Coding. Allow them in your phone settings.",
+    "section_appearance": "Appearance",
+    "section_notifications": "Notifications",
+    "section_account": "Privacy & account",
+    "reminders_hint": "24 hours and 1 hour before",
+    "stat_groups": "Groups",
+    "stat_rank": "Rank",
+    "stat_attended": "Attended"
   },
   "admin": {
     "role": "Admin",
@@ -163,7 +190,11 @@
       "students": "Students",
       "instructors": "Instructors",
       "settings": "Settings",
-      "quizzes": "Quizzes"
+      "quizzes": "Quizzes",
+      "workspace": "Workspace",
+      "academy": "Academy",
+      "overview": "Overview",
+      "announcements": "Announcements"
     },
     "courses": {
       "eyebrow": "dashboard",
@@ -217,19 +248,35 @@
       "title": "Groups",
       "search": "Search groups",
       "new": "New group",
-      "active": "Active · {}",
-      "archived": "Archived · {}",
       "empty": "No groups here yet",
       "actions": "Group actions",
       "edit": "Edit group",
       "archive": "Archive",
       "unarchive": "Unarchive",
-      "students": "Students",
       "weekly": "Weekly",
       "runs": "Runs",
       "next_session": "Next session",
       "open": "Open group",
-      "no_course": "No course"
+      "no_course": "No course",
+      "subtitle": "Each group has its own students, weekly slots, recordings and quizzes.",
+      "export": "Export",
+      "tab_active": "Active",
+      "tab_archived": "Archived",
+      "sort": "Sort by",
+      "sort_next": "Next session",
+      "sort_name": "Name",
+      "sort_students": "Students",
+      "sum_groups": "Active groups",
+      "sum_students": "Enrolled students",
+      "sum_attendance": "Avg attendance",
+      "sum_weekly": "Sessions per week",
+      "status_active": "Active",
+      "status_ending": "Ending soon",
+      "status_archived": "Archived",
+      "progress": "Course progress",
+      "attendance": "Attendance",
+      "create_title": "Create a group",
+      "create_hint": "Set its slots, then add students"
     },
     "group_form": {
       "new_title": "New group",
@@ -247,7 +294,18 @@
     "group": {
       "tab_students": "Students",
       "tab_schedule": "Schedule",
-      "tab_recordings": "Recordings"
+      "tab_recordings": "Recordings",
+      "tab_quizzes": "Quizzes",
+      "stat_sessions": "Sessions",
+      "stat_attendance": "Attendance",
+      "stat_quiz": "Quiz avg",
+      "quiz": "Quiz",
+      "closes": "Closes",
+      "submitted": "Submitted",
+      "average": "Average",
+      "quiz_open": "Open",
+      "quiz_closed": "Closed",
+      "no_quizzes": "No quizzes for this group yet"
     },
     "students": {
       "name": "Full name",
@@ -282,7 +340,19 @@
       "groups_label": "Groups they're in",
       "active_label": "Account active",
       "active_hint": "When off, they can't sign in until you turn it back on.",
-      "saved": "Student saved"
+      "saved": "Student saved",
+      "student": "Student",
+      "attendance": "Attendance",
+      "quiz_avg": "Quiz avg",
+      "invited": "Invited",
+      "no_data": "No data",
+      "search": "Search students",
+      "download": "Download CSV",
+      "resend": "Resend the set-password email",
+      "invite_sent": "Set-password email sent to {}",
+      "more": "More actions",
+      "add_heading": "Add students",
+      "add_to": "to {}"
     },
     "students_page": {
       "eyebrow": "dashboard",
@@ -298,7 +368,9 @@
       "no_group": "No group",
       "add_title": "Add students",
       "add_hint": "Pick the group they join, then add one student or paste a list of emails.",
-      "pick_group": "Group"
+      "pick_group": "Group",
+      "last_seen": "Last seen",
+      "never": "Never signed in"
     },
     "schedule": {
       "slots_title": "Weekly slots",
@@ -338,23 +410,44 @@
       "date_required": "Pick the session date and time",
       "link": "Session link",
       "link_hint": "Leave empty to use the group's link",
-      "session_added": "Session added"
+      "session_added": "Session added",
+      "attended": "Attended",
+      "attendance": "Attendance",
+      "not_yet": "Not yet",
+      "timeline": "Course timeline",
+      "legend_done": "Done {}",
+      "legend_upcoming": "Upcoming {}",
+      "legend_cancelled": "Cancelled {}"
     },
     "recordings": {
       "title": "Title",
-      "number": "Session no",
-      "date": "Recorded on",
-      "link": "Link",
       "url": "Link (YouTube unlisted or Drive)",
       "add": "Add recording",
       "edit": "Edit recording",
       "save": "Save recording",
       "saved": "Recording saved",
       "empty": "No recordings yet",
-      "number_invalid": "Enter a session number",
       "url_invalid": "Enter a valid link",
       "delete_title": "Delete recording?",
-      "delete_message": "Delete \"{}\"? Students won't see it anymore."
+      "delete_message": "Delete \"{}\"? Students won't see it anymore.",
+      "count": "{} recordings",
+      "all_covered": "Every past session has a recording",
+      "missing": "{} past sessions have no recording",
+      "missing_list": "No recording yet for {}. They also show in the alerts.",
+      "reminder_on": "You'll get an alert when a session still has no recording a day after it ends.",
+      "grid": "Grid view",
+      "list": "List view",
+      "copy": "Copy link",
+      "copied": "Link copied",
+      "watched": "{} watched",
+      "session": "Session",
+      "session_required": "Pick the session",
+      "minutes": "Length in minutes (optional)",
+      "minutes_invalid": "Enter the minutes as a number",
+      "notify": "Notify students",
+      "notify_hint": "Posts an announcement to the group in the app",
+      "notify_title": "New recording: {}",
+      "notify_body": "The recording of session {} is up. Find it in the Recordings tab."
     },
     "instructors": {
       "title": "Instructors",
@@ -499,6 +592,97 @@
       "status_completed": "Completed",
       "status_in_progress": "In progress",
       "status_not_started": "Not started"
+    },
+    "badge": "ADMIN",
+    "export_failed": "Couldn't download the file here. Open the dashboard in a browser.",
+    "top": {
+      "search": "Search students, groups, courses",
+      "new": "New",
+      "new_course": "New course",
+      "new_group": "New group",
+      "new_quiz": "New quiz",
+      "new_announcement": "New announcement"
+    },
+    "alerts": {
+      "title": "Alerts",
+      "none": "All caught up. Nothing needs you right now.",
+      "no_recording": "{} #{} has no recording yet",
+      "falling_behind": "{} students in {} missed the last 2 sessions",
+      "quiz_closing": "{} closes in {} h"
+    },
+    "table": {
+      "showing": "Showing {} of {}",
+      "previous": "Previous page",
+      "next": "Next page"
+    },
+    "overview": {
+      "eyebrow": "overview",
+      "greeting_morning": "Good morning, {}",
+      "greeting_afternoon": "Good afternoon, {}",
+      "greeting_evening": "Good evening, {}",
+      "summary": "{} active groups · {} sessions left this week · {} quizzes closing soon",
+      "period_week": "7 days",
+      "period_month": "30 days",
+      "period_all": "All time",
+      "vs_week": "vs the 7 days before",
+      "vs_month": "vs the 30 days before",
+      "kpi_students": "Active students",
+      "kpi_attendance": "Attendance rate",
+      "kpi_quiz": "Avg quiz score",
+      "kpi_sessions": "Sessions this week",
+      "done_left": "{} done · {} left",
+      "attendance_title": "Attendance per session",
+      "attendance_hint": "Share of the group that joined the live call",
+      "attendance_empty": "Attendance shows up here once students join sessions from the app.",
+      "attendance_label": "Attendance for {} over the last sessions: {}",
+      "coming_up": "Coming up",
+      "all_groups": "All groups",
+      "in_days": "in {}d {}h",
+      "in_hours": "in {}h {}m",
+      "students": "{} students",
+      "start_meeting": "Start meeting",
+      "quiz_title": "Quiz scores by group",
+      "quiz_hint": "Average of every first attempt",
+      "quiz_empty": "No quiz results yet",
+      "results": "{} results",
+      "attention_title": "Needs attention",
+      "attention_hint": "Missed the last 2 sessions or more",
+      "attention_empty": "Nobody has missed two sessions in a row.",
+      "missed": "{} · missed {}",
+      "message": "Message {}",
+      "activity_title": "Recent activity",
+      "activity_empty": "Nothing yet",
+      "missed_count": "{} · missed the last {} sessions"
+    },
+    "activity": {
+      "you": "You",
+      "submitted": "submitted {}",
+      "scored": "submitted {} · {}",
+      "recording": "added the recording for {} #{}",
+      "joined": "joined {}",
+      "announced": "posted \"{}\""
+    },
+    "attendance": {
+      "title": "Attendance · {}",
+      "hint": "{}. Students who joined from the app are already ticked.",
+      "count": "{} of {} present",
+      "saved": "Attendance saved"
+    },
+    "announcements": {
+      "eyebrow": "academy",
+      "title": "Announcements",
+      "subtitle": "Messages students see in the app, under the bell on Home.",
+      "new": "New announcement",
+      "title_label": "Title",
+      "body_label": "Message",
+      "to": "Send to",
+      "pick_group": "Pick at least one group",
+      "in_app": "Students see it in the app the next time they open it. There's no push notification on the free plan.",
+      "send": "Send",
+      "sent": "Announcement sent",
+      "empty": "No announcements yet",
+      "delete_title": "Delete announcement?",
+      "delete_message": "Delete \"{}\"? Students won't see it anymore."
     }
   },
   "quizzes": {
@@ -599,6 +783,25 @@
     "errors": {
       "not_available": "This quiz isn't open for you right now.",
       "no_attempt": "This attempt has ended. Go back and open the quiz again."
-    }
+    },
+    "stat_open": "Open",
+    "stat_done": "Done",
+    "stat_total_points": "Points",
+    "avg": "avg",
+    "your_rank": "You're {} of {} in {}",
+    "details": "Details",
+    "review": "Review",
+    "your_score": "Your score"
+  },
+  "time": {
+    "just_now": "Just now",
+    "minutes_ago": "{} min ago",
+    "hours_ago": "{} h ago",
+    "yesterday_at": "Yesterday, {}"
+  },
+  "announcements": {
+    "title": "Announcements",
+    "empty": "No announcements yet",
+    "unread": "Announcements, {} new"
   }
 }

@@ -12,7 +12,7 @@ class SectionHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Expanded(child: Text(title, style: AppTextStyles.font18Bold)),
+        Expanded(child: Text(title, style: AppTextStyles.font18ExtraBold)),
         if (actionLabel != null) TextButton(onPressed: onAction, child: Text(actionLabel!)),
       ],
     );

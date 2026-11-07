@@ -1,3 +1,4 @@
+import 'package:cairo_coding_app/admin/widgets/admin_page.dart';
 import 'package:cairo_coding_app/app.dart';
 import 'package:cairo_coding_app/core/config/app_flavor.dart';
 import 'package:cairo_coding_app/core/const/app_assets.dart';
@@ -90,3 +91,6 @@ Future<void> setUpAppTests() async {
   await initializeDateFormatting();
   CairoTime.init();
 }
+
+/// The first text field on the dashboard page itself, past the search in the top bar.
+Finder pageField() => find.descendant(of: find.byType(AdminPage), matching: find.byType(TextField)).first;

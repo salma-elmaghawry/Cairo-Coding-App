@@ -1,7 +1,9 @@
 import 'dart:async';
 
+import 'package:cairo_coding_app/data/fake/fake_activity_seed.dart';
 import 'package:cairo_coding_app/data/fake/fake_quiz_seed.dart';
 import 'package:cairo_coding_app/data/models/academy_group.dart';
+import 'package:cairo_coding_app/data/models/announcement.dart';
 import 'package:cairo_coding_app/data/models/class_session.dart';
 import 'package:cairo_coding_app/data/models/course.dart';
 import 'package:cairo_coding_app/data/models/instructor.dart';
@@ -56,6 +58,7 @@ class FakeAcademyStore {
   final Map<String, Quiz> quizzes = {};
   final Map<String, QuizContent> quizContents = {};
   final Map<String, QuizAttempt> quizAttempts = {};
+  final Map<String, Announcement> announcements = {};
 
   /// Group id, then quiz id, then student uid.
   final Map<String, Map<String, Map<String, BoardEntry>>> quizBoards = {};
@@ -236,5 +239,6 @@ class FakeAcademyStore {
     }
 
     seedFakeQuizzes(this, now);
+    seedFakeActivity(this, now);
   }
 }

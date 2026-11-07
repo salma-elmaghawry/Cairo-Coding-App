@@ -15,3 +15,10 @@ final minuteTickerProvider = StreamProvider.autoDispose<DateTime>((ref) async* {
   yield now();
   yield* Stream.periodic(const Duration(seconds: 30), (_) => now());
 });
+
+/// Ticks every second, for countdowns that show seconds.
+final secondTickerProvider = StreamProvider.autoDispose<DateTime>((ref) async* {
+  final now = ref.watch(clockProvider);
+  yield now();
+  yield* Stream.periodic(const Duration(seconds: 1), (_) => now());
+});

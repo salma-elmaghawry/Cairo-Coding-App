@@ -1,9 +1,11 @@
 import 'package:cairo_coding_app/admin/admin_routes.dart';
+import 'package:cairo_coding_app/admin/announcements/announcements_screen.dart';
 import 'package:cairo_coding_app/admin/course_detail/course_detail_screen.dart';
 import 'package:cairo_coding_app/admin/courses/courses_screen.dart';
 import 'package:cairo_coding_app/admin/group_detail/group_detail_screen.dart';
 import 'package:cairo_coding_app/admin/groups/groups_screen.dart';
 import 'package:cairo_coding_app/admin/instructors/instructors_screen.dart';
+import 'package:cairo_coding_app/admin/overview/overview_screen.dart';
 import 'package:cairo_coding_app/admin/quizzes/admin_quizzes_screen.dart';
 import 'package:cairo_coding_app/admin/quizzes/quiz_admin_providers.dart';
 import 'package:cairo_coding_app/admin/quizzes/quiz_analytics_screen.dart';
@@ -70,17 +72,18 @@ final adminRouterProvider = Provider<GoRouter>((ref) {
       auth: auth.value,
       location: state.matchedLocation,
       isAllowed: (user) => user.isAdmin,
-      home: AdminRoutes.courses,
+      home: AdminRoutes.overview,
     ),
     errorBuilder: (context, state) => const NotFoundScreen(),
     routes: [
-      GoRoute(path: '/', redirect: (_, _) => AdminRoutes.courses),
+      GoRoute(path: '/', redirect: (_, _) => AdminRoutes.overview),
       GoRoute(path: AuthRoutes.splash, builder: (_, _) => const SplashScreen()),
       GoRoute(path: AuthRoutes.login, builder: (_, _) => const LoginScreen()),
       GoRoute(path: AuthRoutes.blocked, builder: (_, _) => const BlockedScreen()),
       ShellRoute(
         builder: (context, state, child) => AdminScaffold(location: state.matchedLocation, child: child),
         routes: [
+          GoRoute(path: AdminRoutes.overview, pageBuilder: (_, _) => page(const OverviewScreen())),
           GoRoute(
             path: AdminRoutes.courses,
             pageBuilder: (_, _) => page(const CoursesScreen()),
@@ -130,6 +133,7 @@ final adminRouterProvider = Provider<GoRouter>((ref) {
               ),
             ],
           ),
+          GoRoute(path: AdminRoutes.announcements, pageBuilder: (_, _) => page(const AnnouncementsScreen())),
           GoRoute(path: AdminRoutes.settings, pageBuilder: (_, _) => page(const AdminSettingsScreen())),
         ],
       ),

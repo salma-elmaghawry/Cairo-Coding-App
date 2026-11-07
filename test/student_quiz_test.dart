@@ -15,18 +15,15 @@ void main() {
     expect(find.text('Available'), findsWidgets);
     expect(find.text('Leaderboard'), findsOneWidget);
 
-    await tester.tap(find.widgetWithText(ChoiceChip, 'Upcoming'));
-    await settle(tester);
+    await tapPill(tester, 'Upcoming');
     expect(find.text('Arrays and strings'), findsOneWidget);
     expect(find.text('Loops in C++'), findsNothing);
 
-    await tester.tap(find.widgetWithText(ChoiceChip, 'Completed'));
-    await settle(tester);
+    await tapPill(tester, 'Completed');
     expect(find.text('Conditions in C++'), findsOneWidget);
     expect(find.text('6/8'), findsOneWidget);
 
-    await tester.tap(find.widgetWithText(ChoiceChip, 'Expired'));
-    await settle(tester);
+    await tapPill(tester, 'Expired');
     expect(find.text('Operators in C++'), findsOneWidget);
   });
 
@@ -39,8 +36,7 @@ void main() {
   testWidgets('an upcoming quiz can\'t be started', (tester) async {
     phone(tester);
     await openQuizzes(tester);
-    await tester.tap(find.widgetWithText(ChoiceChip, 'Upcoming'));
-    await settle(tester);
+    await tapPill(tester, 'Upcoming');
     await tapText(tester, 'Arrays and strings');
     expect(find.text('Not open yet'), findsOneWidget);
     expect(find.text('Start quiz'), findsNothing);

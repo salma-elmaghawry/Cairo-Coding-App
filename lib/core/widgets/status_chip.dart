@@ -4,6 +4,19 @@ import 'package:flutter/material.dart';
 
 enum StatusTone { accent, neutral, danger, success, gold }
 
+extension StatusToneColor on StatusTone {
+  Color color(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    return switch (this) {
+      StatusTone.accent => colorScheme.primary,
+      StatusTone.neutral => colorScheme.onSurfaceVariant,
+      StatusTone.danger => colorScheme.error,
+      StatusTone.success => Theme.of(context).brightness == Brightness.dark ? AppColors.successDark : AppColors.success,
+      StatusTone.gold => colorScheme.tertiary,
+    };
+  }
+}
+
 class StatusChip extends StatelessWidget {
   const StatusChip({super.key, required this.label, this.tone = StatusTone.accent});
 
@@ -12,23 +25,16 @@ class StatusChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-    final color = switch (tone) {
-      StatusTone.accent => colorScheme.primary,
-      StatusTone.neutral => colorScheme.onSurfaceVariant,
-      StatusTone.danger => colorScheme.error,
-      StatusTone.success => AppColors.success,
-      StatusTone.gold => colorScheme.tertiary,
-    };
+    final color = tone.color(context);
 
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+      padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 3),
       decoration: BoxDecoration(
         color: color.withValues(alpha: .12),
         borderRadius: BorderRadius.circular(999),
         border: Border.all(color: color.withValues(alpha: .4)),
       ),
-      child: Text(label, style: AppTextStyles.font12SemiBold.copyWith(color: color)),
+      child: Text(label, style: AppTextStyles.font12Bold.copyWith(color: color)),
     );
   }
 }

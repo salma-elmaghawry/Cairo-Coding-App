@@ -54,12 +54,12 @@ void main() {
 
     await tester.tap(find.widgetWithText(ChoiceChip, 'All'));
     await settle(tester);
-    await tester.enterText(find.byType(TextField).first, 'git');
+    await tester.enterText(pageField(), 'git');
     await settle(tester);
     expect(find.text('Git basics'), findsOneWidget);
     expect(find.text('Loops in C++'), findsNothing);
 
-    await tester.enterText(find.byType(TextField).first, 'nothing like this');
+    await tester.enterText(pageField(), 'nothing like this');
     await settle(tester);
     expect(find.text('No quizzes match'), findsOneWidget);
   });
@@ -176,7 +176,7 @@ void main() {
     await tapText(tester, 'Save draft');
     expect(find.text('Draft saved'), findsOneWidget);
     expect(find.text('Rough idea'), findsOneWidget);
-    await tester.enterText(find.byType(TextField).first, 'rough');
+    await tester.enterText(pageField(), 'rough');
     await settle(tester);
     await tester.tap(find.text('Edit').first);
     await settle(tester);

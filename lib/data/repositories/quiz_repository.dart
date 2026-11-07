@@ -108,6 +108,9 @@ class QuizRepository {
 
   Future<Result<bool>> hasAttempts(String quizId) => Result.guard(() => _source.hasAttempts(quizId));
 
+  Stream<List<QuizAttempt>> watchRecentSubmissions(int limit) =>
+      ErrorMapper.mapStream(_source.watchRecentSubmissions(limit));
+
   /// [content] is left out when the questions are locked because students have already taken the quiz.
   Future<Result<Quiz>> saveQuiz(Quiz quiz, {QuizContent? content, List<String> previousGroupIds = const []}) =>
       Result.guard(() {

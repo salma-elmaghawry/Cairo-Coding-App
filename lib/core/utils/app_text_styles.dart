@@ -41,6 +41,12 @@ class AppTextStyles {
 
   static TextStyle get font16ExtraBold => _font(16, FontWeight.w800);
 
+  static TextStyle get font15Normal => _font(15, FontWeight.normal);
+
+  static TextStyle get font15Bold => _font(15, FontWeight.bold);
+
+  static TextStyle get font15ExtraBold => _font(15, FontWeight.w800);
+
   static TextStyle get font14Normal => _font(14, FontWeight.normal);
 
   static TextStyle get font14Medium => _font(14, FontWeight.w500);
@@ -51,15 +57,29 @@ class AppTextStyles {
 
   static TextStyle get font14ExtraBold => _font(14, FontWeight.w800);
 
+  static TextStyle get font13Normal => _font(13, FontWeight.normal);
+
+  static TextStyle get font13ExtraBold => _font(13, FontWeight.w800);
+
   static TextStyle get font12Normal => _font(12, FontWeight.normal);
 
   static TextStyle get font12Medium => _font(12, FontWeight.w500);
 
   static TextStyle get font12SemiBold => _font(12, FontWeight.w600);
 
+  static TextStyle get font12Bold => _font(12, FontWeight.bold);
+
+  static TextStyle get font12ExtraBold => _font(12, FontWeight.w800);
+
+  static TextStyle get font11ExtraBold => _font(11, FontWeight.w800);
+
   static TextStyle get monoFont28Bold => _mono(28, FontWeight.w700);
 
+  static TextStyle get monoFont24Bold => _mono(24, FontWeight.w700);
+
   static TextStyle get monoFont20Bold => _mono(20, FontWeight.w700);
+
+  static TextStyle get monoFont18Bold => _mono(18, FontWeight.w700);
 
   static TextStyle get monoFont16Bold => _mono(16, FontWeight.w700);
 
@@ -70,6 +90,8 @@ class AppTextStyles {
   static TextStyle get monoFont12Bold => _mono(12, FontWeight.w700);
 
   static TextStyle get monoFont12Medium => _mono(12, FontWeight.w500);
+
+  static TextStyle get monoFont11Bold => _mono(11, FontWeight.w700);
 
   static TextStyle get monoFont10Medium => _mono(10, FontWeight.w500);
 
@@ -92,4 +114,8 @@ extension AppTextStyleColors on TextStyle {
   TextStyle secondary(BuildContext context) => copyWith(
     color: Theme.of(context).brightness == Brightness.dark ? AppColors.textSecondaryDark : AppColors.textSecondaryLight,
   );
+
+  /// The faintest text, for hints and units next to a number.
+  TextStyle muted(BuildContext context) =>
+      copyWith(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: .6));
 }

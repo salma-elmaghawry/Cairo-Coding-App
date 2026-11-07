@@ -12,6 +12,7 @@ const Set<String> _dateFields = {
   'startedAt',
   'lastAnswerAt',
   'submittedAt',
+  'lastSeenAt',
 };
 
 Map<String, dynamic> fromFirestore(Map<String, dynamic> data) => {

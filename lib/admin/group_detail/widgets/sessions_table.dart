@@ -1,10 +1,11 @@
 import 'package:cairo_coding_app/admin/admin_providers.dart';
+import 'package:cairo_coding_app/admin/group_detail/widgets/attendance_dialog.dart';
 import 'package:cairo_coding_app/admin/group_detail/widgets/session_form_dialog.dart';
+import 'package:cairo_coding_app/admin/insights/group_insights.dart';
 import 'package:cairo_coding_app/core/error_handling/result.dart';
 import 'package:cairo_coding_app/core/helpers/bidi.dart';
 import 'package:cairo_coding_app/core/helpers/date_formats.dart';
 import 'package:cairo_coding_app/core/helpers/pickers.dart';
-import 'package:cairo_coding_app/core/helpers/spacing.dart';
 import 'package:cairo_coding_app/core/helpers/ui_helpers.dart';
 import 'package:cairo_coding_app/core/providers/core_providers.dart';
 import 'package:cairo_coding_app/core/utils/app_text_styles.dart';
@@ -74,151 +75,181 @@ class SessionsTable extends ConsumerWidget {
     SessionFormDialog.show(context, group: group, session: session, suggestedInstructor: suggested);
   }
 
-  (String, StatusTone) _status(ClassSession session, bool past) => switch (session.status) {
+  (String, StatusTone) _status(ClassSession session, bool past, bool next) => switch (session.status) {
     SessionStatus.cancelled => ('session.status.cancelled'.tr(), StatusTone.danger),
-    _ when past => ('session.status.done'.tr(), StatusTone.neutral),
+    _ when past => ('session.status.done'.tr(), StatusTone.success),
+    _ when next => ('schedule.next'.tr(), StatusTone.gold),
     SessionStatus.moved => ('session.status.moved'.tr(), StatusTone.neutral),
     SessionStatus.extra => ('session.status.extra'.tr(), StatusTone.accent),
     SessionStatus.scheduled => ('session.status.scheduled'.tr(), StatusTone.accent),
   };
 
+  String _attended(BuildContext context, GroupInsights? insights, ClassSession session, bool past) {
+    if (session.isCancelled) return '—';
+    if (!past) return 'admin.schedule.not_yet'.tr();
+    if (!session.hasAttendance || insights == null) return 'admin.students.no_data'.tr();
+    return '${insights.attendedOf(session)}/${insights.members.length}';
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final sessions = ref.watch(groupSessionsProvider(group.id));
+    final insights = ref.watch(groupInsightsProvider(group.id));
     final now = ref.watch(clockProvider)();
     final repository = ref.read(academyRepositoryProvider);
     final colorScheme = Theme.of(context).colorScheme;
+    final compact = TextButton.styleFrom(padding: _compactPadding, minimumSize: const Size(0, 34));
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
+    final header = Row(
       children: [
-        Row(
-          children: [
-            Expanded(child: Text('admin.schedule.sessions_title'.tr(), style: AppTextStyles.font18ExtraBold)),
-            OutlinedButton.icon(
-              onPressed: () => _add(context, sessions.value ?? const []),
-              icon: const Icon(Icons.add_rounded, size: 18),
-              label: Text('admin.schedule.add_session'.tr()),
-            ),
-          ],
+        Expanded(child: Text('admin.schedule.sessions_title'.tr(), style: AppTextStyles.font18ExtraBold)),
+        OutlinedButton.icon(
+          onPressed: () => _add(context, sessions.value ?? const []),
+          icon: const Icon(Icons.add_rounded, size: 18),
+          label: Text('admin.schedule.add_session'.tr()),
         ),
-        verticalSpace(12),
-        switch (sessions) {
-          AsyncError(:final error) => ErrorView(message: error.toString()),
-          AsyncData(:final value) when value.isEmpty => EmptyView(
-            message: 'admin.schedule.empty'.tr(),
-            icon: Icons.event_note_outlined,
-          ),
-          AsyncData(:final value) => AppDataTable(
-            minWidth: 720,
-            dimmedRows: {
-              for (final (index, session) in value.indexed)
-                if (session.isPast(now) || session.isCancelled) index,
-            },
-            columns: [
-              const AppTableColumn('#'),
-              AppTableColumn('admin.schedule.date'.tr(), flex: 2),
-              AppTableColumn('admin.schedule.time'.tr(), flex: 2),
-              AppTableColumn('admin.schedule.topic'.tr(), flex: 4),
-              AppTableColumn('admin.students.status'.tr(), flex: 2),
-              AppTableColumn('admin.students.actions'.tr(), flex: 5, alignEnd: true),
-            ],
-            rows: [
-              for (final session in value)
-                () {
-                  final past = session.isPast(now);
-                  final status = _status(session, past);
-                  return [
-                    Text(
-                      session.number?.toString().padLeft(2, '0') ?? '—',
-                      style: AppTextStyles.monoFont14Bold.copyWith(color: colorScheme.primary),
-                    ),
-                    Text(
-                      context.shortDay(session.startsAt),
-                      style: AppTextStyles.font14Bold.copyWith(
-                        decoration: session.isCancelled ? TextDecoration.lineThrough : null,
-                      ),
-                    ),
-                    Text(
-                      '${context.time(session.startsAt)} · ${session.durationLabel}',
-                      style: AppTextStyles.font14Normal.secondary(context),
-                    ),
-                    Row(
-                      children: [
-                        Flexible(
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                session.topic.isEmpty ? '—' : context.bidi(session.topic),
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: AppTextStyles.font14SemiBold,
-                              ),
-                              if (session.instructor.isNotEmpty)
-                                Text(
-                                  'session.by'.tr(args: [session.instructor]),
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: AppTextStyles.font12Normal.secondary(context),
-                                ),
-                            ],
-                          ),
-                        ),
-                        IconButton(
-                          style: IconButton.styleFrom(side: BorderSide.none),
-                          tooltip: 'admin.schedule.edit_title'.tr(),
-                          onPressed: () => _edit(context, value, session),
-                          icon: const Icon(Icons.edit_outlined, size: 16),
-                        ),
-                      ],
-                    ),
-                    StatusChip(label: status.$1, tone: status.$2),
-                    Wrap(
-                      spacing: 4,
-                      crossAxisAlignment: WrapCrossAlignment.center,
-                      children: [
-                        if (!past) ...[
-                          TextButton(
-                            style: TextButton.styleFrom(padding: _compactPadding),
-                            onPressed: session.isCancelled ? null : () => _reschedule(context, ref, session),
-                            child: Text('admin.schedule.reschedule'.tr()),
-                          ),
-                          TextButton(
-                            style: TextButton.styleFrom(
-                              padding: _compactPadding,
-                              foregroundColor: session.isCancelled ? null : colorScheme.error,
-                            ),
-                            onPressed: () => _run(
-                              context,
-                              repository.setSessionStatus(
-                                session,
-                                session.isCancelled
-                                    ? (session.number == null ? SessionStatus.extra : SessionStatus.scheduled)
-                                    : SessionStatus.cancelled,
-                              ),
-                            ),
-                            child: Text(
-                              (session.isCancelled ? 'admin.schedule.restore' : 'admin.schedule.cancel').tr(),
-                            ),
-                          ),
-                        ],
-                        IconButton(
-                          style: IconButton.styleFrom(side: BorderSide.none, foregroundColor: colorScheme.error),
-                          tooltip: 'admin.schedule.delete'.tr(),
-                          onPressed: () => _delete(context, ref, session),
-                          icon: const Icon(Icons.delete_outline_rounded, size: 18),
-                        ),
-                      ],
-                    ),
-                  ];
-                }(),
-            ],
-          ),
-          _ => const SkeletonList(count: 6, itemHeight: 48),
-        },
       ],
     );
+
+    return switch (sessions) {
+      AsyncError(:final error) => ErrorView(message: error.toString()),
+      AsyncData(:final value) when value.isEmpty => Column(
+        children: [
+          header,
+          EmptyView(message: 'admin.schedule.empty'.tr(), icon: Icons.event_note_outlined),
+        ],
+      ),
+      AsyncData(:final value) => () {
+        final nextId = value.where((s) => !s.isCancelled && !s.isPast(now)).firstOrNull?.id;
+        return AppDataTable(
+          minWidth: 760,
+          header: header,
+          dimmedRows: {
+            for (final (index, session) in value.indexed)
+              if (session.isCancelled) index,
+          },
+          highlightedRows: {
+            for (final (index, session) in value.indexed)
+              if (session.id == nextId) index,
+          },
+          columns: [
+            const AppTableColumn('#'),
+            AppTableColumn('admin.schedule.date'.tr(), flex: 3),
+            AppTableColumn('admin.schedule.topic'.tr(), flex: 4),
+            AppTableColumn('admin.schedule.attended'.tr(), flex: 2),
+            AppTableColumn('admin.students.status'.tr(), flex: 2),
+            AppTableColumn('admin.students.actions'.tr(), flex: 5, alignEnd: true),
+          ],
+          rows: [
+            for (final session in value)
+              () {
+                final past = session.isPast(now);
+                final status = _status(session, past, session.id == nextId);
+                return [
+                  Text(
+                    session.number?.toString().padLeft(2, '0') ?? 'X',
+                    style: AppTextStyles.monoFont14Bold.copyWith(color: colorScheme.primary),
+                  ),
+                  Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        context.shortDay(session.startsAt),
+                        style: AppTextStyles.font14ExtraBold.copyWith(
+                          decoration: session.isCancelled ? TextDecoration.lineThrough : null,
+                        ),
+                      ),
+                      Text(
+                        '${context.time(session.startsAt)} · ${session.durationLabel}',
+                        style: AppTextStyles.font12SemiBold.secondary(context),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Flexible(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              session.topic.isEmpty ? '—' : context.bidi(session.topic),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: AppTextStyles.font14Bold,
+                            ),
+                            if (session.instructor.isNotEmpty)
+                              Text(
+                                'session.by'.tr(args: [session.instructor]),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: AppTextStyles.font12Normal.secondary(context),
+                              ),
+                          ],
+                        ),
+                      ),
+                      IconButton(
+                        style: IconButton.styleFrom(side: BorderSide.none),
+                        tooltip: 'admin.schedule.edit_title'.tr(),
+                        onPressed: () => _edit(context, value, session),
+                        icon: const Icon(Icons.edit_outlined, size: 16),
+                      ),
+                    ],
+                  ),
+                  Text(
+                    _attended(context, insights, session, past),
+                    style: AppTextStyles.monoFont12Medium.secondary(context),
+                  ),
+                  StatusChip(label: status.$1, tone: status.$2),
+                  Wrap(
+                    spacing: 4,
+                    crossAxisAlignment: WrapCrossAlignment.center,
+                    children: [
+                      if (past && !session.isCancelled)
+                        TextButton(
+                          style: compact,
+                          onPressed: insights == null
+                              ? null
+                              : () => AttendanceDialog.show(context, session: session, students: insights.members),
+                          child: Text('admin.schedule.attendance'.tr()),
+                        ),
+                      if (!past) ...[
+                        TextButton(
+                          style: compact,
+                          onPressed: session.isCancelled ? null : () => _reschedule(context, ref, session),
+                          child: Text('admin.schedule.reschedule'.tr()),
+                        ),
+                        TextButton(
+                          style: compact.copyWith(
+                            foregroundColor: WidgetStatePropertyAll(session.isCancelled ? null : colorScheme.error),
+                          ),
+                          onPressed: () => _run(
+                            context,
+                            repository.setSessionStatus(
+                              session,
+                              session.isCancelled
+                                  ? (session.number == null ? SessionStatus.extra : SessionStatus.scheduled)
+                                  : SessionStatus.cancelled,
+                            ),
+                          ),
+                          child: Text((session.isCancelled ? 'admin.schedule.restore' : 'admin.schedule.cancel').tr()),
+                        ),
+                      ],
+                      IconButton(
+                        style: IconButton.styleFrom(side: BorderSide.none, foregroundColor: colorScheme.error),
+                        tooltip: 'admin.schedule.delete'.tr(),
+                        onPressed: () => _delete(context, ref, session),
+                        icon: const Icon(Icons.delete_outline_rounded, size: 18),
+                      ),
+                    ],
+                  ),
+                ];
+              }(),
+          ],
+        );
+      }(),
+      _ => const SkeletonList(count: 6, itemHeight: 52),
+    };
   }
 }

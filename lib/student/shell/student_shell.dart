@@ -1,16 +1,35 @@
 import 'package:cairo_coding_app/student/reminders/reminder_providers.dart';
+import 'package:cairo_coding_app/student/student_activity.dart';
+import 'package:cairo_coding_app/student/student_providers.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-class StudentShell extends ConsumerWidget {
+class StudentShell extends ConsumerStatefulWidget {
   const StudentShell({super.key, required this.shell});
 
   final StatefulNavigationShell shell;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<StudentShell> createState() => _StudentShellState();
+}
+
+class _StudentShellState extends ConsumerState<StudentShell> {
+  @override
+  void initState() {
+    super.initState();
+    // Lets the dashboard tell students who signed in from those still to set a password.
+    ref.listenManual(
+      currentUserProvider.select((user) => user?.uid),
+      (_, uid) => uid == null ? null : ref.read(studentActivityProvider).seen(),
+      fireImmediately: true,
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final shell = widget.shell;
     ref.listen(reminderSyncProvider(context.locale.languageCode), (_, _) {});
 
     return Scaffold(

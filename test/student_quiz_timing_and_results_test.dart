@@ -58,8 +58,7 @@ void main() {
   ) async {
     phone(tester);
     await openQuizzes(tester);
-    await tester.tap(find.widgetWithText(ChoiceChip, 'Completed'));
-    await settle(tester);
+    await tapPill(tester, 'Completed');
     await tapText(tester, 'Conditions in C++');
     await tapText(tester, 'View my result');
 

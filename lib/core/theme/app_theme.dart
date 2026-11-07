@@ -13,6 +13,8 @@ class AppTheme {
       onSecondary: AppColors.onPrimaryLight,
       tertiary: AppColors.thirdLight,
       surface: AppColors.surfaceLight,
+      surfaceContainer: AppColors.surfaceLight,
+      surfaceContainerLow: AppColors.surfaceLight,
       onSurface: AppColors.textPrimaryLight,
       onSurfaceVariant: AppColors.textSecondaryLight,
       surfaceContainerLowest: AppColors.deepLight,
@@ -33,6 +35,8 @@ class AppTheme {
       onSecondary: AppColors.onPrimaryDark,
       tertiary: AppColors.thirdDark,
       surface: AppColors.surfaceDark,
+      surfaceContainer: AppColors.backgroundAltDark,
+      surfaceContainerLow: AppColors.sidebarDark,
       onSurface: AppColors.textPrimaryDark,
       onSurfaceVariant: AppColors.textSecondaryDark,
       surfaceContainerLowest: AppColors.deepDark,
@@ -194,14 +198,14 @@ class AppTheme {
         ),
       ),
       navigationBarTheme: NavigationBarThemeData(
-        backgroundColor: colorScheme.surfaceContainerHighest,
-        indicatorColor: colorScheme.primary.withValues(alpha: .16),
+        backgroundColor: colorScheme.surfaceContainer,
+        indicatorColor: colorScheme.primary.withValues(alpha: .22),
         elevation: 0,
-        height: 72,
+        height: 80,
         labelTextStyle: WidgetStateProperty.resolveWith(
           (states) => states.contains(WidgetState.selected)
-              ? AppTextStyles.font12SemiBold.copyWith(color: colorScheme.primary)
-              : AppTextStyles.font12Medium.copyWith(color: textSecondary),
+              ? AppTextStyles.font12ExtraBold.copyWith(color: textPrimary)
+              : AppTextStyles.font12SemiBold.copyWith(color: textSecondary),
         ),
         iconTheme: WidgetStateProperty.resolveWith(
           (states) => IconThemeData(color: states.contains(WidgetState.selected) ? colorScheme.primary : textSecondary),

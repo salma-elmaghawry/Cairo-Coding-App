@@ -1,4 +1,5 @@
 import 'package:cairo_coding_app/data/models/academy_group.dart';
+import 'package:cairo_coding_app/data/models/announcement.dart';
 import 'package:cairo_coding_app/data/models/class_session.dart';
 import 'package:cairo_coding_app/data/models/course.dart';
 import 'package:cairo_coding_app/data/models/instructor.dart';
@@ -53,4 +54,25 @@ abstract class AcademySource {
   Future<Course> saveCourse(Course course);
 
   Future<void> deleteCourse(String id);
+
+  /// Adds [uid] to the session's attendees. The rules let a student add only themselves, and only while
+  /// the session runs (from 30 minutes before it starts).
+  Future<void> markAttended(String groupId, String sessionId, String uid);
+
+  /// Replaces who attended, for the admin taking or correcting attendance.
+  Future<void> setAttendance(String groupId, String sessionId, List<String> uids);
+
+  /// Adds [uid] to the students who opened the recording.
+  Future<void> markViewed(String groupId, String recordingId, String uid);
+
+  /// Stamps the student's profile with the server's time, so the dashboard can tell who signed in.
+  Future<void> touchLastSeen(String uid);
+
+  /// Each group keeps its own copy of an announcement, so the same one can come back once per group.
+  Stream<List<Announcement>> watchAnnouncements(List<String> groupIds);
+
+  /// Writes one copy per group, all with the same id.
+  Future<Announcement> saveAnnouncement(Announcement announcement);
+
+  Future<void> deleteAnnouncement(Announcement announcement);
 }

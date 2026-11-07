@@ -18,7 +18,7 @@ void main() {
     await signIn(tester, FakeAcademyStore.demoAdminEmail);
     await tester.tap(find.text('Students').first);
     await settle(tester);
-    await tester.enterText(find.byType(TextField).first, 'hana');
+    await tester.enterText(pageField(), 'hana');
     await settle(tester);
 
     await tester.tap(find.byTooltip('Edit student'));

@@ -16,6 +16,8 @@ void main() {
 
     await pumpApp(tester, AppFlavor.admin, adminRouterProvider);
     await signIn(tester, FakeAcademyStore.demoAdminEmail);
+    await tester.tap(find.text('Courses').first);
+    await settle(tester);
     await tester.tap(find.text('Open course').first);
     await settle(tester);
     expect(find.text('22 sessions · 2 groups'), findsOneWidget);

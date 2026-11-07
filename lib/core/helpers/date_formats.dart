@@ -26,4 +26,15 @@ extension AppDateFormats on BuildContext {
   String weekdayShortName(int weekday) => DateFormat('EEE', _locale).format(DateTime(2024, 1, weekday));
 
   String timeOfDay(int hour, int minute) => DateFormat.jm(_locale).format(DateTime(2024, 1, 1, hour, minute));
+
+  /// "12 min ago", "2 h ago", "Yesterday, 9:14 PM", or the date for anything older.
+  String relativeTime(DateTime when, DateTime now) {
+    final ago = now.difference(when);
+    if (ago.inMinutes < 1) return 'time.just_now'.tr();
+    if (ago.inMinutes < 60) return 'time.minutes_ago'.tr(args: ['${ago.inMinutes}']);
+    final today = DateTime(now.year, now.month, now.day);
+    if (!when.isBefore(today)) return 'time.hours_ago'.tr(args: ['${ago.inHours}']);
+    if (!when.isBefore(today.subtract(const Duration(days: 1)))) return 'time.yesterday_at'.tr(args: [time(when)]);
+    return '${shortDay(when)}, ${time(when)}';
+  }
 }

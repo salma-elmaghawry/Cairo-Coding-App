@@ -1,27 +1,54 @@
 import 'package:cairo_coding_app/admin/admin_providers.dart';
 import 'package:cairo_coding_app/admin/admin_routes.dart';
+import 'package:cairo_coding_app/admin/group_detail/widgets/student_cells.dart';
+import 'package:cairo_coding_app/admin/insights/group_insights.dart';
 import 'package:cairo_coding_app/admin/students/widgets/add_students_dialog.dart';
 import 'package:cairo_coding_app/admin/widgets/admin_page.dart';
 import 'package:cairo_coding_app/admin/widgets/student_actions.dart';
 import 'package:cairo_coding_app/core/helpers/bidi.dart';
+import 'package:cairo_coding_app/core/helpers/date_formats.dart';
+import 'package:cairo_coding_app/core/providers/core_providers.dart';
 import 'package:cairo_coding_app/core/helpers/spacing.dart';
 import 'package:cairo_coding_app/core/utils/app_text_styles.dart';
 import 'package:cairo_coding_app/core/widgets/app_data_table.dart';
+import 'package:cairo_coding_app/core/widgets/filter_pill.dart';
 import 'package:cairo_coding_app/core/widgets/primary_button.dart';
 import 'package:cairo_coding_app/core/widgets/state_views.dart';
 import 'package:cairo_coding_app/core/widgets/status_chip.dart';
 import 'package:cairo_coding_app/data/models/academy_group.dart';
 import 'package:cairo_coding_app/data/models/course.dart';
+import 'package:cairo_coding_app/data/models/student.dart';
 import 'package:easy_localization/easy_localization.dart' hide TextDirection;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-class StudentsScreen extends ConsumerWidget {
+class StudentsScreen extends ConsumerStatefulWidget {
   const StudentsScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<StudentsScreen> createState() => _StudentsScreenState();
+}
+
+class _StudentsScreenState extends ConsumerState<StudentsScreen> {
+  // Starts from the current search, so a student picked in the top bar's search shows up filtered.
+  late final _search = TextEditingController(text: ref.read(studentsViewProvider).query);
+
+  @override
+  void dispose() {
+    _search.dispose();
+    super.dispose();
+  }
+
+  String _lastSeen(BuildContext context, Student student, DateTime now) {
+    final seen = student.lastSeenAt;
+    if (seen == null) return 'admin.students_page.never'.tr();
+    return context.relativeTime(seen, now);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final now = ref.watch(clockProvider)();
     final students = ref.watch(visibleStudentsProvider);
     final view = ref.watch(studentsViewProvider);
     final viewNotifier = ref.read(studentsViewProvider.notifier);
@@ -44,18 +71,17 @@ class StudentsScreen extends ConsumerWidget {
           AppDataTable(
             minWidth: 900,
             columns: [
-              AppTableColumn('admin.students.name'.tr(), flex: 3),
-              AppTableColumn('admin.students.email'.tr(), flex: 4),
+              AppTableColumn('admin.students.student'.tr(), flex: 5),
               AppTableColumn('admin.students.phone'.tr(), flex: 3),
               AppTableColumn('admin.courses.groups'.tr(), flex: 3),
+              AppTableColumn('admin.students_page.last_seen'.tr(), flex: 2),
               AppTableColumn('admin.students.status'.tr(), flex: 2),
               AppTableColumn('admin.students.actions'.tr(), flex: 2, alignEnd: true),
             ],
             rows: [
               for (final student in value)
                 [
-                  Text(student.name, style: AppTextStyles.font14Bold),
-                  Text(student.email, style: AppTextStyles.font14Normal.secondary(context)),
+                  StudentNameCell(student: student),
                   Text(
                     student.phone,
                     textDirection: TextDirection.ltr,
@@ -77,9 +103,10 @@ class StudentsScreen extends ConsumerWidget {
                         Text('admin.students_page.no_group'.tr(), style: AppTextStyles.font12Normal.secondary(context)),
                     ],
                   ),
+                  Text(_lastSeen(context, student, now), style: AppTextStyles.font12Normal.secondary(context)),
                   StatusChip(
-                    label: (student.active ? 'admin.students.active' : 'admin.students.inactive').tr(),
-                    tone: student.active ? StatusTone.accent : StatusTone.danger,
+                    label: GroupInsights.standingOf(student).label,
+                    tone: GroupInsights.standingOf(student).tone,
                   ),
                   Row(
                     mainAxisSize: MainAxisSize.min,
@@ -103,6 +130,7 @@ class StudentsScreen extends ConsumerWidget {
         SizedBox(
           width: 300,
           child: TextField(
+            controller: _search,
             onChanged: viewNotifier.search,
             decoration: InputDecoration(
               hintText: 'admin.students_page.search'.tr(),
@@ -124,16 +152,16 @@ class StudentsScreen extends ConsumerWidget {
           spacing: 8,
           runSpacing: 8,
           children: [
-            ChoiceChip(
-              label: Text('admin.students_page.all_courses'.tr()),
+            FilterPill(
+              label: 'admin.students_page.all_courses'.tr(),
               selected: view.courseId == null,
-              onSelected: (_) => viewNotifier.filterCourse(null),
+              onSelected: () => viewNotifier.filterCourse(null),
             ),
             for (final course in courses)
-              ChoiceChip(
-                label: Text(context.bidi(course.name)),
+              FilterPill(
+                label: context.bidi(course.name),
                 selected: view.courseId == course.id,
-                onSelected: (_) => viewNotifier.filterCourse(course.id),
+                onSelected: () => viewNotifier.filterCourse(course.id),
               ),
           ],
         ),

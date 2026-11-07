@@ -1,5 +1,6 @@
 import 'package:cairo_coding_app/data/fake/fake_academy_store.dart';
 import 'package:cairo_coding_app/data/models/academy_group.dart';
+import 'package:cairo_coding_app/data/models/announcement.dart';
 import 'package:cairo_coding_app/data/models/class_session.dart';
 import 'package:cairo_coding_app/data/models/course.dart';
 import 'package:cairo_coding_app/data/models/instructor.dart';
@@ -65,7 +66,9 @@ class FakeAcademySource implements AcademySource {
   Future<void> saveSessions(List<ClassSession> sessions) => _write(() {
     for (final session in sessions) {
       final saved = session.id.isEmpty ? session.copyWith(id: _store.newId('session')) : session;
-      _store.sessions[saved.id] = saved;
+      // Like Firestore's merge, the stored attendance wins over the copy being saved.
+      final attendees = _store.sessions[saved.id]?.attendees;
+      _store.sessions[saved.id] = attendees == null ? saved : saved.copyWith(attendees: attendees);
     }
   });
 
@@ -75,7 +78,12 @@ class FakeAcademySource implements AcademySource {
 
   @override
   Future<Recording> saveRecording(Recording recording) => _write(() {
-    final saved = recording.id.isEmpty ? recording.copyWith(id: _store.newId('recording')) : recording;
+    final existing = _store.recordings[recording.id];
+    final saved = recording.copyWith(
+      id: recording.id.isEmpty ? _store.newId('recording') : recording.id,
+      viewers: existing?.viewers,
+      addedAt: existing?.addedAt ?? DateTime.now(),
+    );
     _store.recordings[saved.id] = saved;
     return saved;
   });
@@ -105,6 +113,7 @@ class FakeAcademySource implements AcademySource {
         phone: newStudent.phone,
         groupIds: [groupId],
         active: true,
+        createdAt: DateTime.now(),
       );
       created++;
     }
@@ -169,4 +178,56 @@ class FakeAcademySource implements AcademySource {
 
   @override
   Future<void> deleteCourse(String id) => _write(() => _store.courses.remove(id));
+
+  @override
+  Future<void> markAttended(String groupId, String sessionId, String uid) => _write(() {
+    final session = _store.sessions[sessionId];
+    if (session == null) return;
+    _store.sessions[sessionId] = session.copyWith(attendees: {...?session.attendees, uid}.toList());
+  });
+
+  @override
+  Future<void> setAttendance(String groupId, String sessionId, List<String> uids) => _write(() {
+    final session = _store.sessions[sessionId];
+    if (session == null) return;
+    _store.sessions[sessionId] = session.copyWith(attendees: uids);
+  });
+
+  @override
+  Future<void> markViewed(String groupId, String recordingId, String uid) => _write(() {
+    final recording = _store.recordings[recordingId];
+    if (recording == null) return;
+    _store.recordings[recordingId] = recording.copyWith(viewers: {...recording.viewers, uid}.toList());
+  });
+
+  @override
+  Future<void> touchLastSeen(String uid) => _write(() {
+    final student = _store.students[uid];
+    if (student == null) return;
+    _store.students[uid] = Student(
+      uid: uid,
+      name: student.name,
+      email: student.email,
+      phone: student.phone,
+      groupIds: student.groupIds,
+      active: student.active,
+      lastSeenAt: DateTime.now(),
+      createdAt: student.createdAt,
+    );
+  });
+
+  @override
+  Stream<List<Announcement>> watchAnnouncements(List<String> groupIds) =>
+      _store.watch(() => _store.announcements.values.where((a) => a.groupIds.any(groupIds.contains)).toList());
+
+  @override
+  Future<Announcement> saveAnnouncement(Announcement announcement) => _write(() {
+    final saved = announcement.id.isEmpty ? announcement.copyWith(id: _store.newId('announcement')) : announcement;
+    _store.announcements[saved.id] = saved;
+    return saved;
+  });
+
+  @override
+  Future<void> deleteAnnouncement(Announcement announcement) =>
+      _write(() => _store.announcements.remove(announcement.id));
 }

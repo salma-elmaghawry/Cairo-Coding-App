@@ -7,6 +7,8 @@ class StudentRoutes {
 
   static const String leaderboard = '$quizzes/leaderboard';
 
+  static const String announcements = '$home/announcements';
+
   static String quiz(String quizId) => '$quizzes/$quizId';
 
   static String takeQuiz(String quizId) => '$quizzes/$quizId/take';

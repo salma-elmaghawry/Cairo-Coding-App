@@ -54,6 +54,13 @@ final nextSessionProvider = Provider<AsyncValue<ClassSession?>>((ref) {
   });
 });
 
+/// Sessions held so far out of every planned one; cancelled sessions count for neither.
+final courseProgressProvider = Provider<({int done, int total})>((ref) {
+  final now = ref.watch(clockProvider)();
+  final planned = (ref.watch(studentSessionsProvider).value ?? const <ClassSession>[]).where((s) => !s.isCancelled);
+  return (done: planned.where((s) => s.isPast(now)).length, total: planned.length);
+});
+
 final recordingsFilterProvider = NotifierProvider<RecordingsFilter, String?>(RecordingsFilter.new);
 
 class RecordingsFilter extends Notifier<String?> {

@@ -25,7 +25,7 @@ class TabPage extends StatelessWidget {
       physics: const AlwaysScrollableScrollPhysics(),
       slivers: [
         SliverPadding(
-          padding: const EdgeInsets.fromLTRB(20, 24, 20, 18),
+          padding: const EdgeInsets.fromLTRB(20, 16, 20, 20),
           sliver: SliverToBoxAdapter(
             child: Row(
               children: [
@@ -34,8 +34,8 @@ class TabPage extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       EyebrowText(eyebrow),
-                      verticalSpace(4),
-                      Text(title, style: AppTextStyles.font24ExtraBold),
+                      verticalSpace(2),
+                      Text(title, style: AppTextStyles.font28ExtraBold.copyWith(letterSpacing: -.5)),
                     ],
                   ),
                 ),

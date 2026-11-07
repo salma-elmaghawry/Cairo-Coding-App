@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Cairo Coding Features</title>
+<style>
+  @font-face { font-family: Nunito; font-weight: 400; src: url(../../assets/fonts/Nunito-Regular.ttf); }
+  @font-face { font-family: Nunito; font-weight: 700; src: url(../../assets/fonts/Nunito-Bold.ttf); }
+  @font-face { font-family: Nunito; font-weight: 800; src: url(../../assets/fonts/Nunito-ExtraBold.ttf); }
+  @font-face { font-family: 'JetBrains Mono'; font-weight: 500; src: url(../../assets/fonts/JetBrainsMono-Medium.ttf); }
+  @font-face { font-family: 'JetBrains Mono'; font-weight: 700; src: url(../../assets/fonts/JetBrainsMono-Bold.ttf); }
+
+  :root {
+    --bg: #1b0f26;
+    --surface: #2c1a40;
+    --border: rgba(192,132,252,.22);
+    --text: #F2ECFA;
+    --text-2: #C9BEDD;
+    --muted: rgba(242,236,250,.6);
+    --lilac: #c084fc;
+    --gold: #facc15;
+    --deep: #120a1a;
+    /* Each screenshot is cropped into a 672x420 window. */
+    --shot-w: 672;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 1600px; }
+  body {
+    position: relative;
+    background: var(--bg);
+    color: var(--text);
+    font-family: Nunito, sans-serif;
+    padding: 64px;
+    overflow: hidden;
+  }
+  .bg { position: absolute; inset: 0; pointer-events: none; }
+  .bg::before {
+    content: ''; position: absolute; inset: 0;
+    background-image: radial-gradient(rgba(192,132,252,.12) 1.2px, transparent 1.2px);
+    background-size: 28px 28px;
+  }
+  .glow { position: absolute; border-radius: 50%; filter: blur(110px); }
+  .glow.a { width: 900px; height: 700px; left: -200px; top: 500px; background: rgba(124,58,237,.30); }
+  .glow.b { width: 800px; height: 700px; right: -200px; top: 1500px; background: rgba(192,132,252,.20); }
+
+  .mono { font-family: 'JetBrains Mono', monospace; }
+  header { position: relative; margin-bottom: 40px; }
+  .eyebrow { font-size: 20px; font-weight: 500; color: var(--lilac); }
+  h1 { margin-top: 8px; font-size: 60px; font-weight: 800; line-height: 1.05; letter-spacing: -.015em; }
+  h1 span { color: var(--lilac); }
+  .sub { margin-top: 14px; width: 1100px; font-size: 22px; line-height: 1.45; color: var(--text-2); }
+
+  .grid { position: relative; display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
+  .card {
+    background: rgba(44,26,64,.82); border: 1px solid var(--border); border-radius: 22px;
+    padding: 24px; box-shadow: 0 30px 70px rgba(0,0,0,.35);
+  }
+  .num { font-family: 'JetBrains Mono', monospace; font-size: 16px; font-weight: 700; color: var(--lilac); letter-spacing: .06em; }
+  .card h2 { margin-top: 4px; font-size: 28px; font-weight: 800; }
+  .card p { margin-top: 6px; min-height: 58px; font-size: 18px; line-height: 1.45; color: var(--text-2); }
+
+  .shot {
+    position: relative; margin-top: 16px; width: 672px; height: 420px; overflow: hidden;
+    border-radius: 14px; border: 1px solid rgba(192,132,252,.35); background: #f8f5fd;
+  }
+  /* --x, --y and --w pick the region of the 1440x900 screen to show, in logical pixels. */
+  .shot img {
+    position: absolute; display: block;
+    width: calc(1440px * var(--shot-w) / var(--w));
+    left: calc(-1px * var(--x) * var(--shot-w) / var(--w));
+    top: calc(-1px * var(--y) * var(--shot-w) / var(--w));
+  }
+  .phones { display: flex; justify-content: center; align-items: center; gap: 22px; background: var(--deep); }
+  .phones img {
+    position: static; width: 172px; border-radius: 22px;
+    border: 6px solid #0d0713; outline: 1px solid rgba(192,132,252,.35);
+  }
+  .phones img.mid { width: 186px; }
+</style>
+</head>
+<body>
+  <div class="bg"><div class="glow a"></div><div class="glow b"></div></div>
+
+  <header>
+    <div class="eyebrow mono">// what's inside</div>
+    <h1>Run the whole school <span>from one dashboard.</span></h1>
+    <div class="sub">Courses own their session plan and instructors, groups hold students and the schedule, and every change shows up in the student app right away.</div>
+  </header>
+
+  <div class="grid">
+    <div class="card">
+      <div class="num">01</div>
+      <h2>Courses</h2>
+      <p>Each course owns its session plan and its instructors. Its groups, students and numbers in one place.</p>
+      <div class="shot" style="--x:0;--y:0;--w:1060"><img src="screens/courses.png" alt=""></div>
+    </div>
+
+    <div class="card">
+      <div class="num">02</div>
+      <h2>Session plan</h2>
+      <p>Paste the course's sessions once, one per line. Line n names session n everywhere.</p>
+      <div class="shot" style="--x:248;--y:0;--w:1192"><img src="screens/course-sessions.png" alt=""></div>
+    </div>
+
+    <div class="card">
+      <div class="num">03</div>
+      <h2>Schedule</h2>
+      <p>Weekly slots become dated sessions in Cairo time, already named. Reschedule, cancel or delete any of them.</p>
+      <div class="shot" style="--x:248;--y:0;--w:1192"><img src="screens/schedule.png" alt=""></div>
+    </div>
+
+    <div class="card">
+      <div class="num">04</div>
+      <h2>Add session</h2>
+      <p>Pick the name from the course list, then the number, date, one of the course's instructors and a session link.</p>
+      <div class="shot" style="--x:200;--y:100;--w:960"><img src="screens/add-session.png" alt=""></div>
+    </div>
+
+    <div class="card">
+      <div class="num">05</div>
+      <h2>Students</h2>
+      <p>Every student in the academy. Search by name, email or phone, filter by course, activate or add to a group.</p>
+      <div class="shot" style="--x:248;--y:0;--w:1192"><img src="screens/students.png" alt=""></div>
+    </div>
+
+    <div class="card">
+      <div class="num">06</div>
+      <h2>Instructors</h2>
+      <p>Add each instructor once and see the courses they teach. Sessions only offer the course's own instructors.</p>
+      <div class="shot" style="--x:248;--y:0;--w:1192"><img src="screens/instructors.png" alt=""></div>
+    </div>
+
+    <div class="card">
+      <div class="num">07</div>
+      <h2>Arabic &amp; English</h2>
+      <p>Full right-to-left layout. English names like "C++" stay readable inside the Arabic interface.</p>
+      <div class="shot" style="--x:0;--y:0;--w:1192"><img src="screens/schedule-ar.png" alt=""></div>
+    </div>
+
+    <div class="card">
+      <div class="num">08</div>
+      <h2>Student app</h2>
+      <p>Countdown and one-tap join, the full schedule, recordings, and reminders 24h and 1h before.</p>
+      <div class="shot phones">
+        <img src="../../store/screenshots/raw/en/02.png" alt="">
+        <img class="mid" src="../../store/screenshots/raw/en/01.png" alt="">
+        <img src="../../store/screenshots/raw/en/03.png" alt="">
+      </div>
+    </div>
+  </div>
+</body>
+</html>

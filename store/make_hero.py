@@ -26,10 +26,10 @@ W, H, HALF = 2160, 1920, 1080
 
 # Card bounds in the 1344x2992 raw captures: (x, y, w, h, corner radius).
 CARDS = {
-    "en": {"next": (60, 448, 1224, 1035, 60), "recording": (60, 2404, 1224, 222, 60),
-           "moved": (60, 1390, 1224, 222, 48), "cancelled": (60, 1642, 1224, 222, 48)},
-    "ar": {"next": (60, 448, 1224, 1041, 60), "recording": (60, 2410, 1224, 222, 60),
-           "moved": (60, 1390, 1224, 222, 48), "cancelled": (60, 1642, 1224, 222, 48)},
+    "en": {"next": (60, 415, 1224, 1132, 60), "quiz": (60, 2245, 1224, 240, 60),
+           "moved": (146, 1576, 1140, 384, 48), "cancelled": (146, 1996, 1140, 384, 48)},
+    "ar": {"next": (60, 415, 1224, 1132, 60), "quiz": (60, 2245, 1224, 240, 60),
+           "moved": (58, 1576, 1140, 384, 48), "cancelled": (58, 1996, 1140, 384, 48)},
 }
 
 TEXT = {
@@ -170,11 +170,11 @@ h1 em{{font-style:normal;color:#C084FC}}
 {a_copy}
 {self.phone("01", 120, 760, 600, 14, -5)}
 {self.card("01", "next", 380, 990, 0.555, 3)}
-{self.card("01", "recording", 300, 1640, 0.52, -2)}
+{self.card("01", "quiz", 300, 1650, 0.52, -2)}
 {self.phone("02", HALF + 380, 120, 600, -14, 5)}
 {notif}
-{self.card("02", "moved", HALF + 80, 860, 0.53, -3)}
-{self.card("02", "cancelled", HALF + 150, 1030, 0.53, 2)}
+{self.card("02", "moved", HALF + 80, 800, 0.53, -3)}
+{self.card("02", "cancelled", HALF + 150, 1050, 0.53, 2)}
 {b_copy}"""
         return (f'<!doctype html><html dir="ltr"><head><meta charset="utf-8"><style>{css}</style></head>'
                 f'<body>{body}</body></html>')

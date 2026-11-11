@@ -1,18 +1,30 @@
 Class starts at 7. Was it Sunday or Thursday? Did it move this week? Where's the link? 🤔
 
-Cairo Coding keeps everything about your Cairo Coding School course in one app, so you always know when your next session is and how to join it.
+Cairo Coding keeps everything about your Cairo Coding School course in one app, so you always know when your next session is, how to join it, and how you're doing.
 
 ⏱ YOUR NEXT SESSION, FRONT AND CENTER
-Open the app and see your next session: the day, the time, and a live countdown. When it's time, tap "Join meeting" and you're in class.
+Open the app and see your next session: the day, the time, your instructor and a live countdown. When it's time, tap "Join meeting" and you're in class.
 
 📅 THE FULL SCHEDULE
 Every upcoming session for your group, plus the ones you already attended. If a session is moved, cancelled, or an extra one is added, it's clearly marked, so you never show up at the wrong time.
 
 🔔 A REMINDER BEFORE EVERY SESSION
-Get a notification the day before and an hour before each session, with the time and your group. When a session is moved or cancelled, your reminders update too. Prefer no reminders? Turn them off in Settings.
+Get a notification the day before and an hour before each session, with the time and your group. When a session is moved or cancelled, your reminders update too. Prefer no reminders? Turn them off in your Profile.
+
+📝 QUIZZES AFTER YOUR LESSONS
+Take the quizzes your instructor publishes, some with a timer. See your score, your average and which quizzes are still open. The answers open for review once a quiz closes.
+
+🏆 YOUR GROUP'S LEADERBOARD
+See where you rank in your group, overall or quiz by quiz. Your first attempt is the one that counts, so it's fair for everyone.
 
 🎥 WATCH IT AGAIN
-Missed a session or want to review pointers one more time? Every recording is listed with its session number and date. In more than one group? Filter by group. Recordings open in YouTube or Google Drive.
+Missed a session or want to review pointers one more time? Every recording is listed with its session number and date, and you can search by topic. Recordings open in YouTube or Google Drive.
+
+📣 NEWS FROM THE SCHOOL
+Announcements from Cairo Coding School wait for you under the bell on the home screen.
+
+👤 YOUR PROFILE AND PROGRESS
+Your diploma and group, your attendance rate, the share of session tasks you handed in, and your certificates, all in one place.
 
 🌍 ARABIC OR ENGLISH, LIGHT OR DARK
 Use the app in Arabic or English, with full right-to-left support. Pick light, dark, or follow your phone's theme.
@@ -21,6 +33,6 @@ Use the app in Arabic or English, with full right-to-left support. Pick light, d
 There's no sign-up. Cairo Coding School creates your account when you enroll, and you set your own password from the email you receive. You only ever see your own groups.
 
 🙌 PRIVATE BY DESIGN
-No ads. No tracking. Your schedule and recordings are only visible to the students of your group.
+No ads. No tracking. Your schedule and recordings are only visible to the students of your group, and leaderboards show your name and score only to your group mates.
 
 Enrolled at Cairo Coding School? Sign in with the email you registered with and see your next session.

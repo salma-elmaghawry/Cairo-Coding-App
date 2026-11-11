@@ -66,19 +66,24 @@
           "bg": "light"
         },
         {
+          "title": "A quiz after<br><em>every lesson.</em>",
+          "sub": "Timed quizzes with your score, your average and what's still open.",
+          "bg": "brand"
+        },
+        {
+          "title": "See where you rank<br><em>in your group.</em>",
+          "sub": "A leaderboard overall and quiz by quiz. Your first attempt is the one that counts.",
+          "bg": "light"
+        },
+        {
           "title": "Missed it?<br>Watch it again.",
           "sub": "Every recording with its session number and date.",
           "bg": "brand"
         },
         {
-          "title": "Reminded before<br><em>every session.</em>",
-          "sub": "A notification 24 hours and 1 hour before class. Turn it off anytime.",
+          "title": "Your progress,<br><em>all in one place.</em>",
+          "sub": "Attendance, tasks and certificates. In Arabic or English, light or dark.",
           "bg": "light"
-        },
-        {
-          "title": "Arabic or English.<br>Light or dark.",
-          "sub": "Full right-to-left support, and a dark mode in Cairo Coding colors.",
-          "bg": "brand"
         }
       ]
     },
@@ -128,19 +133,24 @@
           "bg": "light"
         },
         {
+          "title": "اختبار بعد<br><em>كل درس</em>",
+          "sub": "اختبارات بوقت محدد، وتشوف درجتك ومتوسطك واللي لسه مفتوح.",
+          "bg": "brand"
+        },
+        {
+          "title": "شوف ترتيبك<br><em>في مجموعتك</em>",
+          "sub": "لوحة صدارة إجمالي ولكل اختبار، وأول محاولة بس هي اللي بتتحسب.",
+          "bg": "light"
+        },
+        {
           "title": "فاتتك سيشن؟<br>شوفها تاني",
           "sub": "كل التسجيلات برقم السيشن وتاريخها.",
           "bg": "brand"
         },
         {
-          "title": "تنبيه قبل<br><em>كل سيشن</em>",
-          "sub": "تنبيه قبلها بـ 24 ساعة وقبلها بساعة، وتقدر تقفله في أي وقت.",
+          "title": "تقدّمك كله<br><em>في مكان واحد</em>",
+          "sub": "الحضور والتاسكات والشهادات، بالعربي أو الإنجليزي، فاتح أو داكن.",
           "bg": "light"
-        },
-        {
-          "title": "عربي أو إنجليزي<br>فاتح أو داكن",
-          "sub": "دعم كامل للعربي، ووضع داكن بألوان كايرو كودينج.",
-          "bg": "brand"
         }
       ]
     }

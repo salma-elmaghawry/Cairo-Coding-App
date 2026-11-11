@@ -12,7 +12,7 @@ import 'package:cairo_coding_app/student/quizzes/quiz_take_screen.dart';
 import 'package:cairo_coding_app/student/quizzes/quizzes_screen.dart';
 import 'package:cairo_coding_app/student/recordings/recordings_screen.dart';
 import 'package:cairo_coding_app/student/schedule/schedule_screen.dart';
-import 'package:cairo_coding_app/student/settings/settings_screen.dart';
+import 'package:cairo_coding_app/student/profile/profile_screen.dart';
 import 'package:cairo_coding_app/student/shell/student_shell.dart';
 import 'package:cairo_coding_app/student/student_routes.dart';
 import 'package:flutter/widgets.dart';
@@ -101,7 +101,7 @@ final studentRouterProvider = Provider<GoRouter>((ref) {
             routes: [GoRoute(path: StudentRoutes.recordings, builder: (_, _) => const RecordingsScreen())],
           ),
           StatefulShellBranch(
-            routes: [GoRoute(path: StudentRoutes.settings, builder: (_, _) => const SettingsScreen())],
+            routes: [GoRoute(path: StudentRoutes.profile, builder: (_, _) => const ProfileScreen())],
           ),
         ],
       ),

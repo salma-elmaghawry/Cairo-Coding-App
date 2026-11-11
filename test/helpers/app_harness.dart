@@ -1,3 +1,4 @@
+import 'package:cairo_coding_app/admin/groups/widgets/group_card.dart';
 import 'package:cairo_coding_app/admin/widgets/admin_page.dart';
 import 'package:cairo_coding_app/app.dart';
 import 'package:cairo_coding_app/core/config/app_flavor.dart';
@@ -94,3 +95,11 @@ Future<void> setUpAppTests() async {
 
 /// The first text field on the dashboard page itself, past the search in the top bar.
 Finder pageField() => find.descendant(of: find.byType(AdminPage), matching: find.byType(TextField)).first;
+
+/// Opens a group from its card on the Groups page. The page sorts by next session, which changes with the date,
+/// so tests pick the group by name rather than taking the first card.
+Future<void> openGroup(WidgetTester tester, String name) async {
+  final card = find.ancestor(of: find.text(name).first, matching: find.byType(GroupCard));
+  await tester.tap(find.descendant(of: card, matching: find.text('Open group')));
+  await settle(tester);
+}

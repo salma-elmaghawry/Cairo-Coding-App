@@ -15,6 +15,7 @@ class ClassSession extends Equatable {
     this.instructor = '',
     this.manual = false,
     this.attendees,
+    this.taskDoneBy,
   });
 
   factory ClassSession.fromMap(String id, Map<String, dynamic> map) => ClassSession(
@@ -29,6 +30,7 @@ class ClassSession extends Equatable {
     instructor: map['instructor'] as String? ?? '',
     manual: map['manual'] as bool? ?? false,
     attendees: map['attendees'] == null ? null : List<String>.from(map['attendees'] as List),
+    taskDoneBy: map['taskDoneBy'] == null ? null : List<String>.from(map['taskDoneBy'] as List),
   );
 
   final String id;
@@ -50,6 +52,12 @@ class ClassSession extends Equatable {
   final List<String>? attendees;
 
   bool get hasAttendance => attendees != null;
+
+  /// Students who handed in this session's task, by uid, ticked by the admin. Null means the session had no
+  /// task, so it's left out of the tasks rate. Written only by [AcademySource.setTaskDoneBy], never by [toMap].
+  final List<String>? taskDoneBy;
+
+  bool get hasTask => taskDoneBy != null;
 
   DateTime get endsAt => startsAt.add(Duration(minutes: durationMin));
 
@@ -91,8 +99,25 @@ class ClassSession extends Equatable {
       instructor: instructor ?? this.instructor,
       manual: manual,
       attendees: attendees ?? this.attendees,
+      taskDoneBy: taskDoneBy,
     );
   }
+
+  /// [copyWith] can't clear a field, and a task can be taken off a session.
+  ClassSession withTaskDoneBy(List<String>? uids) => ClassSession(
+    id: id,
+    groupId: groupId,
+    number: number,
+    startsAt: startsAt,
+    durationMin: durationMin,
+    status: status,
+    meetingLinkOverride: meetingLinkOverride,
+    topic: topic,
+    instructor: instructor,
+    manual: manual,
+    attendees: attendees,
+    taskDoneBy: uids,
+  );
 
   @override
   List<Object?> get props => [
@@ -107,5 +132,6 @@ class ClassSession extends Equatable {
     instructor,
     manual,
     attendees,
+    taskDoneBy,
   ];
 }

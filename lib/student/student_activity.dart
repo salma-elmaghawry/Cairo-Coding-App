@@ -53,13 +53,6 @@ final myAttendanceProvider = Provider<double?>((ref) {
   return Attendance.studentRate(uid, Attendance.counted(sessions, ref.watch(clockProvider)()));
 });
 
-/// How many sessions the student was at.
-final myAttendedCountProvider = Provider<int>((ref) {
-  final uid = ref.watch(currentUserProvider.select((user) => user?.uid));
-  final sessions = ref.watch(studentSessionsProvider).value ?? const <ClassSession>[];
-  return sessions.where((s) => !s.isCancelled && (s.attendees?.contains(uid) ?? false)).length;
-});
-
 final studentAnnouncementsProvider = StreamProvider<List<Announcement>>((ref) {
   final ids = ref.watch(studentGroupIdsProvider);
   return ref.watch(academyRepositoryProvider).watchAnnouncements(ids);

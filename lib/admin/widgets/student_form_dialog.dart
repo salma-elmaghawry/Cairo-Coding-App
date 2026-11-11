@@ -1,4 +1,5 @@
 import 'package:cairo_coding_app/admin/admin_providers.dart';
+import 'package:cairo_coding_app/admin/widgets/certificates_editor.dart';
 import 'package:cairo_coding_app/core/error_handling/result.dart';
 import 'package:cairo_coding_app/core/helpers/app_validators.dart';
 import 'package:cairo_coding_app/core/helpers/bidi.dart';
@@ -9,6 +10,7 @@ import 'package:cairo_coding_app/core/widgets/app_text_field.dart';
 import 'package:cairo_coding_app/core/widgets/primary_button.dart';
 import 'package:cairo_coding_app/data/data_providers.dart';
 import 'package:cairo_coding_app/data/models/academy_group.dart';
+import 'package:cairo_coding_app/data/models/certificate.dart';
 import 'package:cairo_coding_app/data/models/course.dart';
 import 'package:cairo_coding_app/data/models/student.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -40,6 +42,7 @@ class _StudentFormDialogState extends ConsumerState<StudentFormDialog> {
   // Archived groups aren't listed below, but they stay on the student when saving.
   late final Set<String> _groupIds = {...widget.student.groupIds};
   late bool _active = widget.student.active;
+  late List<Certificate> _certificates = widget.student.certificates;
   bool _saving = false;
 
   @override
@@ -56,7 +59,13 @@ class _StudentFormDialogState extends ConsumerState<StudentFormDialog> {
     final result = await ref
         .read(academyRepositoryProvider)
         .updateStudent(
-          widget.student.copyWith(name: _name.text, phone: _phone.text, groupIds: _groupIds.toList(), active: _active),
+          widget.student.copyWith(
+            name: _name.text,
+            phone: _phone.text,
+            groupIds: _groupIds.toList(),
+            active: _active,
+            certificates: _certificates,
+          ),
         );
     if (!mounted) return;
     setState(() => _saving = false);
@@ -74,7 +83,10 @@ class _StudentFormDialogState extends ConsumerState<StudentFormDialog> {
     final courseNames = {
       for (final course in ref.watch(coursesProvider).value ?? const <Course>[]) course.id: course.name,
     };
-    final groups = (ref.watch(adminGroupsProvider).value ?? const <AcademyGroup>[]).where((g) => !g.archived);
+    final allGroups = ref.watch(adminGroupsProvider).value ?? const <AcademyGroup>[];
+    final groups = allGroups.where((g) => !g.archived);
+    final courseOf = {for (final group in allGroups) group.id: courseNames[group.courseId]};
+    final suggestedTitle = [for (final id in widget.student.groupIds) ?courseOf[id]].firstOrNull ?? '';
 
     return AlertDialog(
       title: Text('admin.students.edit_title'.tr()),
@@ -132,6 +144,13 @@ class _StudentFormDialogState extends ConsumerState<StudentFormDialog> {
                   ),
                   value: _active,
                   onChanged: (value) => setState(() => _active = value),
+                ),
+                const Divider(),
+                verticalSpace(6),
+                CertificatesEditor(
+                  certificates: _certificates,
+                  suggestedTitle: suggestedTitle,
+                  onChanged: (certificates) => setState(() => _certificates = certificates),
                 ),
               ],
             ),

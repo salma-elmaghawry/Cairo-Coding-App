@@ -100,7 +100,7 @@
       "home": "الرئيسية",
       "schedule": "الجدول",
       "recordings": "التسجيلات",
-      "settings": "الإعدادات",
+      "profile": "حسابي",
       "quizzes": "الاختبارات"
     }
   },
@@ -177,10 +177,23 @@
     "section_appearance": "الشكل واللغة",
     "section_notifications": "الإشعارات",
     "section_account": "الخصوصية والحساب",
-    "reminders_hint": "قبل كل سيشن بـ 24 ساعة وبساعة",
-    "stat_groups": "المجموعات",
-    "stat_rank": "الترتيب",
-    "stat_attended": "حضرت"
+    "reminders_hint": "قبل كل سيشن بـ 24 ساعة وبساعة"
+  },
+  "profile": {
+    "eyebrow": "حسابك",
+    "title": "الملف الشخصي",
+    "section_studies": "الدراسة",
+    "diploma": "الدبلومة",
+    "group": "المجموعة",
+    "attendance_rate": "نسبة الحضور",
+    "tasks_rate": "نسبة التاسكات",
+    "sessions_of": "{} من {} سيشن",
+    "tasks_of": "{} من {} تاسك",
+    "no_data": "لم يُسجَّل شيء بعد",
+    "section_certificates": "الشهادات",
+    "no_certificates": "لا توجد شهادات بعد",
+    "no_certificates_hint": "تظهر هنا عند إنهاء الدبلومة",
+    "issued_on": "صدرت {}"
   },
   "admin": {
     "role": "مسؤول",
@@ -416,6 +429,8 @@
       "session_added": "تمت إضافة السيشن",
       "attended": "الحضور",
       "attendance": "الحضور",
+      "task": "التاسك",
+      "task_count": "التاسك {}/{}",
       "not_yet": "لم تبدأ",
       "timeline": "مسار الكورس",
       "legend_done": "انتهت {}",
@@ -674,6 +689,14 @@
       "count": "حضر {} من {}",
       "saved": "تم حفظ الحضور"
     },
+    "tasks": {
+      "title": "التاسك · {}",
+      "hint": "{}. حدد الطلاب الذين سلّموا تاسك هذه السيشن.",
+      "count": "سلّم {} من {}",
+      "saved": "تم حفظ التاسك",
+      "clear": "بدون تاسك",
+      "cleared": "تمت إزالة التاسك من هذه السيشن"
+    },
     "announcements": {
       "eyebrow": "الأكاديمية",
       "title": "الإعلانات",
@@ -689,6 +712,17 @@
       "empty": "لا توجد إعلانات بعد",
       "delete_title": "حذف الإعلان؟",
       "delete_message": "حذف \"{}\"؟ لن يراه الطلاب بعد ذلك."
+    },
+    "certificates": {
+      "title": "الشهادات",
+      "hint": "روابط ملفات الشهادات (Google Drive أو PDF). يفتحها الطالب من ملفه الشخصي.",
+      "add": "إضافة شهادة",
+      "name": "الدبلومة",
+      "link": "رابط الشهادة",
+      "link_invalid": "أدخل رابطاً يبدأ بـ https://",
+      "date": "تاريخ الإصدار",
+      "none": "لا توجد شهادات بعد",
+      "remove": "حذف الشهادة"
     }
   },
   "quizzes": {

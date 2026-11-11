@@ -12,7 +12,7 @@ lib/
 ├── core/      theme, fonts, assets, l10n helpers, Result + errors, shared widgets, animations
 ├── data/      models, sources (contracts), fake/ (in-memory backend), repositories, data_providers.dart
 ├── shared/    screens both apps use: login, splash, blocked, preferences, routing guard
-├── student/   student router + tabs (home, schedule, quizzes, recordings, settings)
+├── student/   student router + tabs (home, schedule, quizzes, recordings, profile)
 └── admin/     admin router + sidebar shell + courses, course detail tabs, groups, group detail tabs, students, instructors, quizzes, settings
 ```
 The student entry point never imports `admin/`, so admin code isn't compiled into the APK (and vice versa).
@@ -63,6 +63,13 @@ Added with the dashboard redesign (Nov 2026). Like quizzes, there is no server, 
 - Neither `toMap()` of a session nor of a recording writes these lists, and sessions are saved with `merge`, so an admin edit never wipes attendance taken meanwhile.
 - The dashboard's numbers come from `GroupInsights` (one per group) and `OverviewNumbers`. Quiz averages use the leaderboards, which hold each student's first attempt.
 
+## Profile, tasks and certificates
+The student's last tab is Profile (`student/profile/`): name and email, diploma and group, attendance rate, tasks rate and certificates, then the app's preferences and logging out. Its labels use `.tr(context: context)` so they change at once when the language is switched on that page.
+- **Diploma** is the name of the course each of the student's groups points to. Students read courses one by one (`watchCourses(ids:)`); the rules allow `get` on a course to any active student but keep `list` admin-only. Archived groups show only when the student has no current one.
+- **Tasks** are `taskDoneBy` (uids) on session docs, ticked by the admin from the session's "Task" button (Group › Schedule). Like `attendees`, the field missing means the session had no task, so it's left out of the rate; saving with nobody ticked means a task nobody handed in, and "No task" deletes the field. Students can't write it: their only session update is `addsOnlySelf('attendees')`. Tasks rate = sessions whose `taskDoneBy` has the student ÷ non-cancelled sessions that have the field.
+- **Attendance rate** on the Profile uses the same sessions as the dashboard (`Attendance.counted`).
+- **Certificates** are `certificates` on `users/{uid}`: a list of `{title, url, issuedOn}` with the date as `yyyy-MM-dd`, a nested map, so `toFirestore` doesn't convert it. The admin adds or removes them in "Edit student" (saved with the rest by `updateStudent`); the link is a Drive or PDF https link because Spark has no Storage. The student opens it outside the app.
+
 ## Quizzes
 There is no server on the Spark plan, so the phone does the arithmetic and `firestore.rules` checks every step. Read the block at the top of the quiz rules before changing anything here.
 - **Where things live.** `quizzes/{id}` is the admin's master copy. `content/paper` holds the questions and `content/key` the answers, in separate documents so one can be hidden without the other. `groups/{id}/quizzes/{quizId}` is what students list: a copy of the details with no questions, one per group while published, so a student's listeners stay provable by the rules. All of these change together in one batch (`FirestoreQuizSource.saveQuiz`).
@@ -77,9 +84,11 @@ There is no server on the Spark plan, so the phone does the arithmetic and `fire
 - Images are https links, because Spark has no Storage. Avatars are initials, because students have no photo.
 
 ## Tests
-- `tool/rules_test/`: security rules against the Firestore emulator (`npm install && npm test`): quizzes, plus attendance, views, last seen and announcements in `attendance.test.js`. The files share one emulator, so they run one at a time.
+- `tool/rules_test/`: security rules against the Firestore emulator (`npm install && npm test`): quizzes, plus attendance, views, last seen and announcements in `attendance.test.js`, and course reads, certificates and tasks in `profile.test.js`. The files share one emulator, so they run one at a time.
 - `test/attendance_test.dart`, `student_activity_test.dart`, `admin_attendance_test.dart`: attendance and quiz averages, what the student app writes, and the admin's attendance and announcements.
 - `test/quiz_model_test.dart`, `quiz_leaderboard_test.dart`, `quiz_analytics_test.dart`, `quiz_repository_test.dart`: scoring, availability, publishing checks, ranking and analytics. `FakeQuizSource` refuses what the rules refuse.
 - `test/student_quiz_test.dart`, `student_quiz_timing_and_results_test.dart`, `admin_quiz_test.dart`: the full quiz flows on the fake backend.
 - `test/routing_and_schedule_test.dart`: auth redirect rules and the session generator.
+- `test/student_profile_test.dart`: the Profile tab against the fake store, and how certificates and tasks map to and from Firestore. Ticking a task is in `admin_attendance_test.dart`, adding a certificate in `admin_edit_student_test.dart`.
 - `test/student_smoke_test.dart`, `test/admin_smoke_test.dart`: boot the real app, sign in, and walk through every tab.
+- Admin tests open a group with `openGroup(tester, 'CS140')`: the Groups page sorts by next session, so the first card changes with the date.

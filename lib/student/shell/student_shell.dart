@@ -63,9 +63,9 @@ class _StudentShellState extends ConsumerState<StudentShell> {
               label: 'student.nav.recordings'.tr(),
             ),
             NavigationDestination(
-              icon: const Icon(Icons.tune_outlined),
-              selectedIcon: const Icon(Icons.tune_rounded),
-              label: 'student.nav.settings'.tr(),
+              icon: const Icon(Icons.person_outline_rounded),
+              selectedIcon: const Icon(Icons.person_rounded),
+              label: 'student.nav.profile'.tr(),
             ),
           ],
         ),

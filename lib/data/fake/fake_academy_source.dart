@@ -66,9 +66,11 @@ class FakeAcademySource implements AcademySource {
   Future<void> saveSessions(List<ClassSession> sessions) => _write(() {
     for (final session in sessions) {
       final saved = session.id.isEmpty ? session.copyWith(id: _store.newId('session')) : session;
-      // Like Firestore's merge, the stored attendance wins over the copy being saved.
-      final attendees = _store.sessions[saved.id]?.attendees;
-      _store.sessions[saved.id] = attendees == null ? saved : saved.copyWith(attendees: attendees);
+      // Like Firestore's merge, the stored attendance and task win over the copy being saved.
+      final stored = _store.sessions[saved.id];
+      _store.sessions[saved.id] = stored == null
+          ? saved
+          : saved.copyWith(attendees: stored.attendees).withTaskDoneBy(stored.taskDoneBy ?? saved.taskDoneBy);
     }
   });
 
@@ -143,6 +145,7 @@ class FakeAcademySource implements AcademySource {
       phone: student.phone,
       groupIds: student.groupIds,
       active: student.active,
+      certificates: student.certificates,
     );
   });
 
@@ -167,7 +170,8 @@ class FakeAcademySource implements AcademySource {
   });
 
   @override
-  Stream<List<Course>> watchCourses() => _store.watch(() => _store.courses.values.toList());
+  Stream<List<Course>> watchCourses({List<String>? ids}) =>
+      _store.watch(() => _store.courses.values.where((c) => ids == null || ids.contains(c.id)).toList());
 
   @override
   Future<Course> saveCourse(Course course) => _write(() {
@@ -194,6 +198,13 @@ class FakeAcademySource implements AcademySource {
   });
 
   @override
+  Future<void> setTaskDoneBy(String groupId, String sessionId, List<String>? uids) => _write(() {
+    final session = _store.sessions[sessionId];
+    if (session == null) return;
+    _store.sessions[sessionId] = session.withTaskDoneBy(uids);
+  });
+
+  @override
   Future<void> markViewed(String groupId, String recordingId, String uid) => _write(() {
     final recording = _store.recordings[recordingId];
     if (recording == null) return;
@@ -204,16 +215,7 @@ class FakeAcademySource implements AcademySource {
   Future<void> touchLastSeen(String uid) => _write(() {
     final student = _store.students[uid];
     if (student == null) return;
-    _store.students[uid] = Student(
-      uid: uid,
-      name: student.name,
-      email: student.email,
-      phone: student.phone,
-      groupIds: student.groupIds,
-      active: student.active,
-      lastSeenAt: DateTime.now(),
-      createdAt: student.createdAt,
-    );
+    _store.students[uid] = student.copyWith(lastSeenAt: DateTime.now());
   });
 
   @override

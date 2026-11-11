@@ -100,7 +100,7 @@
       "home": "Home",
       "schedule": "Schedule",
       "recordings": "Recordings",
-      "settings": "Settings",
+      "profile": "Profile",
       "quizzes": "Quizzes"
     }
   },
@@ -177,10 +177,23 @@
     "section_appearance": "Appearance",
     "section_notifications": "Notifications",
     "section_account": "Privacy & account",
-    "reminders_hint": "24 hours and 1 hour before",
-    "stat_groups": "Groups",
-    "stat_rank": "Rank",
-    "stat_attended": "Attended"
+    "reminders_hint": "24 hours and 1 hour before"
+  },
+  "profile": {
+    "eyebrow": "your account",
+    "title": "Profile",
+    "section_studies": "Studies",
+    "diploma": "Diploma",
+    "group": "Group",
+    "attendance_rate": "Attendance rate",
+    "tasks_rate": "Tasks rate",
+    "sessions_of": "{} of {} sessions",
+    "tasks_of": "{} of {} tasks",
+    "no_data": "Nothing recorded yet",
+    "section_certificates": "Certificates",
+    "no_certificates": "No certificates yet",
+    "no_certificates_hint": "They show up here when you finish a diploma",
+    "issued_on": "Issued {}"
   },
   "admin": {
     "role": "Admin",
@@ -413,6 +426,8 @@
       "session_added": "Session added",
       "attended": "Attended",
       "attendance": "Attendance",
+      "task": "Task",
+      "task_count": "Task {}/{}",
       "not_yet": "Not yet",
       "timeline": "Course timeline",
       "legend_done": "Done {}",
@@ -668,6 +683,14 @@
       "count": "{} of {} present",
       "saved": "Attendance saved"
     },
+    "tasks": {
+      "title": "Task · {}",
+      "hint": "{}. Tick the students who handed in this session's task.",
+      "count": "{} of {} handed in",
+      "saved": "Task saved",
+      "clear": "No task",
+      "cleared": "Task taken off this session"
+    },
     "announcements": {
       "eyebrow": "academy",
       "title": "Announcements",
@@ -683,6 +706,17 @@
       "empty": "No announcements yet",
       "delete_title": "Delete announcement?",
       "delete_message": "Delete \"{}\"? Students won't see it anymore."
+    },
+    "certificates": {
+      "title": "Certificates",
+      "hint": "Links to the certificate files (Google Drive or PDF). The student opens them from their Profile.",
+      "add": "Add certificate",
+      "name": "Diploma",
+      "link": "Certificate link",
+      "link_invalid": "Enter a link that starts with https://",
+      "date": "Issued on",
+      "none": "No certificates yet",
+      "remove": "Remove certificate"
     }
   },
   "quizzes": {

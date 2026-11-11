@@ -1,8 +1,9 @@
 import 'package:cairo_coding_app/data/fake/fake_academy_store.dart';
 import 'package:cairo_coding_app/data/models/announcement.dart';
+import 'package:cairo_coding_app/data/models/certificate.dart';
 import 'package:cairo_coding_app/data/models/student.dart';
 
-/// Attendance, recording views, sign-ins and announcements for the demo, so the dashboard has something to show.
+/// Attendance, tasks, recording views, sign-ins, a certificate and announcements for the demo, so the dashboard has something to show.
 /// A few students are behind on purpose: Youssef missed the last two CS140 sessions, Karim stopped coming before
 /// he was deactivated, and Farida never signed in.
 void seedFakeActivity(FakeAcademyStore store, DateTime now) {
@@ -22,6 +23,14 @@ void seedFakeActivity(FakeAcademyStore store, DateTime now) {
       active: student.active,
       createdAt: group?.startDate,
       lastSeenAt: neverSignedIn.contains(student.uid) ? null : now.subtract(Duration(hours: 2 + student.name.length)),
+      certificates: [
+        if (student.email == FakeAcademyStore.demoStudentEmail)
+          Certificate(
+            title: 'Programming Basics',
+            url: 'https://drive.google.com/file/d/demo-certificate/view',
+            issuedOn: DateTime(now.year, now.month, now.day).subtract(const Duration(days: 60)),
+          ),
+      ],
     );
   }
 
@@ -42,7 +51,14 @@ void seedFakeActivity(FakeAcademyStore store, DateTime now) {
               (student.name.length + index) % 7 != 0)
             student.uid,
       ];
-      store.sessions[session.id] = session.copyWith(attendees: attendees);
+      // Every session but the latest had a task; the admin hasn't ticked the latest one yet.
+      final taskDoneBy = [
+        for (final uid in attendees)
+          if (store.students[uid]!.name.length % 4 != index % 4) uid,
+      ];
+      store.sessions[session.id] = session
+          .copyWith(attendees: attendees)
+          .withTaskDoneBy(fromEnd == 1 ? null : taskDoneBy);
     }
 
     for (final recording in store.recordings.values.where((r) => r.groupId == groupId).toList()) {

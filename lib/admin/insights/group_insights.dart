@@ -77,6 +77,8 @@ class GroupInsights {
 
   int attendedOf(ClassSession session) => session.attendees?.where(memberIds.contains).length ?? 0;
 
+  int taskDoneOf(ClassSession session) => session.taskDoneBy?.where(memberIds.contains).length ?? 0;
+
   QuizBoard? boardOf(String quizId) => boards.where((b) => b.quizId == quizId).firstOrNull;
 
   static StudentStanding standingOf(Student student) => !student.active

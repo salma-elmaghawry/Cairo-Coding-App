@@ -98,10 +98,10 @@ class AcademyRepository {
   Future<Result<void>> deleteInstructor(Instructor instructor) =>
       Result.guard(() => _source.deleteInstructor(instructor.id));
 
-  Stream<List<Course>> watchCourses() => ErrorMapper.mapStream(
-    _source.watchCourses().map(
-      (list) => [...list]..sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase())),
-    ),
+  Stream<List<Course>> watchCourses({List<String>? ids}) => ErrorMapper.mapStream(
+    _source
+        .watchCourses(ids: ids)
+        .map((list) => [...list]..sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()))),
   );
 
   Future<Result<Course>> saveCourse(Course course) => Result.guard(
@@ -234,6 +234,9 @@ class AcademyRepository {
 
   Future<Result<void>> setAttendance(ClassSession session, List<String> uids) =>
       Result.guard(() => _source.setAttendance(session.groupId, session.id, uids));
+
+  Future<Result<void>> setTaskDoneBy(ClassSession session, List<String>? uids) =>
+      Result.guard(() => _source.setTaskDoneBy(session.groupId, session.id, uids));
 
   Future<Result<void>> markViewed(Recording recording, String uid) =>
       Result.guard(() => _source.markViewed(recording.groupId, recording.id, uid));

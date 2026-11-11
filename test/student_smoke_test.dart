@@ -33,7 +33,7 @@ void main() {
     final newest = FakeAcademyStore().recordings.values.reduce((a, b) => a.recordedAt.isAfter(b.recordedAt) ? a : b);
     expect(find.text(newest.title), findsWidgets);
 
-    await tester.tap(find.text('Settings').last);
+    await tester.tap(find.text('Profile').last);
     await settle(tester);
     expect(find.text('Mariam Adel'), findsOneWidget);
   });

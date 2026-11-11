@@ -36,7 +36,7 @@ class HomeHeader extends ConsumerWidget {
           label: 'home.profile'.tr(),
           excludeSemantics: true,
           child: InkResponse(
-            onTap: () => context.go(StudentRoutes.settings),
+            onTap: () => context.go(StudentRoutes.profile),
             customBorder: const CircleBorder(),
             child: ProgressRing(
               value: progress.total == 0 ? 0 : progress.done / progress.total,

@@ -33,8 +33,7 @@ void main() {
     await signIn(tester, FakeAcademyStore.demoAdminEmail);
     await tester.tap(find.text('Groups').first);
     await settle(tester);
-    await tester.tap(find.text('Open group').first);
-    await settle(tester);
+    await openGroup(tester, 'CS140');
     await tester.tap(find.text('Schedule'));
     await settle(tester);
     expect(find.text('Intro To Programming & Datatypes'), findsOneWidget);

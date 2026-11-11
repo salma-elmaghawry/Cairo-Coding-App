@@ -28,8 +28,7 @@ void main() {
     await openAdmin(tester);
     await tester.tap(find.text('Groups').first);
     await settle(tester);
-    await tester.tap(find.text('Open group').first);
-    await settle(tester);
+    await openGroup(tester, 'CS140');
     await tester.tap(find.text('Schedule').last);
     await settle(tester);
 
@@ -47,6 +46,36 @@ void main() {
     await settle(tester);
     expect(find.text('Attendance saved'), findsOneWidget);
     expect(find.byType(AlertDialog), findsNothing);
+  });
+
+  testWidgets('admin ticks who handed in a task and can take the task off the session', (tester) async {
+    await openAdmin(tester);
+    await tester.tap(find.text('Groups').first);
+    await settle(tester);
+    await openGroup(tester, 'CS140');
+    await tester.tap(find.text('Schedule').last);
+    await settle(tester);
+
+    final withTask = find.ancestor(of: find.textContaining(RegExp(r'^Task \d+/5$')), matching: find.byType(TextButton));
+    final before = withTask.evaluate().length;
+    expect(before, greaterThan(0));
+    await tester.tap(withTask.first);
+    await settle(tester);
+    final dialog = find.byType(AlertDialog);
+    expect(find.descendant(of: dialog, matching: find.text('Task · Session 1')), findsOneWidget);
+    expect(find.descendant(of: dialog, matching: find.textContaining(' of 5 handed in')), findsOneWidget);
+    await tester.tap(find.descendant(of: dialog, matching: find.text('Youssef Samir')));
+    await tester.tap(find.descendant(of: dialog, matching: find.text('Save')));
+    await settle(tester);
+    expect(find.text('Task saved'), findsOneWidget);
+    expect(find.byType(AlertDialog), findsNothing);
+
+    await tester.tap(withTask.first);
+    await settle(tester);
+    await tester.tap(find.descendant(of: find.byType(AlertDialog), matching: find.text('No task')));
+    await settle(tester);
+    expect(find.text('Task taken off this session'), findsOneWidget);
+    expect(withTask.evaluate().length, before - 1);
   });
 
   testWidgets('admin posts an announcement to a group and can delete it', (tester) async {

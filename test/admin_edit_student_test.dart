@@ -50,4 +50,47 @@ void main() {
     expect(find.widgetWithText(ActionChip, 'Workshop'), findsOneWidget);
     expect(find.text('Inactive'), findsOneWidget);
   });
+
+  testWidgets('admin adds a certificate link to a student and removes it again', (tester) async {
+    tester.view.physicalSize = const Size(1440, 1400);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+
+    await pumpApp(tester, AppFlavor.admin, adminRouterProvider);
+    await signIn(tester, FakeAcademyStore.demoAdminEmail);
+    await tester.tap(find.text('Students').first);
+    await settle(tester);
+    await tester.enterText(pageField(), 'hana');
+    await settle(tester);
+    await tester.tap(find.byTooltip('Edit student'));
+    await settle(tester);
+    expect(find.text('No certificates yet'), findsOneWidget);
+
+    await tester.tap(find.text('Add certificate'));
+    await settle(tester);
+    final form = find.byType(AlertDialog).last;
+    final fields = find.descendant(of: form, matching: find.byType(TextFormField));
+    final title = tester.widget<TextField>(find.descendant(of: fields.at(0), matching: find.byType(TextField)));
+    expect(title.controller!.text, 'C++');
+    await tester.enterText(fields.at(1), 'drive.google.com/file/d/1/view');
+    await tester.tap(find.descendant(of: form, matching: find.text('Add')));
+    await settle(tester);
+    expect(find.text('Enter a link that starts with https://'), findsOneWidget);
+    await tester.enterText(fields.at(1), 'https://drive.google.com/file/d/1/view');
+    await tester.tap(find.descendant(of: form, matching: find.text('Add')));
+    await settle(tester);
+    expect(find.byType(AlertDialog), findsOneWidget);
+    expect(find.textContaining('drive.google.com'), findsOneWidget);
+
+    await tester.tap(find.text('Save'));
+    await settle(tester);
+    expect(find.text('Student saved'), findsOneWidget);
+
+    await tester.tap(find.byTooltip('Edit student'));
+    await settle(tester);
+    expect(find.textContaining('drive.google.com'), findsOneWidget);
+    await tester.tap(find.byTooltip('Remove certificate'));
+    await tester.pump();
+    expect(find.text('No certificates yet'), findsOneWidget);
+  });
 }

@@ -3,7 +3,7 @@ class StudentRoutes {
   static const String schedule = '/schedule';
   static const String quizzes = '/quizzes';
   static const String recordings = '/recordings';
-  static const String settings = '/settings';
+  static const String profile = '/profile';
 
   static const String leaderboard = '$quizzes/leaderboard';
 

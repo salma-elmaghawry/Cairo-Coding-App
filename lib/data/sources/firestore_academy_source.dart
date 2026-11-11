@@ -186,6 +186,7 @@ class FirestoreAcademySource implements AcademySource {
     'phone': student.phone,
     'groupIds': student.groupIds,
     'active': student.active,
+    'certificates': [for (final certificate in student.certificates) certificate.toMap()],
   });
 
   @override
@@ -218,7 +219,13 @@ class FirestoreAcademySource implements AcademySource {
   }
 
   @override
-  Stream<List<Course>> watchCourses() => _courses.snapshots().map((s) => _map(s, Course.fromMap));
+  Stream<List<Course>> watchCourses({List<String>? ids}) {
+    if (ids == null) return _courses.snapshots().map((s) => _map(s, Course.fromMap));
+    return combineLatestLists([
+      for (final id in ids)
+        _courses.doc(id).snapshots().map((doc) => [if (doc.data() case final data?) Course.fromMap(doc.id, data)]),
+    ]);
+  }
 
   @override
   Future<Course> saveCourse(Course course) async {
@@ -239,6 +246,11 @@ class FirestoreAcademySource implements AcademySource {
   @override
   Future<void> setAttendance(String groupId, String sessionId, List<String> uids) =>
       _sessionsOf(groupId).doc(sessionId).update({'attendees': uids, 'updatedAt': FieldValue.serverTimestamp()});
+
+  @override
+  Future<void> setTaskDoneBy(String groupId, String sessionId, List<String>? uids) => _sessionsOf(
+    groupId,
+  ).doc(sessionId).update({'taskDoneBy': uids ?? FieldValue.delete(), 'updatedAt': FieldValue.serverTimestamp()});
 
   @override
   Future<void> markViewed(String groupId, String recordingId, String uid) =>

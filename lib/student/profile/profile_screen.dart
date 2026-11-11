@@ -5,25 +5,30 @@ import 'package:cairo_coding_app/core/utils/app_text_styles.dart';
 import 'package:cairo_coding_app/data/data_providers.dart';
 import 'package:cairo_coding_app/shared/preferences/preferences_panel.dart';
 import 'package:cairo_coding_app/student/reminders/reminder_providers.dart';
-import 'package:cairo_coding_app/student/settings/widgets/account_section.dart';
-import 'package:cairo_coding_app/student/settings/widgets/profile_card.dart';
-import 'package:cairo_coding_app/student/settings/widgets/reminders_section.dart';
-import 'package:cairo_coding_app/student/settings/widgets/settings_section.dart';
+import 'package:cairo_coding_app/student/profile/widgets/account_section.dart';
+import 'package:cairo_coding_app/student/profile/widgets/certificates_section.dart';
+import 'package:cairo_coding_app/student/profile/widgets/profile_card.dart';
+import 'package:cairo_coding_app/student/profile/widgets/rates_row.dart';
+import 'package:cairo_coding_app/student/profile/widgets/reminders_section.dart';
+import 'package:cairo_coding_app/student/profile/widgets/settings_section.dart';
+import 'package:cairo_coding_app/student/profile/widgets/studies_section.dart';
 import 'package:cairo_coding_app/student/widgets/tab_page.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class SettingsScreen extends ConsumerWidget {
-  const SettingsScreen({super.key});
+/// Who the student is and how they're doing (name, email, diploma, group, attendance, tasks, certificates),
+/// then the app's preferences and logging out.
+class ProfileScreen extends ConsumerWidget {
+  const ProfileScreen({super.key});
 
   Future<void> _logout(BuildContext context, WidgetRef ref) async {
     final confirmed = await showConfirmDialog(
       context,
-      title: 'settings.logout_title'.tr(),
-      message: 'settings.logout_message'.tr(),
-      confirmLabel: 'auth.logout'.tr(),
-      cancelLabel: 'common.cancel'.tr(),
+      title: 'settings.logout_title'.tr(context: context),
+      message: 'settings.logout_message'.tr(context: context),
+      confirmLabel: 'auth.logout'.tr(context: context),
+      cancelLabel: 'common.cancel'.tr(context: context),
       destructive: true,
     );
     if (!confirmed) return;
@@ -36,15 +41,21 @@ class SettingsScreen extends ConsumerWidget {
     final colorScheme = Theme.of(context).colorScheme;
 
     return TabPage(
-      eyebrow: 'settings.eyebrow'.tr(),
-      title: 'settings.title'.tr(),
+      eyebrow: 'profile.eyebrow'.tr(context: context),
+      title: 'profile.title'.tr(context: context),
       slivers: [
         SliverList.list(
           children: [
             const ProfileCard(),
             verticalSpace(24),
+            const StudiesSection(),
+            verticalSpace(12),
+            const RatesRow(),
+            verticalSpace(24),
+            const CertificatesSection(),
+            verticalSpace(24),
             SettingsSection(
-              title: 'settings.section_appearance'.tr(),
+              title: 'settings.section_appearance'.tr(context: context),
               children: const [Padding(padding: EdgeInsets.all(14), child: PreferencesPanel())],
             ),
             verticalSpace(24),
@@ -63,7 +74,7 @@ class SettingsScreen extends ConsumerWidget {
               ),
               onPressed: () => _logout(context, ref),
               icon: const Icon(Icons.logout_rounded),
-              label: Text('auth.logout'.tr()),
+              label: Text('auth.logout'.tr(context: context)),
             ),
           ].animateList(),
         ),

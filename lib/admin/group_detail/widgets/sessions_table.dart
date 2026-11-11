@@ -1,6 +1,6 @@
 import 'package:cairo_coding_app/admin/admin_providers.dart';
-import 'package:cairo_coding_app/admin/group_detail/widgets/attendance_dialog.dart';
 import 'package:cairo_coding_app/admin/group_detail/widgets/session_form_dialog.dart';
+import 'package:cairo_coding_app/admin/group_detail/widgets/student_checklist_dialog.dart';
 import 'package:cairo_coding_app/admin/insights/group_insights.dart';
 import 'package:cairo_coding_app/core/error_handling/result.dart';
 import 'package:cairo_coding_app/core/helpers/bidi.dart';
@@ -213,6 +213,20 @@ class SessionsTable extends ConsumerWidget {
                               ? null
                               : () => AttendanceDialog.show(context, session: session, students: insights.members),
                           child: Text('admin.schedule.attendance'.tr()),
+                        ),
+                      if (past && !session.isCancelled)
+                        TextButton(
+                          style: compact,
+                          onPressed: insights == null
+                              ? null
+                              : () => TaskDialog.show(context, session: session, students: insights.members),
+                          child: Text(
+                            session.hasTask && insights != null
+                                ? 'admin.schedule.task_count'.tr(
+                                    args: ['${insights.taskDoneOf(session)}', '${insights.members.length}'],
+                                  )
+                                : 'admin.schedule.task'.tr(),
+                          ),
                         ),
                       if (!past) ...[
                         TextButton(

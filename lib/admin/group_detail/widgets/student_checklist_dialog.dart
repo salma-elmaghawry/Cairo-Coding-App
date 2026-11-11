@@ -6,40 +6,100 @@ import 'package:cairo_coding_app/core/widgets/initials_avatar.dart';
 import 'package:cairo_coding_app/data/data_providers.dart';
 import 'package:cairo_coding_app/data/models/class_session.dart';
 import 'package:cairo_coding_app/data/models/student.dart';
+import 'package:cairo_coding_app/data/repositories/academy_repository.dart';
 import 'package:cairo_coding_app/shared/session_labels.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+typedef ChecklistSave = Future<Result<void>> Function(AcademyRepository repository, List<String> uids);
+
+/// An extra action that removes the record altogether, such as taking a task off a session.
+typedef ChecklistClear = ({String label, String message, Future<Result<void>> Function(AcademyRepository) run});
+
 /// Takes or corrects attendance for one session. Students who joined from the app are already ticked.
-class AttendanceDialog extends ConsumerStatefulWidget {
-  const AttendanceDialog({super.key, required this.session, required this.students});
-
-  final ClassSession session;
-  final List<Student> students;
-
+abstract final class AttendanceDialog {
   static Future<void> show(BuildContext context, {required ClassSession session, required List<Student> students}) =>
       showDialog<void>(
         context: context,
-        builder: (_) => AttendanceDialog(session: session, students: students),
+        builder: (context) => StudentChecklistDialog(
+          title: 'admin.attendance.title'.tr(args: [session.title]),
+          hint: 'admin.attendance.hint'.tr(args: [context.fullDay(session.startsAt)]),
+          countKey: 'admin.attendance.count',
+          savedMessage: 'admin.attendance.saved'.tr(),
+          students: students,
+          initial: {...?session.attendees},
+          save: (repository, uids) => repository.setAttendance(session, uids),
+        ),
       );
-
-  @override
-  ConsumerState<AttendanceDialog> createState() => _AttendanceDialogState();
 }
 
-class _AttendanceDialogState extends ConsumerState<AttendanceDialog> {
-  late final Set<String> _present = {...?widget.session.attendees};
+/// Ticks who handed in the session's task. Saving with nobody ticked still counts as a task nobody handed in;
+/// "No task" takes it off the session so it leaves the students' tasks rate.
+abstract final class TaskDialog {
+  static Future<void> show(BuildContext context, {required ClassSession session, required List<Student> students}) =>
+      showDialog<void>(
+        context: context,
+        builder: (context) => StudentChecklistDialog(
+          title: 'admin.tasks.title'.tr(args: [session.title]),
+          hint: 'admin.tasks.hint'.tr(args: [context.fullDay(session.startsAt)]),
+          countKey: 'admin.tasks.count',
+          savedMessage: 'admin.tasks.saved'.tr(),
+          students: students,
+          initial: {...?session.taskDoneBy},
+          save: (repository, uids) => repository.setTaskDoneBy(session, uids),
+          clear: session.hasTask
+              ? (
+                  label: 'admin.tasks.clear'.tr(),
+                  message: 'admin.tasks.cleared'.tr(),
+                  run: (repository) => repository.setTaskDoneBy(session, null),
+                )
+              : null,
+        ),
+      );
+}
+
+/// A list of students to tick, with "everyone" on top. Saves the ticked uids through [save].
+class StudentChecklistDialog extends ConsumerStatefulWidget {
+  const StudentChecklistDialog({
+    super.key,
+    required this.title,
+    required this.hint,
+    required this.countKey,
+    required this.savedMessage,
+    required this.students,
+    required this.initial,
+    required this.save,
+    this.clear,
+  });
+
+  final String title;
+  final String hint;
+
+  /// A translation key that takes the ticked count and the number of students.
+  final String countKey;
+  final String savedMessage;
+  final List<Student> students;
+  final Set<String> initial;
+  final ChecklistSave save;
+  final ChecklistClear? clear;
+
+  @override
+  ConsumerState<StudentChecklistDialog> createState() => _StudentChecklistDialogState();
+}
+
+class _StudentChecklistDialogState extends ConsumerState<StudentChecklistDialog> {
+  late final Set<String> _ticked = {...widget.initial};
   bool _saving = false;
 
-  Future<void> _save() async {
+  Future<void> _run(Future<Result<void>> Function(AcademyRepository) action, String message) async {
     setState(() => _saving = true);
-    final result = await ref.read(academyRepositoryProvider).setAttendance(widget.session, _present.toList());
+    final result = await action(ref.read(academyRepositoryProvider));
     if (!mounted) return;
     setState(() => _saving = false);
     switch (result) {
       case Ok():
-        showAppSnackBar(context, 'admin.attendance.saved'.tr());
+        showAppSnackBar(context, message);
         Navigator.of(context).pop();
       case Err(:final failure):
         showAppSnackBar(context, failure.message, isError: true);
@@ -48,32 +108,30 @@ class _AttendanceDialogState extends ConsumerState<AttendanceDialog> {
 
   @override
   Widget build(BuildContext context) {
-    final all = widget.students.every((s) => _present.contains(s.uid));
+    final all = widget.students.every((s) => _ticked.contains(s.uid));
+    final clear = widget.clear;
 
     return AlertDialog(
-      title: Text('admin.attendance.title'.tr(args: [widget.session.title])),
+      title: Text(widget.title),
       content: SizedBox(
         width: 420,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text(
-              'admin.attendance.hint'.tr(args: [context.fullDay(widget.session.startsAt)]),
-              style: AppTextStyles.font13Normal.secondary(context),
-            ),
+            Text(widget.hint, style: AppTextStyles.font13Normal.secondary(context)),
             CheckboxListTile(
               contentPadding: EdgeInsets.zero,
               value: all,
               title: Text(
-                'admin.attendance.count'.tr(args: ['${_present.length}', '${widget.students.length}']),
+                widget.countKey.tr(args: ['${_ticked.length}', '${widget.students.length}']),
                 style: AppTextStyles.font14ExtraBold,
               ),
               onChanged: (value) => setState(() {
                 if (value ?? false) {
-                  _present.addAll(widget.students.map((s) => s.uid));
+                  _ticked.addAll(widget.students.map((s) => s.uid));
                 } else {
-                  _present.removeAll(widget.students.map((s) => s.uid));
+                  _ticked.removeAll(widget.students.map((s) => s.uid));
                 }
               }),
             ),
@@ -85,11 +143,11 @@ class _AttendanceDialogState extends ConsumerState<AttendanceDialog> {
                   for (final student in widget.students)
                     CheckboxListTile(
                       contentPadding: EdgeInsets.zero,
-                      value: _present.contains(student.uid),
+                      value: _ticked.contains(student.uid),
                       secondary: InitialsAvatar(name: student.name, size: 32),
                       title: Text(student.name, style: AppTextStyles.font14Bold),
                       onChanged: (value) =>
-                          setState(() => (value ?? false) ? _present.add(student.uid) : _present.remove(student.uid)),
+                          setState(() => (value ?? false) ? _ticked.add(student.uid) : _ticked.remove(student.uid)),
                     ),
                 ],
               ),
@@ -98,8 +156,17 @@ class _AttendanceDialogState extends ConsumerState<AttendanceDialog> {
         ),
       ),
       actions: [
+        if (clear != null)
+          TextButton(
+            style: TextButton.styleFrom(foregroundColor: Theme.of(context).colorScheme.error),
+            onPressed: _saving ? null : () => _run(clear.run, clear.message),
+            child: Text(clear.label),
+          ),
         TextButton(onPressed: () => Navigator.of(context).pop(), child: Text('common.cancel'.tr())),
-        ElevatedButton(onPressed: _saving ? null : _save, child: Text('common.save'.tr())),
+        ElevatedButton(
+          onPressed: _saving ? null : () => _run((repo) => widget.save(repo, _ticked.toList()), widget.savedMessage),
+          child: Text('common.save'.tr()),
+        ),
       ],
     );
   }

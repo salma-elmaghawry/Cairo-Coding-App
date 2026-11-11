@@ -28,8 +28,7 @@ void main() {
     await settle(tester);
     expect(find.text('CS140'), findsOneWidget);
 
-    await tester.tap(find.text('Open group').first);
-    await settle(tester);
+    await openGroup(tester, 'CS140');
     expect(find.text('Mariam Adel'), findsOneWidget);
 
     await tester.tap(find.text('Schedule'));

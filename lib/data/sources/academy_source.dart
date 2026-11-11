@@ -49,7 +49,8 @@ abstract class AcademySource {
   /// Puts [to] on every session that names [from] as its instructor.
   Future<void> renameSessionInstructor(String from, String to);
 
-  Stream<List<Course>> watchCourses();
+  /// Every course, or only those in [ids]: students may read single courses, not list them all.
+  Stream<List<Course>> watchCourses({List<String>? ids});
 
   Future<Course> saveCourse(Course course);
 
@@ -61,6 +62,9 @@ abstract class AcademySource {
 
   /// Replaces who attended, for the admin taking or correcting attendance.
   Future<void> setAttendance(String groupId, String sessionId, List<String> uids);
+
+  /// Replaces who handed in the session's task, for the admin. Null takes the task off the session.
+  Future<void> setTaskDoneBy(String groupId, String sessionId, List<String>? uids);
 
   /// Adds [uid] to the students who opened the recording.
   Future<void> markViewed(String groupId, String recordingId, String uid);

@@ -1,5 +1,6 @@
 import 'package:cairo_coding_app/admin/admin_router.dart';
 import 'package:cairo_coding_app/core/config/app_flavor.dart';
+import 'package:cairo_coding_app/core/helpers/bidi.dart';
 import 'package:cairo_coding_app/data/fake/fake_academy_store.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -41,8 +42,8 @@ void main() {
 
     await tester.enterText(fields.at(1), 'youssef.n@example.com');
     await tester.enterText(fields.at(2), ' 012 7777 1618 ');
-    await tester.tap(find.widgetWithText(ChoiceChip, 'C++'));
-    await tester.tap(find.widgetWithText(ChoiceChip, 'CS150 · C++'));
+    await tester.tap(find.widgetWithText(ChoiceChip, 'C++'.unbroken));
+    await tester.tap(find.widgetWithText(ChoiceChip, 'CS150 · C++'.unbroken));
     await tester.pump();
     await tester.tap(find.descendant(of: dialog, matching: find.text('Save')));
     await settle(tester);
@@ -53,6 +54,6 @@ void main() {
     expect(find.text('012 7777 1618'), findsOneWidget);
     expect(find.text('011 5555 2718'), findsNothing);
     expect(find.text('2 groups'), findsNWidgets(2));
-    expect(find.widgetWithText(ActionChip, 'C++'), findsNWidgets(2));
+    expect(find.widgetWithText(ActionChip, 'C++'.unbroken), findsNWidgets(2));
   });
 }

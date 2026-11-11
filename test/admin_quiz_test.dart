@@ -1,5 +1,6 @@
 import 'package:cairo_coding_app/admin/admin_router.dart';
 import 'package:cairo_coding_app/core/config/app_flavor.dart';
+import 'package:cairo_coding_app/core/helpers/bidi.dart';
 import 'package:cairo_coding_app/data/fake/fake_academy_store.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -44,20 +45,20 @@ void main() {
 
   testWidgets('lists quizzes, searches and filters by status', (tester) async {
     await openQuizzes(tester);
-    expect(find.text('Loops in C++'), findsOneWidget);
+    expect(find.text('Loops in C++'.unbroken), findsOneWidget);
     expect(find.text('Pointers'), findsOneWidget);
 
     await tester.tap(find.widgetWithText(ChoiceChip, 'Draft'));
     await settle(tester);
     expect(find.text('Pointers'), findsOneWidget);
-    expect(find.text('Loops in C++'), findsNothing);
+    expect(find.text('Loops in C++'.unbroken), findsNothing);
 
     await tester.tap(find.widgetWithText(ChoiceChip, 'All'));
     await settle(tester);
     await tester.enterText(pageField(), 'git');
     await settle(tester);
     expect(find.text('Git basics'), findsOneWidget);
-    expect(find.text('Loops in C++'), findsNothing);
+    expect(find.text('Loops in C++'.unbroken), findsNothing);
 
     await tester.enterText(pageField(), 'nothing like this');
     await settle(tester);
@@ -78,7 +79,7 @@ void main() {
     await tapText(tester, 'Publish');
     expect(find.text('Pick at least one group'), findsWidgets);
 
-    await tester.tap(find.widgetWithText(ChoiceChip, 'CS140 · C++'));
+    await tester.tap(find.widgetWithText(ChoiceChip, 'CS140 · C++'.unbroken));
     await settle(tester);
     await tapText(tester, 'Publish');
     expect(find.text("Question 1 isn't finished"), findsOneWidget);
@@ -186,7 +187,7 @@ void main() {
 
   testWidgets('a quiz students have taken keeps its questions locked', (tester) async {
     await openQuizzes(tester);
-    await openMenuOf(tester, indexOfCard(tester, 'Conditions in C++'));
+    await openMenuOf(tester, indexOfCard(tester, 'Conditions in C++'.unbroken));
     await tapText(tester, 'Unpublish');
     expect(find.text('Quiz unpublished'), findsOneWidget);
     await tester.tap(find.widgetWithText(ChoiceChip, 'Draft'));
@@ -201,9 +202,9 @@ void main() {
   testWidgets('duplicates, unpublishes and deletes from the list', (tester) async {
     await openQuizzes(tester);
 
-    await openMenuOf(tester, indexOfCard(tester, 'Loops in C++'));
+    await openMenuOf(tester, indexOfCard(tester, 'Loops in C++'.unbroken));
     await tapText(tester, 'Duplicate');
-    expect(find.text('Copy of Loops in C++'), findsOneWidget);
+    expect(find.text('Copy of Loops in C++'.unbroken), findsOneWidget);
 
     await openMenuOf(tester, indexOfCard(tester, 'Git basics'));
     await tapText(tester, 'Delete');
@@ -227,7 +228,7 @@ void main() {
     await tester.tap(find.text('Quizzes').first);
     await settle(tester);
 
-    final title = tester.getTopLeft(find.text('Conditions in C++'));
+    final title = tester.getTopLeft(find.text('Conditions in C++'.unbroken));
     final buttons = find.text('Analytics');
     var closest = buttons.first;
     var best = double.infinity;

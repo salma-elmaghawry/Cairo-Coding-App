@@ -1,5 +1,6 @@
 import 'package:cairo_coding_app/admin/admin_router.dart';
 import 'package:cairo_coding_app/core/config/app_flavor.dart';
+import 'package:cairo_coding_app/core/helpers/bidi.dart';
 import 'package:cairo_coding_app/data/fake/fake_academy_source.dart';
 import 'package:cairo_coding_app/data/fake/fake_academy_store.dart';
 import 'package:cairo_coding_app/data/models/class_session.dart';
@@ -51,6 +52,6 @@ void main() {
     await settle(tester);
     expect(find.text('Session deleted'), findsOneWidget);
     expect(find.text('Intro To Programming & Datatypes'), findsNothing);
-    expect(find.text('Operators In C++'), findsOneWidget);
+    expect(find.text('Operators In C++'.unbroken), findsOneWidget);
   });
 }

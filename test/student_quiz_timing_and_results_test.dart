@@ -1,4 +1,5 @@
 import 'package:cairo_coding_app/core/config/app_flavor.dart';
+import 'package:cairo_coding_app/core/helpers/bidi.dart';
 import 'package:cairo_coding_app/core/providers/core_providers.dart';
 import 'package:cairo_coding_app/data/fake/fake_academy_store.dart';
 import 'package:cairo_coding_app/student/quizzes/quiz_take_screen.dart';
@@ -59,7 +60,7 @@ void main() {
     phone(tester);
     await openQuizzes(tester);
     await tapPill(tester, 'Completed');
-    await tapText(tester, 'Conditions in C++');
+    await tapText(tester, 'Conditions in C++'.unbroken);
     await tapText(tester, 'View my result');
 
     expect(find.text('6/8'), findsOneWidget);
@@ -135,7 +136,7 @@ void main() {
     await tester.tap(find.text('الاختبارات').last);
     await settle(tester);
     // In Arabic, English titles are wrapped in direction marks.
-    await tester.tap(find.textContaining('Loops in C++').first);
+    await tester.tap(find.textContaining('Loops in C++'.unbroken).first);
     await settle(tester);
     await tapText(tester, 'ابدأ الاختبار');
     expect(find.text('السؤال 1 من 5'), findsOneWidget);

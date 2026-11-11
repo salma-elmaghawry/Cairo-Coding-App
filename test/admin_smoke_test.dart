@@ -1,4 +1,5 @@
 import 'package:cairo_coding_app/core/config/app_flavor.dart';
+import 'package:cairo_coding_app/core/helpers/bidi.dart';
 import 'package:cairo_coding_app/data/fake/fake_academy_store.dart';
 import 'package:cairo_coding_app/admin/admin_router.dart';
 import 'package:flutter/material.dart';
@@ -22,7 +23,7 @@ void main() {
 
     await tester.tap(find.text('Courses').first);
     await settle(tester);
-    expect(find.text('C++'), findsOneWidget);
+    expect(find.text('C++'.unbroken), findsOneWidget);
 
     await tester.tap(find.text('Groups').first);
     await settle(tester);

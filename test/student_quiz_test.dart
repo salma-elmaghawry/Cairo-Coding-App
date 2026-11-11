@@ -1,3 +1,4 @@
+import 'package:cairo_coding_app/core/helpers/bidi.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -11,20 +12,20 @@ void main() {
     phone(tester);
     await openQuizzes(tester);
 
-    expect(find.text('Loops in C++'), findsOneWidget);
+    expect(find.text('Loops in C++'.unbroken), findsOneWidget);
     expect(find.text('Available'), findsWidgets);
     expect(find.text('Leaderboard'), findsOneWidget);
 
     await tapPill(tester, 'Upcoming');
     expect(find.text('Arrays and strings'), findsOneWidget);
-    expect(find.text('Loops in C++'), findsNothing);
+    expect(find.text('Loops in C++'.unbroken), findsNothing);
 
     await tapPill(tester, 'Completed');
-    expect(find.text('Conditions in C++'), findsOneWidget);
+    expect(find.text('Conditions in C++'.unbroken), findsOneWidget);
     expect(find.text('6/8'), findsOneWidget);
 
     await tapPill(tester, 'Expired');
-    expect(find.text('Operators in C++'), findsOneWidget);
+    expect(find.text('Operators in C++'.unbroken), findsOneWidget);
   });
 
   testWidgets('a draft quiz and another group\'s quiz never appear', (tester) async {
@@ -46,7 +47,7 @@ void main() {
     phone(tester);
     await openQuizzes(tester);
 
-    await tapText(tester, 'Loops in C++');
+    await tapText(tester, 'Loops in C++'.unbroken);
     expect(find.text('Quiz details'), findsOneWidget);
     expect(find.text('10 min'), findsOneWidget);
     await tapText(tester, 'Start quiz');

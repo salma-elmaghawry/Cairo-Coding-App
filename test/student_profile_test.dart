@@ -1,4 +1,5 @@
 import 'package:cairo_coding_app/core/config/app_flavor.dart';
+import 'package:cairo_coding_app/core/helpers/bidi.dart';
 import 'package:cairo_coding_app/data/data_providers.dart';
 import 'package:cairo_coding_app/data/fake/fake_academy_store.dart';
 import 'package:cairo_coding_app/data/models/certificate.dart';
@@ -40,7 +41,7 @@ void main() {
 
     expect(find.text('Mariam Adel'), findsOneWidget);
     expect(find.text(FakeAcademyStore.demoStudentEmail), findsOneWidget);
-    expect(find.text('C++ · Tools and setup'), findsOneWidget);
+    expect(find.text('C++ · Tools and setup'.unbroken), findsOneWidget);
     expect(find.text('CS140 · Workshop'), findsOneWidget);
     expect(find.text('$attended of ${counted.length} sessions'), findsOneWidget);
     expect(find.text('$handedIn of ${withTask.length} tasks'), findsOneWidget);

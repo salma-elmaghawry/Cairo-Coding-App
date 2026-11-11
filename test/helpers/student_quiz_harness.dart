@@ -1,4 +1,5 @@
 import 'package:cairo_coding_app/core/config/app_flavor.dart';
+import 'package:cairo_coding_app/core/helpers/bidi.dart';
 import 'package:cairo_coding_app/core/providers/core_providers.dart';
 import 'package:cairo_coding_app/data/fake/fake_academy_store.dart';
 import 'package:cairo_coding_app/student/student_router.dart';
@@ -34,7 +35,7 @@ Future<void> tapText(WidgetTester tester, String text) async {
 }
 
 Future<void> openLoops(WidgetTester tester) async {
-  await tapText(tester, 'Loops in C++');
+  await tapText(tester, 'Loops in C++'.unbroken);
   await tapText(tester, 'Start quiz');
 }
 

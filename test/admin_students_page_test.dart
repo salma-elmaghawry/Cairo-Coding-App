@@ -1,5 +1,6 @@
 import 'package:cairo_coding_app/admin/admin_router.dart';
 import 'package:cairo_coding_app/core/config/app_flavor.dart';
+import 'package:cairo_coding_app/core/helpers/bidi.dart';
 import 'package:cairo_coding_app/data/fake/fake_academy_store.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -38,7 +39,7 @@ void main() {
     await settle(tester);
     await tester.tap(find.byType(DropdownButtonFormField<String>));
     await settle(tester);
-    await tester.tap(find.text('CS150 · C++').last);
+    await tester.tap(find.text('CS150 · C++'.unbroken).last);
     await settle(tester);
     final dialog = find.byType(AlertDialog);
     final fields = find.descendant(of: dialog, matching: find.byType(TextFormField));
